@@ -10,27 +10,89 @@ const Navigation = () => {
         </div>
         <ul className="flex gap-x-8">
           <li>
-            <NavLink className="font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3">Home</NavLink>
+            <NavLink
+              to="/"
+              className={({ isActive }) => {
+                return isActive
+                  ? "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3"
+                  : "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3";
+              }}
+            >
+              Home
+            </NavLink>
           </li>
           <li>
-            <NavLink className="font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out">Sample</NavLink>
+            <NavLink
+              to="/sample"
+              className={({ isActive }) => {
+                return isActive
+                  ? "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3"
+                  : "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3";
+              }}
+            >
+              Sample
+            </NavLink>
           </li>
           <li>
-            <NavLink className="font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out">Pricing</NavLink>
+            <NavLink
+              to="/pricing"
+              className={({ isActive }) => {
+                return isActive
+                  ? "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3"
+                  : "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3";
+              }}
+            >
+              Pricing
+            </NavLink>
           </li>
           <li>
-            <NavLink className="font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out">Dashboard</NavLink>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) => {
+                return isActive
+                  ? "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3"
+                  : "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3";
+              }}
+            >
+              Dashboard
+            </NavLink>
           </li>
           <li>
-            <NavLink className="font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out">Contact Us</NavLink>
+            <NavLink
+              className={({ isActive }) => {
+                return isActive
+                  ? "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3"
+                  : "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3";
+              }}
+            >
+              Contact Us
+            </NavLink>
           </li>
         </ul>
         <ul className="flex flex-end gap-x-8">
           <li>
-            <NavLink className="font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out">Login</NavLink>
+            <NavLink
+              to="/login"
+              className={({ isActive }) => {
+                return isActive
+                  ? "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3"
+                  : "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3";
+              }}
+            >
+              Login
+            </NavLink>
           </li>
           <li>
-            <NavLink className="font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out">Sign Up</NavLink>
+            <NavLink
+              to="/sign-up"
+              className={({ isActive }) => {
+                return isActive
+                  ? "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3"
+                  : "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3";
+              }}
+            >
+              Sign Up
+            </NavLink>
           </li>
         </ul>
       </div>

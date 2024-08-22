@@ -45,13 +45,13 @@ const FAQs = () => {
             onClick={() => handleOpen(1)}
             className={
               open === 1
-                ? "bg-white rounded-t-md px-4"
-                : "bg-white rounded-md px-4"
+                ? "bg-white rounded-t-md p-4"
+                : "bg-white rounded-md p-4"
             }
           >
             How do I get started with creating a talking head video?
           </AccordionHeader>
-          <AccordionBody className="bg-white rounded-b-md px-4">
+          <AccordionBody className="bg-white rounded-b-md p-4">
             Simply upload a clear image of a face and an audio clip. Our AI will
             process the inputs to generate a realistic talking head video with
             synchronized facial expressions.
@@ -66,13 +66,13 @@ const FAQs = () => {
             onClick={() => handleOpen(2)}
             className={
               open === 2
-                ? "bg-white rounded-t-md px-4"
-                : "bg-white rounded-md px-4"
+                ? "bg-white rounded-t-md p-4"
+                : "bg-white rounded-md p-4"
             }
           >
             What file formats are supported for image and audio uploads?
           </AccordionHeader>
-          <AccordionBody className="bg-white rounded-b-md px-4">
+          <AccordionBody className="bg-white rounded-b-md p-4">
             We currently support JPEG and PNG formats for images, and MP3
             formats for audio clips.
           </AccordionBody>
@@ -86,13 +86,13 @@ const FAQs = () => {
             onClick={() => handleOpen(3)}
             className={
               open === 3
-                ? "bg-white rounded-t-md px-4"
-                : "bg-white rounded-md px-4"
+                ? "bg-white rounded-t-md p-4"
+                : "bg-white rounded-md p-4"
             }
           >
             Can I preview the video before downloading?
           </AccordionHeader>
-          <AccordionBody className="bg-white rounded-b-md px-4">
+          <AccordionBody className="bg-white rounded-b-md p-4">
             Yes, you can preview the animated video before finalizing and
             downloading it in your preferred resolution.
           </AccordionBody>
@@ -106,13 +106,13 @@ const FAQs = () => {
             onClick={() => handleOpen(4)}
             className={
               open === 4
-                ? "bg-white rounded-t-md px-4"
-                : "bg-white rounded-md px-4"
+                ? "bg-white rounded-t-md p-4"
+                : "bg-white rounded-md p-4"
             }
           >
             Is my data secure?
           </AccordionHeader>
-          <AccordionBody className="bg-white rounded-b-md px-4">
+          <AccordionBody className="bg-white rounded-b-md p-4">
             Absolutely. We implement robust security measures to ensure that
             your images and audio files are protected and handled in compliance
             with data protection regulations.
@@ -127,13 +127,13 @@ const FAQs = () => {
             onClick={() => handleOpen(5)}
             className={
               open === 5
-                ? "bg-white rounded-t-md px-4"
-                : "bg-white rounded-md px-4"
+                ? "bg-white rounded-t-md p-4"
+                : "bg-white rounded-md p-4"
             }
           >
             What resolutions are available for the final video download?
           </AccordionHeader>
-          <AccordionBody className="bg-white rounded-b-md px-4">
+          <AccordionBody className="bg-white rounded-b-md p-4">
             You can download your video in various resolutions, including
             standard and HD quality, depending on your needs.
           </AccordionBody>

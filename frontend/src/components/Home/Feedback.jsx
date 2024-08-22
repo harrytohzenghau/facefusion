@@ -28,7 +28,9 @@ const Feedback = () => {
                     alt="Review 1"
                     className="w-12 h-12 rounded-full object-cover"
                   />
-                  <p className="font-bold">Sarah L., <br /> Online Educator</p>
+                  <p className="font-bold">
+                    Sarah L. <br /> Online Educator
+                  </p>
                 </div>
               </div>
             </div>
@@ -51,7 +53,8 @@ const Feedback = () => {
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <p className="font-bold">
-                    Nguyen Quoc An, Digital Marketer
+                    Nguyen Quoc An
+                    <br /> Digital Marketer
                   </p>
                 </div>
               </div>
@@ -74,7 +77,7 @@ const Feedback = () => {
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <p className="font-bold">
-                    Emily R., Social Media Influencer
+                    Emily R. <br /> Social Media Influencer
                   </p>
                 </div>
               </div>

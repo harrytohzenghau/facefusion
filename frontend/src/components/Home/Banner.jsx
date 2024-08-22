@@ -13,7 +13,7 @@ const Banner = () => {
               Bring Your Images to Life: Create Realistic Talking Head Videos
               with AI-Driven Facial Animation.
             </h1>
-            <Link className="text-base text-white bg-blue-2 px-3 py-2 rounded-md hover:bg-blue-3 transform transition-all duration-200 ease-in-out">
+            <Link to="/sample" className="text-base text-white bg-blue-2 px-3 py-2 rounded-md hover:bg-blue-3 transform transition-all duration-200 ease-in-out">
               Explore Now
             </Link>
           </div>
