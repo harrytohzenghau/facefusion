@@ -1,10 +1,13 @@
 import Root from "../components/Layout/Root";
 import { createBrowserRouter } from "react-router-dom";
-import Pricing from "../components/Pricing/Pricing";
 import Home from "../pages/Home";
 import Sample from "../pages/Sample";
 import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
+import Dashboard from "../pages/Dashboard";
+import Contact from "../pages/Contact";
+import Privacy from "../pages/Privacy";
+import Pricing from "../pages/Pricing";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +23,10 @@ const router = createBrowserRouter([
         element: <Pricing />,
       },
       {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
         path: "sample",
         element: <Sample />,
       },
@@ -30,7 +37,15 @@ const router = createBrowserRouter([
       {
         path: "sign-up",
         element: <SignUp />,
-      }
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+      {
+        path: "privacy",
+        element: <Privacy />,
+      },
     ],
   },
 ]);

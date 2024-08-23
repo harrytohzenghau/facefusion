@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import banner_img from "../../assets/banner_img.png";
-import Card from "../Card";
+import Card from "../UI/Card";
 
 const Banner = () => {
   return (

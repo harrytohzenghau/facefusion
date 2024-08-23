@@ -59,6 +59,7 @@ const Navigation = () => {
           </li>
           <li>
             <NavLink
+              to="/contact"
               className={({ isActive }) => {
                 return isActive
                   ? "text-blue-2 font-bold hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-3"

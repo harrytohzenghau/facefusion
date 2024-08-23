@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "../UI/Card";
 import review_1 from "../../assets/review-1.jpg";
 import review_2 from "../../assets/review-2.jpg";
 import review_3 from "../../assets/review-3.jpg";

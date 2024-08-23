@@ -4,7 +4,7 @@ import {
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
-import Card from "../Card";
+import Card from "../UI/Card";
 
 function Icon({ id, open }) {
   return (

@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "../UI/Card";
 import video_1 from "../../assets/videos/video.mp4";
 
 const SampleVideosAudio = () => {

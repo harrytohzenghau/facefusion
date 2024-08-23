@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "../UI/Card";
 import upload_image from "../../assets/upload_image.jpg";
 import upload_audio from "../../assets/upload_audio.jpg";
 import download_video from "../../assets/download.jpg";
