@@ -1,0 +1,5 @@
+python inference.py --checkpoint_path checkpoints/wav2lip_gan.pth --face loo_5s.mp4 --audio siongodaddy.mp3 
+
+python upscale.py /results/result_voice.mp4 /results
+
+python upscale_onnx.py ./output_video_lowRes/loo_3s.mp4 ~/high_res_output
