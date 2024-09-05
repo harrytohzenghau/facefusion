@@ -249,3 +249,44 @@ body {
   margin-top: 20px;
   font-weight: 400;
 }
+
+/* Sample Videos Section */
+.sample-videos {
+  text-align: center;
+  padding: 50px;
+  background: linear-gradient(to right, #ADE8F4, #f0f8ff);
+}
+
+.sample-videos h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.video-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.video-box {
+  width: 250px;
+  height: 150px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-box:hover {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.play-icon {
+  width: 50px;
+}
