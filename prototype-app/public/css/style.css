@@ -290,3 +290,91 @@ body {
 .play-icon {
   width: 50px;
 }
+
+/* Pricing Plan Section */
+.pricing-plan {
+  padding: 50px;
+  background-color: #f0f8ff;
+  text-align: center; /* Center the whole section */
+}
+
+.pricing-plan h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.pricing-cards {
+  display: flex;
+  justify-content: center;
+  gap: 150px; /* Adjust the gap to align cards above table */
+  margin-bottom: 30px;
+}
+
+.pricing-card {
+  background-color: #66ccff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.pricing-card h3 {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.pricing-card .price {
+  font-size: 2rem;
+  color: white;
+  font-weight: 700;
+}
+
+/* Pricing Table */
+.pricing-table {
+  width: 80%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  table-layout: fixed; /* Ensures equal width columns */
+}
+
+.pricing-table th,
+.pricing-table td {
+  padding: 15px;
+  text-align: center; /* Center align the text in all columns */
+  border-bottom: 1px solid #ddd;
+}
+
+.pricing-table th {
+  font-weight: 600;
+  text-align: left; /* Keep labels aligned to the left */
+}
+
+.pricing-table td {
+  text-align: center;
+  width: 33.33%; /* Ensure columns take equal width */
+}
+
+.subscribe-buttons {
+  display: flex;
+  justify-content: center; /* Center align the buttons */
+  gap: 150px; /* Match button alignment with pricing cards */
+  margin-top: 20px;
+}
+
+.btn-subscribe {
+  background-color: #66ccff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-subscribe:hover {
+  background-color: #0099ff;
+}

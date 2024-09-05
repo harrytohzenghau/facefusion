@@ -3,29 +3,125 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pricing Page</title>
+  <title>Pricing Plan</title>
   <link rel="stylesheet" href="/css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <!-- Navbar (reuse your existing navbar) -->
   <div class="navbar">
     <img src="logo.png" alt="FaceFusion Logo" class="logo">
-    
     <div class="nav-center">
       <a href="/">Home</a>
       <a href="/sample.html">Sample</a>
       <a href="/pricing.html">Pricing</a>
       <a href="/dashboard.html">Dashboard</a>
     </div>
-  
     <div class="nav-right">
       <a href="/login.html">Login</a>
       <a href="/signup.html">Sign Up</a>
     </div>
   </div>
-  
 
-  <h1>Pricing Page</h1>
-  <p>This is the Pricing page content.</p>
+  <!-- Pricing Plan Section -->
+  
+  
+  <section class="pricing-plan">
+    <div><h1>Pricing Plan</h1></div>
+    <div class="pricing-cards">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div class="pricing-card">
+        <h3>Fusion Basic</h3>
+        <p class="price">$0/mo</p>
+      </div>
+      <div class="pricing-card">
+        <h3>Fusion Premium</h3>
+        <p class="price">$5/mo</p>
+      </div>
+    </div>
+
+    <!-- Pricing Table -->
+    <table class="pricing-table">
+      <tr>
+        <th>Image Uploads</th>
+        <td>Up to 3 images</td>
+        <td>Unlimited images</td>
+      </tr>
+      <tr>
+        <th>Audio Uploads</th>
+        <td>No</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <th>Video Generation</th>
+        <td>Yes</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <th>Video Length</th>
+        <td>Up to 15 seconds</td>
+        <td>Customisable</td>
+      </tr>
+      <tr>
+        <th>Video Export Resolution</th>
+        <td>SD Resolution (1280 × 720)</td>
+        <td>HD Resolution (1920 × 1080)</td>
+      </tr>
+      <tr>
+        <th>Maximum Videos Allowed</th>
+        <td>Up to 3 videos</td>
+        <td>Up to 10 videos</td>
+      </tr>
+
+      <tr>
+        <td></td> <!-- Empty cell for alignment -->
+
+        <!-- Subscribe Button for Fusion Basic -->
+        <td>
+          <button class="btn-subscribe">Subscribe</button>
+        </td>
+
+        <!-- Subscribe Button for Fusion Premium -->
+        <td>
+          <button class="btn-subscribe">Subscribe</button>
+        </td>
+      </tr>
+    </table>
+
+  </section>
+
+  <!-- Footer (reuse your existing footer) -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-column">
+        <img src="logo.png" alt="FaceFusion Logo" class="footer-logo">
+      </div>
+      <div class="footer-column">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Sample</a></li>
+          <li><a href="#">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Get in Touch</h4>
+        <a href="#"><img src="instagram-icon.png" alt="Instagram Icon"></a>
+        <a href="#"><img src="facebook-icon.png" alt="Facebook Icon"></a>
+      </div>
+    </div>
+    <p>&copy; 2024 FaceFusion. All rights reserved</p>
+  </footer>
+
 </body>
 </html>
