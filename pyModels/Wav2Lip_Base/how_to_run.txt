@@ -1,0 +1,20 @@
+RUN wav2lip (change the mp4 file and mp3 file to your own files)---
+inference command:
+python inference.py --checkpoint_path checkpoints/wav2lip_gan.pth --face loo_5s.mp4 --audio siongodaddy.mp3 
+
+RUN upscaleling---
+input dir: ./output_video_lowRes/loo_3s.mp4
+output dir: ~/high_res_output
+** change your own directory
+
+inference command:
+python upscale_onnx.py ./output_video_lowRes/loo_3s.mp4 ~/high_res_output
+
+
+
+
+Download the models here:
+https://drive.google.com/drive/folders/1SUo_nigymrW7_VlUwlQXvCmYMDsfOYP3?usp=sharing
+
+copy paste the models in AI-onnx to the AI-onnx folder in Wav2lip_Base
+copy paste the models in Checkpoints to the Checkpoints folder in Wav2lip_Base
