@@ -1,2 +1,18 @@
-node_modules
+# Node.js modules
+node_modules/
 
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# Optional: If you don’t want to commit the lock file
+# package-lock.json
+# yarn.lock
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
