@@ -1,5 +1,5 @@
 import { CheckIcon } from "@heroicons/react/20/solid";
-import Card from "../components/UI/Card";
+import Card from "../../components/UI/Card";
 
 const freeFeatures = [
   "Up to 3 image uploads",

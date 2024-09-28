@@ -45,7 +45,7 @@ const Navigation = () => {
               Pricing
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink
               to="/dashboard"
               className={({ isActive }) => {
@@ -56,7 +56,7 @@ const Navigation = () => {
             >
               Dashboard
             </NavLink>
-          </li>
+          </li> */}
           <li>
             <NavLink
               to="/contact"
