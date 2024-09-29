@@ -10,4 +10,3 @@ router.put('/:id', ContentBankController.updateContent);
 router.delete('/:id', ContentBankController.deleteContent);
 
 module.exports = router;
-s
