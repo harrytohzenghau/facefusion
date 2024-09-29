@@ -48,25 +48,24 @@ const ProfileController = {
   },
 
 //   upload portrait
-  async uploadPortrait(req, res) {
-    const userId = req.user.id; // Assuming `req.user` is set by authentication middleware
-    const { file } = req; // Assuming file is received via multer middleware
-    try {
-      const portrait = new ContentBank({
-        user_id: userId,
-        name: file.originalname,
-        file_type: 'Portrait',
-        file_s3_key: file.path, // or any storage path used
-        is_sample: false,
-        created_at: new Date(),
-      });
+async uploadPortrait(req, res) {
+  try {
+    const userId = req.user.id;
+    const portrait = new ContentBank({
+      user_id: userId,
+      name: req.file.originalname,
+      file_type: 'Portrait',
+      file_s3_key: `user/${req.file.s3Key}`, // This will be 'user/portraits/filename.jpg'
+      created_at: new Date(),
+      is_sample: false,
+    });
 
-      await portrait.save();
-      res.status(201).json({ message: 'Portrait uploaded successfully' });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  },
+    await portrait.save();
+    res.status(201).json({ message: 'Portrait uploaded successfully', portrait });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+},
 
   // Submit text for synchronization
   async submitText(req, res) {
