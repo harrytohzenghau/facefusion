@@ -11,11 +11,17 @@ connectDB();
 app.use(express.json());
 
 // Define Routes
+app.use('/api/auth', require('./routes/authRoutes')); // Auth routes for login and registration
+app.use('/api/samples', require('./routes/samplesRoutes')); // Guest viewing samples
+app.use('/api/plans', require('./routes/plansRoutes')); // Viewing subscription plans
+app.use('/api/profile', require('./routes/profileRoutes')); // Updated with profile-related actions
+app.use('/api/animation', require('./routes/animationRoutes')); // For generating animations
+app.use('/api/ratings', require('./routes/ratingsRoutes')); // Route for handling ratings
 app.use('/api/users', require('./routes/users'));
 app.use('/api/userRoles', require('./routes/userRoles'));
 app.use('/api/contentBank', require('./routes/contentBank'));
-app.use('/api/subscriptionPlans', require('./routes/subscriptionPlan'));
-app.use('/api/ratings', require('./routes/ratings'));
+
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
