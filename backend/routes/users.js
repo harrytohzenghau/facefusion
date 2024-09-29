@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/UserController');
+const { authenticateUser, authorizeAdmin } = require('../middleware/authMiddleware');
 
-// Get all users
-router.get('/', UserController.getAllUsers);
+router.use(authenticateUser);
+
+// Get all users (Admin Only)
+router.get('/', authorizeAdmin, UserController.getAllUsers);
 
 // Get a user by ID
 router.get('/:id', UserController.getUserById);
@@ -11,10 +14,10 @@ router.get('/:id', UserController.getUserById);
 // Create a new user
 router.post('/', UserController.createUser);
 
-// Update a user by ID
+// Update a user by ID 
 router.put('/:id', UserController.updateUser);
 
-// Delete a user by ID
+// Delete a user by ID 
 router.delete('/:id', UserController.deleteUser);
 
 module.exports = router;
