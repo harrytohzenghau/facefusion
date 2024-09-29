@@ -30,7 +30,7 @@ class RatingsController {
   async postRating(req, res) {
     try {
       const { videoId, rating, feedback } = req.body;
-      const userId = req.user.id; // Assuming user information is available in req.user
+      const userId = req.user.id; 
 
       // Validate the rating value
       if (rating < 1 || rating > 5) {

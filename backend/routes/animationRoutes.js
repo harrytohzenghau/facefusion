@@ -1,14 +1,25 @@
 const express = require('express');
 const AnimationController = require('../controllers/AnimationController');
 const router = express.Router();
+const multer = require('multer');
 
-// Assuming an authentication middleware is in place to get `req.user`
+// Setup multer for file uploads
+const upload = multer({ dest: 'uploads/' });
+
 router.post('/generateAnimation', AnimationController.generateAnimation);
 router.get('/download/:videoId', AnimationController.download);
-router.post('/submitJob', AnimationController.submitJob);// Route to submit a new animation job
-router.get('/showVideo/:videoId', AnimationController.showVideo);// Route to view generated animation video
-router.get('/allVideos', AnimationController.getAllVideos); // Route to get all videos for the premium user
+router.post('/submitJob', AnimationController.submitJob);
+router.get('/showVideo/:videoId', AnimationController.showVideo);
+router.get('/allVideos', AnimationController.getAllVideos);
 
+// AI API
+// Route to generate expression animation
+router.post('/expression', upload.single('face'), AnimationController.generateExpression);
 
+// Route to generate lip sync animation
+router.post('/lipSync', upload.fields([{ name: 'face' }, { name: 'audio' }]), AnimationController.generateLipSync);
+
+// Route for text-to-speech
+router.post('/textToSpeech', AnimationController.textToSpeech);
 
 module.exports = router;
