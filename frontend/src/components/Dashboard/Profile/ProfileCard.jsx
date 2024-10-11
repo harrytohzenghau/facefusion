@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Card from "../../UI/Card";
 
 const ProfileCard = () => {
@@ -66,6 +67,20 @@ const ProfileCard = () => {
               className="bg-white p-2 rounded-md drop-shadow-lg"
             />
           </div>
+        </div>
+        <div className="flex ml-auto mt-4 gap-x-4">
+          <button
+            type="submit"
+            className="bg-blue-1 text-white px-4 py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"
+          >
+            Update
+          </button>
+          <Link
+            to="/user"
+            className="bg-blue-7 px-4 py-2 rounded-lg hover:bg-blue-6 transform transition-all duration-200 ease-in-out"
+          >
+            Back
+          </Link>
         </div>
       </form>
     </Card>

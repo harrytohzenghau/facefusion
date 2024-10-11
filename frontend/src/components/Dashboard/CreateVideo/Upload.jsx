@@ -105,7 +105,7 @@ const Upload = () => {
           {image && <img src={image} alt="Uploaded Preview" />}
         </div>
       </div>
-      <button className="bg-blue-1 text-white py-2 rounded-lg" type="submit">Generate</button>
+      <button className="bg-blue-1 text-white py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out" type="submit">Generate</button>
     </form>
   );
 };

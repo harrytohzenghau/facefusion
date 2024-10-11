@@ -1,10 +1,48 @@
-import { Link } from "react-router-dom";
 import logo from "../../assets/facefusion_logo.png";
+import { useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "../../services/AuthService";
+import { login as loginAction } from "../../store/authSlice";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
-  const loginSubmitHandler = (e) => {
+  const usernameRef = useRef();
+  const passwordRef = useRef();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const loginSubmitHandler = async (e) => {
     e.preventDefault();
+
+    const username = usernameRef.current.value;
+    const password = passwordRef.current.value;
+
+    try {
+      const data = await login(username, password);
+
+      if (!data) {
+        return toast.error("No token found");
+      }
+
+      dispatch(loginAction({
+        token: data.token,
+        // user: { username: data.username, type: data.type } // Adjust based on API response
+      }));
+
+      toast.success("Login successfully.");
+
+      if (data.type === "user") {
+        navigate("/dashboard");
+      } else {
+        navigate("/admin");
+      }
+    } catch (error) {
+      toast.error("Login failed. Please try again.");
+    }
   };
+
   return (
     <div>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -32,9 +70,10 @@ const Login = () => {
                 <input
                   id="username"
                   name="username"
+                  ref={usernameRef}
                   type="text"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full px-4 py-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -61,9 +100,10 @@ const Login = () => {
                   id="password"
                   name="password"
                   type="password"
+                  ref={passwordRef}
                   required
                   autoComplete="current-password"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full px-4 py-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>

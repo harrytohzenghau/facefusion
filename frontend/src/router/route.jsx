@@ -14,6 +14,14 @@ import CreateVideo from "../pages/User/CreateVideo";
 import Profile from "../pages/User/Profile";
 import Plan from "../pages/User/Plan";
 import Rating from "../pages/User/Rating";
+import AdminRoot from "../components/Layout/AdminRoot";
+import UserList from "../pages/Admin/UserList";
+import CreateUser from "../pages/Admin/CreateUser";
+import EditUser from "../pages/Admin/EditUser";
+import RatingList from "../pages/Admin/RatingList";
+import ViewRating from "../pages/Admin/ViewRating";
+import Thanks from "../pages/User/Thanks";
+import AdminList from "../pages/Admin/AdminList";
 
 const router = createBrowserRouter([
   {
@@ -77,6 +85,40 @@ const router = createBrowserRouter([
       {
         path: "rating",
         element: <Rating />,
+      },
+      {
+        path: "thanks",
+        element: <Thanks />,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminRoot />,
+    children: [
+      {
+        index: true,
+        element: <UserList />,
+      },
+      {
+        path: "admin-list",
+        element: <AdminList />,
+      },
+      {
+        path: "create",
+        element: <CreateUser />,
+      },
+      {
+        path: "edit",
+        element: <EditUser />,
+      },
+      {
+        path: "rating",
+        element: <RatingList />,
+      },
+      {
+        path: "view-rating",
+        element: <ViewRating />,
       },
     ],
   },
