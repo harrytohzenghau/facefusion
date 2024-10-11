@@ -1,4 +1,4 @@
-const ContentBank = require('../models/ContentBank'); // Assuming ContentBank is where samples are stored
+const ContentBank = require('../models/ContentBank'); 
 
 const SamplesController = {
   // Fetch sample data

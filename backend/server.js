@@ -2,22 +2,24 @@ const express = require('express');
 const connectDB = require('./config/db');
 require('dotenv').config();
 const UserRole = require('./models/UserRole'); // Import the UserRole model
+const cors = require('cors');
 
 const app = express();
+
 
 // Connect to MongoDB
 connectDB();
 
 // Middleware to parse JSON
 app.use(express.json());
+app.use(cors());
+
 
 // Seeds(This one to add all the roles on startup)
 const seedRoles = async () => {
   const roles = [
     { id: 1, name: 'Admin' },
-    { id: 2, name: 'Guest' },
-    { id: 3, name: 'Free' },
-    { id: 4, name: 'Premium' }
+    { id: 2, name: 'User' }
   ];
 
   try {
@@ -32,6 +34,7 @@ const seedRoles = async () => {
     console.error('Error seeding roles:', error);
   }
 };
+
 
 // Call the seedRoles function after connecting to the database
 seedRoles();
