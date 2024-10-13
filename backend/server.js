@@ -13,6 +13,9 @@ connectDB();
 // Middleware to parse JSON
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.raw({ type: 'application/json' })); // Required for Stripe webhooks
+
+
 
 
 // Seeds(This one to add all the roles on startup)
@@ -49,6 +52,7 @@ app.use('/api/ratings', require('./routes/ratingsRoutes')); // Route for handlin
 app.use('/api/users', require('./routes/users'));
 app.use('/api/userRoles', require('./routes/userRoles'));
 app.use('/api/contentBank', require('./routes/contentBank'));
+app.use('/api/stripe', require('./routes/stripeRoutes')); // For stripe
 
 // Start the server
 const PORT = process.env.PORT || 5000;
