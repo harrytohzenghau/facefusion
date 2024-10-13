@@ -1,90 +1,32 @@
 import { useEffect, useState } from "react";
 import Card from "../../components/UI/Card";
 import AccountTable from "../../components/Admin/AccountTable";
-import { getAllUsers } from "../../services/AdminService";
+import { deleteUser, editUser, getAllUsers } from "../../services/AdminService";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const UserList = () => {
-  const [allUsers, setAllUsers] = useState([
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-    {
-      username: "test",
-      first_name: "test 1",
-      last_name: "test 2",
-      email_address: "test@test.com",
-    },
-  ]);
+  const [allUsers, setAllUsers] = useState();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await getAllUsers();
-        const result = await response.json();
-        setAllUsers(result);
+
+        if (!response.success) {
+          return toast.error("Something went wrong when fetching user data.");
+        }
+
+        let userList = [];
+
+        for (let i = 0; i < response.data.length; i++) {
+          if (response.data[i].user_role_id !== 1) {
+            userList.push(response.data[i]);
+          }
+        }
+        setAllUsers(userList);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -92,9 +34,49 @@ const UserList = () => {
     fetchUsers();
   }, []);
 
-  const editUserHandler = () => {};
-  const banUserHandler = () => {};
-  const deleteUserHandler = () => {};
+  const editUserHandler = async (userId) => {
+    navigate(`/admin/edit/${userId}`);
+  };
+
+  const banUserHandler = async (userId, is_locked) => {
+    const updatedLock = { is_locked: !is_locked };
+    try {
+      const response = await editUser(userId, updatedLock);
+
+      if (response.success) {
+        const updatedUsers = allUsers.map((user) => {
+          if (user._id === userId) {
+            return { ...user, is_locked: !is_locked };
+          }
+          return user;
+        });
+
+        setAllUsers(updatedUsers);
+        toast.success("User has been updated");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      return toast.error(error);
+    }
+  };
+  const deleteUserHandler = async (userId) => {
+    try {
+      const response = await deleteUser(userId);
+
+      if (response.success) {
+        const updatedUsers = allUsers.filter((admin) => admin._id !== userId);
+
+        setAllUsers(updatedUsers);
+        toast.success("User has been deleted");
+        navigate("/admin");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      return toast.error(error);
+    }
+  };
 
   return (
     <Card additionalClassName="my-10 flex flex-col gap-y-4 justify-between bg-white rounded-md p-6 drop-shadow-lg">

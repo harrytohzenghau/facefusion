@@ -1,8 +1,9 @@
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const login = async (username, password) => {
   try {
-    const response = await axios.post("http://localhost:3000/api/auth/login", {
+    const response = await axios.post(`${apiUrl}/api/auth/login`, {
       username,
       password,
     });
@@ -14,16 +15,17 @@ export const login = async (username, password) => {
 };
 
 export const register = async (user) => {
-  const { username, first_name, last_name, email, password } = user;
+  const { username, first_name, last_name, email, phone, password } = user;
 
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/auth/register",
+      `${apiUrl}/api/auth/register`,
       {
         username,
         first_name,
         last_name,
         email,
+        phone,
         password,
       }
     );

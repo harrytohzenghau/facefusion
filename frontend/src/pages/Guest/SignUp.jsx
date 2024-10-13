@@ -11,6 +11,7 @@ const SignUp = () => {
   const lastNameRef = useRef();
   const usernameRef = useRef();
   const emailRef = useRef();
+  const phoneRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
 
@@ -24,48 +25,46 @@ const SignUp = () => {
     const first_name = firstNameRef.current.value;
     const last_name = lastNameRef.current.value;
     const email = emailRef.current.value;
+    const phone = phoneRef.current.value;
     const password = passwordRef.current.value;
     const confirmPassword = confirmPasswordRef.current.value;
-    const user_role_id = "3";
 
     if (confirmPassword !== password) {
       return toast.error("Password does not matched.");
     }
 
     const userData = {
-      test_data: 'ahha',
       username,
       first_name,
       last_name,
       email,
+      phone,
       password,
     };
 
     try {
-      const response = await register(userData);
-
-      console.log(response.status);
-      // if (response.ok) {
-      //   return toast.error("Something went wrong!");
-      // }
+      await register(userData);
 
       const data = await login(username, password);
 
       if (!data) {
-        return toast.error("No token found");
+        return toast.error("No user found");
       }
 
       dispatch(
         loginAction({
+          user: data.formattedUser,
           token: data.token,
-          // user: { username: data.username, type: data.type } // Adjust based on API response
         })
       );
 
-      toast.success("Register successfully.");
+      toast.success("Login successfully.");
 
-      if (data.type === "user") {
-        navigate("/dashboard");
+      if (
+        data.formattedUser.role === "Free" ||
+        data.formattedUser.role === "Premium"
+      ) {
+        navigate("/user");
       } else {
         navigate("/admin");
       }
@@ -164,7 +163,7 @@ const SignUp = () => {
                 />
               </div>
             </div>
-            {/* <div>
+            <div>
               <label
                 htmlFor="phone"
                 className="block text-sm font-medium leading-6 text-gray-900"
@@ -176,12 +175,13 @@ const SignUp = () => {
                   id="phone"
                   name="phone"
                   type="tel"
+                  ref={phoneRef}
                   required
                   autoComplete="phone"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full px-4 py-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
-            </div> */}
+            </div>
             <div>
               <div className="flex items-center justify-between">
                 <label

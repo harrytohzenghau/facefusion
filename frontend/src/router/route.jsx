@@ -22,6 +22,7 @@ import RatingList from "../pages/Admin/RatingList";
 import ViewRating from "../pages/Admin/ViewRating";
 import Thanks from "../pages/User/Thanks";
 import AdminList from "../pages/Admin/AdminList";
+import { AdminRoute, UserRoute } from "../util/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -64,31 +65,59 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DashboardHome />,
+        element: (
+          <UserRoute>
+            <DashboardHome />
+          </UserRoute>
+        ),
       },
       {
         path: "create",
-        element: <CreateVideo />,
+        element: (
+          <UserRoute>
+            <CreateVideo />
+          </UserRoute>
+        ),
       },
       {
         path: "library",
-        element: <Library />,
+        element: (
+          <UserRoute>
+            <Library />
+          </UserRoute>
+        ),
       },
       {
         path: "profile",
-        element: <Profile />,
+        element: (
+          <UserRoute>
+            <Profile />
+          </UserRoute>
+        ),
       },
       {
         path: "plan",
-        element: <Plan />,
+        element: (
+          <UserRoute>
+            <Plan />
+          </UserRoute>
+        ),
       },
       {
         path: "rating",
-        element: <Rating />,
+        element: (
+          <UserRoute>
+            <Rating />
+          </UserRoute>
+        ),
       },
       {
         path: "thanks",
-        element: <Thanks />,
+        element: (
+          <UserRoute>
+            <Thanks />
+          </UserRoute>
+        ),
       },
     ],
   },
@@ -98,27 +127,51 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <UserList />,
+        element: (
+          <AdminRoute>
+            <UserList />
+          </AdminRoute>
+        ),
       },
       {
         path: "admin-list",
-        element: <AdminList />,
+        element: (
+          <AdminRoute>
+            <AdminList />
+          </AdminRoute>
+        ),
       },
       {
         path: "create",
-        element: <CreateUser />,
+        element: (
+          <AdminRoute>
+            <CreateUser />
+          </AdminRoute>
+        ),
       },
       {
-        path: "edit",
-        element: <EditUser />,
+        path: "edit/:id",
+        element: (
+          <AdminRoute>
+            <EditUser />
+          </AdminRoute>
+        ),
       },
       {
         path: "rating",
-        element: <RatingList />,
+        element: (
+          <AdminRoute>
+            <RatingList />
+          </AdminRoute>
+        ),
       },
       {
         path: "view-rating",
-        element: <ViewRating />,
+        element: (
+          <AdminRoute>
+            <ViewRating />
+          </AdminRoute>
+        ),
       },
     ],
   },

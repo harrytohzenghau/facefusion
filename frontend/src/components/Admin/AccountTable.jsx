@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import DataTable from "react-data-table-component";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const AccountTable = ({
@@ -57,7 +56,7 @@ const AccountTable = ({
     },
     {
       name: "Email",
-      selector: (row) => row.email_address,
+      selector: (row) => row.email,
       sortable: true,
       width: "10rem",
     },
@@ -75,7 +74,7 @@ const AccountTable = ({
     {
       name: "Status",
       selector: (row) => {
-        if (row.user_active) {
+        if (!row.is_locked) {
           return "Active";
         } else {
           return "Inactive";
@@ -111,9 +110,9 @@ const AccountTable = ({
             <button
               type="button"
               className="bg-blue-4 text-white px-4 py-2 rounded-lg hover:bg-blue-5 transform transition-all duration-200 ease-in-out"
-              onClick={() => banUserHandler(row._id)}
+              onClick={() => banUserHandler(row._id, row.is_locked)}
             >
-              {row.user_active ? "Ban" : "Activate"}
+              {!row.is_locked ? "Ban" : "Activate"}
             </button>
             <button
               type="button"

@@ -23,18 +23,20 @@ const Login = () => {
       const data = await login(username, password);
 
       if (!data) {
-        return toast.error("No token found");
+        return toast.error("You have entered wrong username or password. Please try again.");
       }
 
-      dispatch(loginAction({
-        token: data.token,
-        // user: { username: data.username, type: data.type } // Adjust based on API response
-      }));
+      dispatch(
+        loginAction({
+          user: data.formattedUser,
+          token: data.token,
+        })
+      );
 
       toast.success("Login successfully.");
 
-      if (data.type === "user") {
-        navigate("/dashboard");
+      if (data.formattedUser.role === "Free" || data.formattedUser.role === "Premium") {
+        navigate("/user");
       } else {
         navigate("/admin");
       }
