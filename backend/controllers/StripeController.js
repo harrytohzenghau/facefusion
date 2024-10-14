@@ -1,17 +1,19 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const User = require('../models/User');  // need to update user or subscription data
+const SubscriptionPlan = require('../models/SubscriptionPlan'); 
 
 const StripeController = {
-  // create Checkout Session for payment or subscription
+  // Checkout Session for payment or subscription
   async createCheckoutSession(req, res) {
     const { priceId } = req.body;
 
     try {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        mode: 'subscription', // or change to 'payment' for one-time payment
+        mode: 'subscription', // ot change to 'payment' for one-time payment
         line_items: [
           {
-            price: priceId, // Stripe price ID for your product or subscription
+            price: priceId, // Stripe price ID
             quantity: 1,
           },
         ],
@@ -25,33 +27,86 @@ const StripeController = {
     }
   },
 
-  // handle Stripe Webhooks (Idk if yall need but its for )
+  // Handle Stripe Webhooks
   async handleWebhook(req, res) {
     const sig = req.headers['stripe-signature'];
     let event;
+
     try {
+      // verify the webhook signature
       event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (error) {
       return res.status(400).send(`Webhook Error: ${error.message}`);
     }
 
-    // Handle the event
+    // Handle different event types from Stripe
     switch (event.type) {
-      case 'checkout.session.completed':
-        // Handle successful checkout session here (e.g., update database)
+      case 'checkout.session.completed': {
+        const session = event.data.object;
+
+        // Handle successful checkout session (e.g., create/update user subscription)
+        const userId = session.client_reference_id; 
+        const priceId = session.display_items[0].price.id; // Price ID of the subscription
+        await handleSubscriptionSuccess(userId, priceId);
+
         break;
-      case 'invoice.payment_succeeded':
-        // Handle successful payment
+      }
+      case 'invoice.payment_succeeded': {
+        // Payment was successful, update subscription status if needed
+        const invoice = event.data.object;
+        console.log(`Payment succeeded for invoice: ${invoice.id}`);
+        // can update subscription or invoice status here
+
         break;
-      case 'invoice.payment_failed':
-        // Handle payment failure
+      }
+      case 'invoice.payment_failed': {
+        // Payment failed, notify the user or take necessary action
+        const invoice = event.data.object;
+        console.log(`Payment failed for invoice: ${invoice.id}`);
+        // You could update payment status here
+
         break;
+      }
       default:
+        // Unexpected event type
         return res.status(400).end();
     }
 
+    // Send a 200 response
     res.json({ received: true });
   },
 };
+
+// handle successful subscription
+async function handleSubscriptionSuccess(userId, priceId) {
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      console.error(`User with ID ${userId} not found.`);
+      return;
+    }
+
+    // update or create a subscription plan for the user
+    let subscriptionPlan = await SubscriptionPlan.findOne({ user_id: userId });
+    if (!subscriptionPlan) {
+      subscriptionPlan = new SubscriptionPlan({
+        user_id: userId,
+        subscription_type: 'Premium',
+        start_date: new Date(),
+        price_id: priceId, // store the Stripe price ID
+      });
+    } else {
+      // update existing subscription
+      subscriptionPlan.subscription_type = 'Premium';
+      subscriptionPlan.price_id = priceId;
+    }
+
+    await subscriptionPlan.save();
+    console.log(`Subscription plan for user ${userId} successfully updated/created.`);
+  } catch (error) {
+    console.error('Error handling subscription success:', error);
+  }
+}
 
 module.exports = StripeController;
