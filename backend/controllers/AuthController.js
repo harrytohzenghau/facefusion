@@ -17,14 +17,19 @@ const AuthController = {
         return res.status(401).json({ message: "Invalid credentials" });
 
       const role = await UserRole.findOne({ id: user.user_role_id });
-      
-      const token = jwt.sign({ id: user._id, role: role.name }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
-      }); // setToken()
+
+      const token = jwt.sign(
+        { id: user._id, role: role.name },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1h",
+        }
+      ); // setToken()
 
       const formattedUser = {
         id: user.id,
         role: role.name,
+        is_locked: user.is_locked,
       };
 
       res.json({ token, formattedUser });
@@ -45,7 +50,8 @@ const AuthController = {
 
   // register new user
   async register(req, res) {
-    const { username, first_name, last_name, phone, email, password } = req.body;
+    const { username, first_name, last_name, phone, email, password } =
+      req.body;
     try {
       // Check if user already exists
       const existingUser = await User.findOne({ email });
