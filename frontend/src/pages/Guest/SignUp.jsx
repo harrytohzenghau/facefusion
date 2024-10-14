@@ -43,26 +43,34 @@ const SignUp = () => {
     };
 
     try {
-      await register(userData);
+      const registerResponse = await register(userData);
 
-      const data = await login(username, password);
+      if (!registerResponse.success) {
+        toast.error(
+          "Something went wrong while registering your account. Please try again."
+        );
+      }
 
-      if (!data) {
-        return toast.error("No user found");
+      const loginResponse = await login(username, password);
+
+      if (!loginResponse.success) {
+        return toast.error(
+          "Something went wrong while logging into your account. Please try again."
+        );
       }
 
       dispatch(
         loginAction({
-          user: data.formattedUser,
-          token: data.token,
+          user: loginResponse.data.formattedUser,
+          token: loginResponse.data.token,
         })
       );
 
       toast.success("Login successfully.");
 
       if (
-        data.formattedUser.role === "Free" ||
-        data.formattedUser.role === "Premium"
+        loginResponse.data.formattedUser.role === "Free" ||
+        loginResponse.data.formattedUser.role === "Premium"
       ) {
         navigate("/user");
       } else {

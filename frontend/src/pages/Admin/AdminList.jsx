@@ -86,6 +86,7 @@ const AdminList = () => {
         editUserHandler={editUserHandler}
         banUserHandler={banUserHandler}
         deleteUserHandler={deleteUserHandler}
+        isAdmin={true}
       />
     </Card>
   );

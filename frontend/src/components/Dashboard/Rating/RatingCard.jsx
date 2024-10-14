@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Card from "../../UI/Card";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { postRating } from "../../../services/UserService";
 
 const RatingCard = () => {
   const [rating, setRating] = useState(0);
@@ -22,10 +24,21 @@ const RatingCard = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData, rating);
-    navigate("/user/thanks")
+
+    try {
+      const response = await postRating(formData);
+
+      if (response.success) {
+        toast.success("Rating sent successfully!");
+        navigate("/user/thanks");
+      } else {
+        return toast.error("Something went wrong");
+      }
+    } catch (error) {
+      return toast.error(error.message);
+    }
   };
 
   return (

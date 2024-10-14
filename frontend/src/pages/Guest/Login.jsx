@@ -20,22 +20,31 @@ const Login = () => {
     const password = passwordRef.current.value;
 
     try {
-      const data = await login(username, password);
+      const response = await login(username, password);
 
-      if (!data) {
-        return toast.error("You have entered wrong username or password. Please try again.");
+      if (!response.success) {
+        return toast.error(
+          "You have entered wrong username or password. Please try again."
+        );
+      }
+
+      if (response.data.formattedUser.is_locked) {
+        return toast.error("Your account has been deactivated.");
       }
 
       dispatch(
         loginAction({
-          user: data.formattedUser,
-          token: data.token,
+          user: response.data.formattedUser,
+          token: response.data.token,
         })
       );
 
       toast.success("Login successfully.");
 
-      if (data.formattedUser.role === "Free" || data.formattedUser.role === "Premium") {
+      if (
+        response.data.formattedUser.role === "Free" ||
+        response.data.formattedUser.role === "Premium"
+      ) {
         navigate("/user");
       } else {
         navigate("/admin");

@@ -7,6 +7,7 @@ const AccountTable = ({
   editUserHandler,
   banUserHandler,
   deleteUserHandler,
+  isAdmin = false,
 }) => {
   const navigate = useNavigate();
 
@@ -59,17 +60,6 @@ const AccountTable = ({
       selector: (row) => row.email,
       sortable: true,
       width: "10rem",
-    },
-    {
-      name: "Plan",
-      selector: (row) => {
-        if (row.user_admin) {
-          return "Premium";
-        } else {
-          return "Free";
-        }
-      },
-      sortable: true,
     },
     {
       name: "Status",
@@ -127,6 +117,16 @@ const AccountTable = ({
       width: "25rem",
     },
   ];
+
+  if (!isAdmin) {
+    columns.splice(5, 0, {
+      name: "Plan",
+      selector: (row) => {
+        return row.user_admin ? "Premium" : "Free";
+      },
+      sortable: true,
+    });
+  }
 
   return (
     <>

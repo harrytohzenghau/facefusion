@@ -60,6 +60,7 @@ const UserList = () => {
       return toast.error(error);
     }
   };
+  
   const deleteUserHandler = async (userId) => {
     try {
       const response = await deleteUser(userId);
