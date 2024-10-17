@@ -7,6 +7,7 @@ const userSchema = new Schema({
   last_name: { type: String, required: true },
   phone: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  stripe_customer_id: { type: String, unique: true },
   password_hash: { type: String, required: true },
   user_role_id: { type: Number, ref: "UserRole", required: true },
   pfp_s3_key: String,

@@ -1,11 +1,10 @@
-const SubscriptionPlan = require('../models/SubscriptionPlan');
+const SubscriptionPlan = require("../models/SubscriptionPlan");
 
 const PlansController = {
-
-   // Get all subscription plans
-   async getAllPlans(req, res) {
+  // Get all subscription plans
+  async getAllPlans(req, res) {
     try {
-      const plans = await SubscriptionPlan.find().populate('user_id');
+      const plans = await SubscriptionPlan.find().populate("user_id");
       res.json(plans);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -15,8 +14,11 @@ const PlansController = {
   // Get a subscription plan by user ID
   async getPlanByUserId(req, res) {
     try {
-      const plan = await SubscriptionPlan.findOne({ user_id: req.params.user_id });
-      if (!plan) return res.status(404).json({ message: 'Subscription plan not found' });
+      const plan = await SubscriptionPlan.findOne({
+        user_id: req.params.user_id,
+      });
+      if (!plan)
+        return res.status(404).json({ message: "Subscription plan not found" });
       res.json(plan);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -37,7 +39,11 @@ const PlansController = {
   // Update a subscription plan by user ID
   async updatePlan(req, res) {
     try {
-      const updatedPlan = await SubscriptionPlan.findOneAndUpdate({ user_id: req.params.user_id }, req.body, { new: true });
+      const updatedPlan = await SubscriptionPlan.findOneAndUpdate(
+        { user_id: req.params.user_id },
+        req.body,
+        { new: true }
+      );
       res.json(updatedPlan);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -48,11 +54,11 @@ const PlansController = {
   async deletePlan(req, res) {
     try {
       await SubscriptionPlan.findOneAndDelete({ user_id: req.params.user_id });
-      res.json({ message: 'Subscription plan deleted' });
+      res.json({ message: "Subscription plan deleted" });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-  }
+  },
 };
 
 module.exports = PlansController;

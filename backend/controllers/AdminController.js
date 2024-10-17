@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs/dist/bcrypt");
 const User = require("../models/User"); // Import User Entity
+const SubscriptionPlan = require("../models/SubscriptionPlan");
 
 const AdminController = {
   async getUsers(req, res) {
@@ -83,7 +84,7 @@ const AdminController = {
       is_locked,
       user_role_id,
     } = req.body;
-    
+
     try {
       const user = await User.findById(id); // updateUser()
       if (!user) return res.status(404).json({ message: "User not found" });
@@ -110,6 +111,7 @@ const AdminController = {
     const { id } = req.params;
     try {
       await User.findByIdAndDelete(id); // removeUserById()
+      await SubscriptionPlan.findOneAndDelete({ user_id: id });
       res.json({ message: "User deleted" });
     } catch (error) {
       res.status(500).json({ error: error.message });

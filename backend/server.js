@@ -3,13 +3,23 @@ const connectDB = require("./config/db");
 const cors = require("cors");
 require("dotenv").config();
 const UserRole = require("./models/UserRole"); // Import the UserRole model
+const StripeController = require("./controllers/StripeController");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 
-app.use(cors({
-  origin: 'http://localhost:5173', // Allow requests only from this origin
-  credentials: true                 // Enable cookies and credentials if needed
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL, // Allow requests only from this origin
+    credentials: true, // Enable cookies and credentials if needed
+  })
+);
+
+app.post(
+  "/api/webhook",
+  express.raw({ type: "application/json" }),
+  StripeController.handleWebhook
+);
 
 // Connect to MongoDB
 connectDB();
@@ -43,7 +53,7 @@ seedRoles();
 
 // Define Routes
 app.use("/api/auth", require("./routes/authRoutes")); // Auth routes for login and registration
-app.use("/api/admin", require("./routes/adminRoutes")); 
+app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api/samples", require("./routes/samplesRoutes")); // Guest viewing samples
 app.use("/api/plans", require("./routes/plansRoutes")); // Viewing subscription plans
 app.use("/api/profile", require("./routes/profileRoutes")); // Updated with profile-related actions
@@ -52,6 +62,7 @@ app.use("/api/ratings", require("./routes/ratingsRoutes")); // Route for handlin
 app.use("/api/users", require("./routes/users"));
 app.use("/api/userRoles", require("./routes/userRoles"));
 app.use("/api/contentBank", require("./routes/contentBank"));
+app.use("/api/stripe", require("./routes/stripeRoutes")); // For stripe
 
 // Start the server
 const PORT = process.env.PORT || 5000;
