@@ -1,8 +1,8 @@
 import logo from "../../assets/facefusion_logo.png";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../services/AuthService";
-import { login as loginAction } from "../../store/authSlice";
+import { login as loginAction, logout } from "../../store/authSlice";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
@@ -12,6 +12,10 @@ const Login = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(logout());
+  }, []);
 
   const loginSubmitHandler = async (e) => {
     e.preventDefault();

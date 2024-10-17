@@ -23,6 +23,7 @@ import ViewRating from "../pages/Admin/ViewRating";
 import Thanks from "../pages/User/Thanks";
 import AdminList from "../pages/Admin/AdminList";
 import { AdminRoute, UserRoute } from "../util/ProtectedRoute";
+import Success from "../pages/User/Success";
 
 const router = createBrowserRouter([
   {
@@ -100,6 +101,14 @@ const router = createBrowserRouter([
         element: (
           <UserRoute>
             <Plan />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "success",
+        element: (
+          <UserRoute>
+            <Success />
           </UserRoute>
         ),
       },

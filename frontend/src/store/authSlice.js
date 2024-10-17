@@ -20,9 +20,12 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
     },
+    updatePlan(state, action) {
+      state.user = action.payload.user;
+    },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, updatePlan } = authSlice.actions;
 
 export default authSlice;

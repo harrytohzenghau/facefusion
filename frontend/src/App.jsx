@@ -6,9 +6,9 @@ import { useSelector } from "react-redux";
 import useAutoLogout from "./hooks/useAutoLogout.jsx";
 
 function App() {
-  // const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state.auth.token);
 
-  // useAutoLogout(token);
+  useAutoLogout(token);
   return (
     <>
       <Toaster />
