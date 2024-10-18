@@ -2,9 +2,12 @@ const express = require('express');
 const AnimationController = require('../controllers/AnimationController');
 const router = express.Router();
 const multer = require('multer');
+const { upload } = require('../middleware/uploadMiddleware');
+const { authenticateToken, authenticateUser } = require('../middleware/authMiddleware');
 
 // Setup multer for file uploads
-const upload = multer({ dest: 'uploads/' });
+router.use(authenticateToken);
+router.use(authenticateUser);
 
 router.post('/generateAnimation', AnimationController.generateAnimation);
 router.get('/download/:videoId', AnimationController.download);

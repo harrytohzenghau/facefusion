@@ -1,10 +1,10 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 const UserRole = require("./models/UserRole"); // Import the UserRole model
 const StripeController = require("./controllers/StripeController");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 
@@ -14,6 +14,8 @@ app.use(
     credentials: true, // Enable cookies and credentials if needed
   })
 );
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.post(
   "/api/webhook",
