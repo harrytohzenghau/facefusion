@@ -122,7 +122,12 @@ const AccountTable = ({
     columns.splice(5, 0, {
       name: "Plan",
       selector: (row) => {
-        return row.user_admin ? "Premium" : "Free";
+        switch (row.user_role_id) {
+          case 2:
+            return "Free";
+          case 3:
+            return "Premium";
+        }
       },
       sortable: true,
     });

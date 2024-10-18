@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from "../../store/authSlice";
 import toast from "react-hot-toast";
 
@@ -14,60 +14,80 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="max-w-[17vw] px-10 py-6 h-auto min-h-screen text-white bg-blue-1 flex flex-col justify-between">
-      <ul className="flex flex-col gap-y-3 my-3">
+    <div className="w-[12.5rem] fixed h-screen text-white bg-blue-1 flex flex-col justify-between">
+      <ul className="flex flex-col gap-y-3 m-8">
         <li>
-          <Link to="/user">
+          <NavLink to="/user">
             <h4 className="font-bold">Dashboard</h4>
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link
+          <NavLink
             to="/user/create"
-            className="hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-5"
+            className={({ isActive }) => {
+              return isActive
+                ? "text-blue-5"
+                : "hover:text-blue-5 transform transition-all duration-200 ease-in-out";
+            }}
           >
             Create Video
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link
+          <NavLink
             to="/user/library"
-            className="hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-5"
+            className={({ isActive }) => {
+              return isActive
+                ? "text-blue-5"
+                : "hover:text-blue-5 transform transition-all duration-200 ease-in-out";
+            }}
           >
             Library
-          </Link>
+          </NavLink>
         </li>
       </ul>
-      <ul className="flex flex-col gap-y-3 my-3">
+      <ul className="flex flex-col gap-y-3 m-8">
         <li>
           <h4 className="font-bold">Settings</h4>
         </li>
         <li>
-          <Link
+          <NavLink
             to="/user/profile"
-            className="hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-5"
+            className={({ isActive }) => {
+              return isActive
+                ? "text-blue-5"
+                : "hover:text-blue-5 transform transition-all duration-200 ease-in-out";
+            }}
           >
             Profile
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link
+          <NavLink
             to="/user/plan"
-            className="hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-5"
+            className={({ isActive }) => {
+              return isActive
+                ? "text-blue-5"
+                : "hover:text-blue-5 transform transition-all duration-200 ease-in-out";
+            }}
           >
             Plans & Billing
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link
+          <NavLink
             to="/user/rating"
-            className="hover:text-blue-3 transform transition-all duration-200 ease-in-out hover:text-blue-5"
+            className={({ isActive }) => {
+              return isActive
+                ? "text-blue-5"
+                : "hover:text-blue-5 transform transition-all duration-200 ease-in-out";
+            }}
           >
             Rate Our Service
-          </Link>
+          </NavLink>
         </li>
       </ul>
-      <ul className="flex flex-col gap-y-3 my-3">
+      <ul className="flex flex-col gap-y-3 m-8">
         <li>
           <button
             type="button"
