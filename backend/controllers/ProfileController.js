@@ -3,7 +3,7 @@ const User = require('../models/User'); // Import User Entity
 const ProfileController = {
   // Update profile
   async updateProfile(req, res) {
-    const { id } = req.user; // Assuming `id` is fetched from the authenticated user (middleware can be used)
+    const { id } = req.user; 
     const { first_name, last_name, email, password } = req.body;
     try {
       const user = await User.findById(id);
@@ -25,7 +25,7 @@ const ProfileController = {
 
   // Upgrade to premium plan
   async upgradeToPremium(req, res) {
-    const userId = req.user.id; // Assuming `req.user` is set by authentication middleware
+    const userId = req.user.id; 
     try {
       let plan = await SubscriptionPlan.findOne({ user_id: userId });
 
@@ -55,7 +55,7 @@ async uploadPortrait(req, res) {
       user_id: userId,
       name: req.file.originalname,
       file_type: 'Portrait',
-      file_s3_key: `user/${req.file.s3Key}`, // This will be 'user/portraits/filename.jpg'
+      file_s3_key: `${req.file.s3Key}`, // This will be 'user/portraits/filename.jpg'
       created_at: new Date(),
       is_sample: false,
     });
