@@ -1,5 +1,5 @@
 const ContentBank = require('../models/ContentBank');
-const { downloadFileFromS3, deleteFileFromS3  } = require('../utils/s3Utils');
+const { downloadFileFromS3, deleteFileFromS3, getSignedUrlForS3  } = require('../utils/s3Utils');
 
 const ContentBankController = {
   // Get all content items
@@ -17,10 +17,16 @@ const ContentBankController = {
     try {
       const contentItem = await ContentBank.findById(req.params.id);
       if (!contentItem) return res.status(404).json({ message: 'Content not found' });
-      res.json(contentItem);
+
+      // Generate a pre-signed URL
+      const fileKey = contentItem.file_s3_key;
+      const signedUrl = await getSignedUrlForS3(process.env.AWS_S3_BUCKET_NAME, fileKey);
+
+      res.json({ content: contentItem, fileUrl: signedUrl });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  
   },
 
   // Create new content
@@ -31,7 +37,7 @@ const ContentBankController = {
         name,
         user_id,
         file_type,
-        file_s3_key: `user/${req.file.s3Key}`, // This will be 'user/contentBank/filename.mp4'
+        file_s3_key: `${req.file.s3Key}`, // This will be 'user/contentBank/filename.mp4'
         created_at: new Date(),
         is_sample: false
       });
@@ -52,8 +58,8 @@ const ContentBankController = {
       // If a new file is uploaded, handle S3 upload
       if (req.file) {
         const newS3Key = `contentBank/${req.file.filename}`;
-        await uploadFileToS3(req.file.path, process.env.AWS_S3_BUCKET_NAME, `user/${newS3Key}`);
-        content.file_s3_key = `user/${newS3Key}`;
+        await uploadFileToS3(req.file.path, process.env.AWS_S3_BUCKET_NAME, `${newS3Key}`);
+        content.file_s3_key = `${newS3Key}`;
         content.name = req.file.originalname;
       }
 

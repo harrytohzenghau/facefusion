@@ -66,8 +66,19 @@ const deleteFileFromS3 = async (bucketName, key) => {
   }
 };
 
+const getSignedUrlForS3 = async (bucketName, key) => {
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: key,
+  });
+
+  const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // 1 hour expiration
+  return signedUrl;
+};
+
 module.exports = {
   uploadFileToS3,
   downloadFileFromS3,
   deleteFileFromS3,
+  getSignedUrlForS3,
 };
