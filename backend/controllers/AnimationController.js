@@ -2,6 +2,7 @@ const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 const FormData = require("form-data");
+const { uploadFileToS3 } = require('../utils/s3Utils');
 const AnimationJob = require("../models/AnimationJob");
 
 const AnimationController = {
@@ -100,15 +101,13 @@ const AnimationController = {
     }
   },
 
-  // New: Generate Expression Animation
+  // New: Generate Expression Animation and save to S3
   async generateExpression(req, res) {
     try {
       const { expression } = req.body;
 
       if (!req.file || !expression) {
-        return res
-          .status(400)
-          .json({ message: "Face image and expression are required" });
+        return res.status(400).json({ message: "Face image and expression are required" });
       }
 
       const formData = new FormData();
@@ -124,16 +123,22 @@ const AnimationController = {
         }
       );
 
-      const videoFileName = `video-${Date.now()}.mp4`;
-      const videoPath = path.join(__dirname, "../uploads/", videoFileName);
-      const writer = fs.createWriteStream(videoPath);
+      const localFilePath = path.join(__dirname, '../uploads/', `video-${Date.now()}.mp4`);
+      const writer = fs.createWriteStream(localFilePath);
 
       response.data.pipe(writer);
 
-      writer.on("finish", () => {
+      writer.on("finish", async () => {
+        // Upload to S3
+        const s3Key = `users/${req.user._id}/videos/${path.basename(localFilePath)}`;
+        await uploadFileToS3(localFilePath, process.env.AWS_S3_BUCKET_NAME, s3Key);
+
+        // Delete the local file after uploading to S3
+        fs.unlinkSync(localFilePath);
+
         res.status(200).json({
-          message: "Video generated successfully",
-          videoUrl: `/uploads/${videoFileName}`,
+          message: "Video generated and uploaded to S3 successfully",
+          s3Url: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`,
         });
       });
 
@@ -143,19 +148,15 @@ const AnimationController = {
       });
     } catch (error) {
       console.error("Error generating expression animation:", error);
-      res
-        .status(500)
-        .json({ error: "Failed to generate expression animation" });
+      res.status(500).json({ error: "Failed to generate expression animation" });
     }
   },
 
-  // New: Generate Lip Sync Animation
+  // New: Generate Lip Sync Animation and save to S3
   async generateLipSync(req, res) {
     try {
       if (!req.files || !req.files.face || !req.files.audio) {
-        return res
-          .status(400)
-          .json({ message: "Face video and audio file are required" });
+        return res.status(400).json({ message: "Face video and audio file are required" });
       }
 
       const formData = new FormData();
@@ -171,16 +172,22 @@ const AnimationController = {
         }
       );
 
-      const videoFileName = `video-${Date.now()}.mp4`;
-      const videoPath = path.join(__dirname, "../uploads/", videoFileName);
-      const writer = fs.createWriteStream(videoPath);
+      const localFilePath = path.join(__dirname, '../uploads/', `video-${Date.now()}.mp4`);
+      const writer = fs.createWriteStream(localFilePath);
 
       response.data.pipe(writer);
 
-      writer.on("finish", () => {
+      writer.on("finish", async () => {
+        // Upload to S3
+        const s3Key = `users/${req.user._id}/videos/${path.basename(localFilePath)}`;
+        await uploadFileToS3(localFilePath, process.env.AWS_S3_BUCKET_NAME, s3Key);
+
+        // Delete the local file after uploading to S3
+        fs.unlinkSync(localFilePath);
+
         res.status(200).json({
-          message: "Video with lip sync generated successfully",
-          videoUrl: `/uploads/${videoFileName}`,
+          message: "Video with lip sync generated and uploaded to S3 successfully",
+          s3Url: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`,
         });
       });
 
@@ -194,14 +201,12 @@ const AnimationController = {
     }
   },
 
-  // New: Text to Speech
+  // New: Text to Speech and save to S3
   async textToSpeech(req, res) {
     try {
       const { message, gender } = req.body;
       if (!message || !gender) {
-        return res
-          .status(400)
-          .json({ message: "Message text and gender are required" });
+        return res.status(400).json({ message: "Message text and gender are required" });
       }
 
       const formData = new FormData();
@@ -216,7 +221,21 @@ const AnimationController = {
         }
       );
 
-      res.status(200).json(response.data);
+      const audioFileName = `audio-${Date.now()}.mp3`;
+      const localFilePath = path.join(__dirname, '../uploads/', audioFileName);
+      fs.writeFileSync(localFilePath, response.data);
+
+      // Upload to S3
+      const s3Key = `users/${req.user._id}/audio/${audioFileName}`;
+      await uploadFileToS3(localFilePath, process.env.AWS_S3_BUCKET_NAME, s3Key);
+
+      // Delete local file after upload
+      fs.unlinkSync(localFilePath);
+
+      res.status(200).json({
+        message: "Text to speech generated and uploaded to S3 successfully",
+        s3Url: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`,
+      });
     } catch (error) {
       console.error("Error generating text to speech:", error);
       res.status(500).json({ error: "Failed to generate text to speech" });
