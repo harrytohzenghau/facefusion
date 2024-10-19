@@ -6,7 +6,6 @@ const { upload } = require('../middleware/uploadMiddleware');
 const { authenticateToken, authenticateUser } = require('../middleware/authMiddleware');
 
 // Setup multer for file uploads
-router.use(authenticateToken);
 router.use(authenticateUser);
 
 router.post('/generateAnimation', AnimationController.generateAnimation);

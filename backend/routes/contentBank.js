@@ -1,12 +1,22 @@
 const express = require('express');
-const router = express.Router();
+const { upload, uploadToS3Middleware } = require('../middleware/uploadMiddleware');
 const ContentBankController = require('../controllers/ContentBankController');
 
-// Routes
+const router = express.Router();
+
+// Route to get all content
 router.get('/', ContentBankController.getAllContent);
+
+// Route to create new content (upload file to S3)
+router.post('/createContent', upload.single('file'), uploadToS3Middleware, ContentBankController.createContent);
+
+// Route to get content by ID
 router.get('/:id', ContentBankController.getContentById);
-router.post('/', ContentBankController.createContent);
+
+// Route to update content by ID
 router.put('/:id', ContentBankController.updateContent);
+
+// Route to delete content by ID
 router.delete('/:id', ContentBankController.deleteContent);
 
 module.exports = router;

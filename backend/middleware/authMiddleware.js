@@ -1,49 +1,43 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const jwt = require('jsonwebtoken');
-
-// Middleware to authenticate the JWT
+// Middleware to authenticate token
 const authenticateToken = (req, res, next) => {
-  const token = req.header('Authorization')?.split(' ')[1]; // Expecting a Bearer token in the Authorization header
+  // Get the token from the Authorization header
+  const token = req.header('Authorization')?.split(' ')[1]; // Assuming Bearer token format
+  if (!token) return res.status(401).json({ message: 'Unauthorized: No token provided' });
 
-  if (!token) {
-    return res.status(401).json({ message: 'Access denied. No token provided.' });
-  }
+  // Verify the token
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) return res.status(403).json({ message: 'Forbidden: Invalid token' });
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
-    req.user = decoded; // Attach the decoded user payload to the request
-    next(); // Proceed to the next middleware/route handler
-  } catch (error) {
-    res.status(403).json({ message: 'Invalid token.' });
-  }
+    try {
+      // Attach user details to the request after token verification
+      const user = await User.findById(decoded.id);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+
+      req.user = user; // Attach user data to req object
+      next();
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
 };
 
-const authenticateUser = async (req, res, next) => {
-  try {
-    const userId = req.user.id; // Assuming req.user is set after authentication
-
-    if (!userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // req.user = user; // Attach user data to req object
-    next();
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
+// Middleware to authorize admin users
 const authorizeAdmin = (req, res, next) => {
-  if (req.user.role === 'Admin') {
-    return next();
+  // Assuming user_role_id is an object or a string representing the role
+  if (req.user && req.user.user_role_id && req.user.user_role_id.name === 'Admin') {
+    return next(); // Admin access allowed
   }
   return res.status(403).json({ message: 'Forbidden: Admin access required' });
+};
+
+const authenticateUser = (req, res, next) => {
+  if (req.user) {
+    return next(); // Proceed if user is authenticated
+  }
+  return res.status(401).json({ message: 'Unauthorized: User not authenticated' });
 };
 
 module.exports = { authenticateToken, authenticateUser, authorizeAdmin };

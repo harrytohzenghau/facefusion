@@ -1,11 +1,10 @@
 const express = require('express');
 const AdminController = require('../controllers/AdminController');
 const router = express.Router();
-const { authenticateUser, authorizeAdmin, authenticateToken } = require('../middleware/authMiddleware');
+const { authenticateToken, authorizeAdmin } = require('../middleware/authMiddleware');
 
-router.use(authenticateToken);
-// router.use(authenticateUser);
-router.use(authorizeAdmin); // for admin only
+router.use(authenticateToken);  // Token validation for all routes in this file
+router.use(authorizeAdmin);     // Only admins can access these routes
 
 router.get('/users', AdminController.getUsers);
 router.get('/users/:id', AdminController.getOneUser);
