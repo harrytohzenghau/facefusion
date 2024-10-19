@@ -7,7 +7,7 @@ const router = express.Router();
 // Route to get all content
 router.get('/', ContentBankController.getAllContent);
 
-// Route to create new content (upload file to S3)
+// Route to create new content (upload file to S3 and check upload limit)
 router.post('/createContent', upload.single('file'), uploadToS3Middleware, ContentBankController.createContent);
 
 // Route to get content by ID
