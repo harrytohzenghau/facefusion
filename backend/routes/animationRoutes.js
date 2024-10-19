@@ -24,4 +24,8 @@ router.post('/lipSync', upload.fields([{ name: 'face' }, { name: 'audio' }]), An
 // Route for text-to-speech
 router.post('/textToSpeech', AnimationController.textToSpeech);
 
+// An's
+router.post('/upscaleVideo', upload.single('file'), AnimationController.upscaleVideo);
+
+
 module.exports = router;
