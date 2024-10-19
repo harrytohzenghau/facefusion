@@ -241,6 +241,58 @@ const AnimationController = {
       res.status(500).json({ error: "Failed to generate text to speech" });
     }
   },
+
+  async upscaleVideo(req, res) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "Video file is required" });
+      }
+
+      const formData = new FormData();
+      formData.append("file", fs.createReadStream(req.file.path));
+
+      // Send the request to the upscaling API
+      const response = await axios.post(
+        "https://c8db-138-75-118-40.ngrok-free.app/make-hd",
+        formData,
+        {
+          headers: {
+            ...formData.getHeaders(),
+            'ngrok-skip-browser-warning': 'true',
+          },
+          responseType: "stream",
+        }
+      );
+
+      const localFilePath = path.join(__dirname, '../uploads/', `video-hd-${Date.now()}.mp4`);
+      const writer = fs.createWriteStream(localFilePath);
+
+      // Pipe the response (video) to local storage
+      response.data.pipe(writer);
+
+      writer.on("finish", async () => {
+        // Upload the upscaled video to S3
+        const s3Key = `user/${req.user._id}/videos/${path.basename(localFilePath)}`;
+        await uploadFileToS3(localFilePath, process.env.AWS_S3_BUCKET_NAME, s3Key);
+
+        // Delete the local file after uploading to S3
+        fs.unlinkSync(localFilePath);
+
+        res.status(200).json({
+          message: "HD video generated and uploaded to S3 successfully",
+          s3Url: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`,
+        });
+      });
+
+      writer.on("error", (error) => {
+        console.error("Error saving video file:", error);
+        res.status(500).json({ error: "Failed to save video file" });
+      });
+    } catch (error) {
+      console.error("Error upscaling video:", error);
+      res.status(500).json({ error: "Failed to upscale video" });
+    }
+  },
 };
 
 module.exports = AnimationController;
