@@ -20,8 +20,8 @@ const upload = multer({ storage: storage });
 
 // Define upload limits based on plan type
 const uploadLimits = {
-  free: { images: 5, videos: 2 },
-  premium: { images: 50, videos: 20 }
+  free: { images: 3, videos: 3 },
+  premium: { images: 1000, videos: 1000 }
 };
 
 // Middleware to check upload limits and upload to S3
