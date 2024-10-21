@@ -54,7 +54,7 @@ const Upload = ({ role, generateVideoHandler }) => {
     setTextInput(e.target.value);
   };
 
-  const generateVideoFormHandler = (e) => {
+  const generateVideoFormHandler = async (e) => {
     e.preventDefault();
     if (!image) {
       return toast.error("Please upload an image!");
@@ -72,7 +72,7 @@ const Upload = ({ role, generateVideoHandler }) => {
       }
     }
 
-    generateVideoHandler(image, expression, textInput, audio);
+    await generateVideoHandler(image, expression, textInput, audio);
   };
 
   return (

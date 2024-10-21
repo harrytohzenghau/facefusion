@@ -25,6 +25,8 @@ export const generateExpression = async (image, expression) => {
       }
     );
 
+    console.log(response.data)
+
     return { success: true, data: response.data };
   } catch (error) {
     if (error.response) {

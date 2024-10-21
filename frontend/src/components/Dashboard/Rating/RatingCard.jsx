@@ -3,23 +3,25 @@ import Card from "../../UI/Card";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { postRating } from "../../../services/UserService";
+import { useSelector } from "react-redux";
 
 const RatingCard = () => {
+  const user = useSelector((state) => state.auth.user);
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
-  const [formData, setFormData] = useState({
+  const [ratingData, setRatingData] = useState({
     name: "",
     occupation: "",
-    companyName: "",
-    comment: "",
+    company_name: "",
+    feedback: "",
   });
 
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setRatingData({
+      ...ratingData,
       [name]: value,
     });
   };
@@ -27,14 +29,25 @@ const RatingCard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user.id) {
+      return toast.error("No user id found!");
+    }
+
+    if (rating === 0) {
+      return toast.error("Please select stars from 0 to 5!");
+    }
+
+    ratingData.user_id = user.id;
+    ratingData.rating = rating;
+
     try {
-      const response = await postRating(formData);
+      const response = await postRating(ratingData);
 
       if (response.success) {
         toast.success("Rating sent successfully!");
         navigate("/user/thanks");
       } else {
-        return toast.error("Something went wrong");
+        return toast.error("Something went wrong while submit rating!");
       }
     } catch (error) {
       return toast.error(error.message);
@@ -90,7 +103,7 @@ const RatingCard = () => {
             type="text"
             id="name"
             name="name"
-            value={formData.name}
+            value={ratingData.name}
             onChange={handleInputChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             required
@@ -108,7 +121,7 @@ const RatingCard = () => {
             type="text"
             id="occupation"
             name="occupation"
-            value={formData.occupation}
+            value={ratingData.occupation}
             onChange={handleInputChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             required
@@ -117,16 +130,16 @@ const RatingCard = () => {
 
         <div className="mb-4">
           <label
-            htmlFor="companyName"
+            htmlFor="company_name"
             className="block text-sm font-medium text-gray-700"
           >
             Company Name
           </label>
           <input
             type="text"
-            id="companyName"
-            name="companyName"
-            value={formData.companyName}
+            id="company_name"
+            name="company_name"
+            value={ratingData.company_name}
             onChange={handleInputChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             required
@@ -135,15 +148,15 @@ const RatingCard = () => {
 
         <div className="mb-4">
           <label
-            htmlFor="comment"
+            htmlFor="feedback"
             className="block text-sm font-medium text-gray-700"
           >
-            Comment
+            Feedback
           </label>
           <textarea
-            id="comment"
-            name="comment"
-            value={formData.comment}
+            id="feedback"
+            name="feedback"
+            value={ratingData.feedback}
             onChange={handleInputChange}
             rows="4"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"

@@ -1,29 +1,37 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Upload from "../../components/Dashboard/CreateVideo/Upload";
 import Download from "../../components/Dashboard/CreateVideo/Download";
 import { useSelector } from "react-redux";
 import { generateExpression } from "../../services/AnimationService";
+import { LoadingContext } from "../../context/LoadingContext";
 
 const CreateVideo = () => {
   const user = useSelector((state) => state.auth.user);
   const [video, setVideo] = useState(null);
+  const { setIsLoading } = useContext(LoadingContext);
 
   const generateVideoHandler = async (image, expression, inputText, audio) => {
     if (user.role === "Free") {
       try {
+        setIsLoading(true);
         const response = await generateExpression(image, expression);
         setVideo(response.data.videoUrl);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     }
 
     if (user.role === "Premium") {
       try {
+        setIsLoading(true);
         const response = await generateExpression(image, expression);
         setVideo(response.data.videoUrl);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     }
   };

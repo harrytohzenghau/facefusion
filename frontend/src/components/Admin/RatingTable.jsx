@@ -1,10 +1,11 @@
-import React from "react";
 import DataTable from "react-data-table-component";
-import { useNavigate } from "react-router-dom";
 
-const RatingTable = ({ title, allRatings }) => {
-  const navigate = useNavigate();
-
+const RatingTable = ({
+  title,
+  allRatings,
+  viewRatingHandler,
+  deleteRatingHandler,
+}) => {
   const customStyles = {
     table: {
       style: {
@@ -32,64 +33,29 @@ const RatingTable = ({ title, allRatings }) => {
       width: "3rem",
     },
     {
-      name: "Username",
-      selector: (row) => row.username,
+      name: "Name",
+      selector: (row) => row.name,
       sortable: true,
       width: "7rem",
     },
     {
-      name: "First Name",
-      selector: (row) => row.first_name,
-      sortable: true,
-      width: "7rem",
-    },
-    {
-      name: "Last Name",
-      selector: (row) => row.last_name,
-      sortable: true,
-      width: "7rem",
-    },
-    {
-      name: "Email",
-      selector: (row) => row.email_address,
+      name: "Company Name",
+      selector: (row) => row.company_name,
       sortable: true,
       width: "10rem",
     },
     {
-      name: "Plan",
-      selector: (row) => {
-        if (row.user_admin) {
-          return "Premium";
-        } else {
-          return "Free";
-        }
-      },
+      name: "Occupation",
+      selector: (row) => row.occupation,
       sortable: true,
+      width: "7rem",
     },
     {
-      name: "Status",
-      selector: (row) => {
-        if (row.user_active) {
-          return "Active";
-        } else {
-          return "Inactive";
-        }
-      },
+      name: "Rating",
+      selector: (row) => row.rating,
       sortable: true,
+      width: "5rem",
     },
-    // {
-    //   name: "Created At",
-    //   selector: (row) => {
-    //     const date = new Date(row.user_created);
-
-    //     const day = date.getDate();
-    //     const month = date.getMonth() + 1;
-    //     const year = date.getFullYear();
-
-    //     return `${day}/${month}/${year}`;
-    //   },
-    //   sortable: true,
-    // },
     {
       name: "Action",
       selector: (row) => {
@@ -98,21 +64,14 @@ const RatingTable = ({ title, allRatings }) => {
             <button
               type="button"
               className="bg-blue-1 text-white px-4 py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"
-            //   onClick={() => editUserHandler(row._id)}
+              onClick={() => viewRatingHandler(row._id)}
             >
-              Edit
-            </button>
-            <button
-              type="button"
-              className="bg-blue-4 text-white px-4 py-2 rounded-lg hover:bg-blue-5 transform transition-all duration-200 ease-in-out"
-            //   onClick={() => banUserHandler(row._id)}
-            >
-              {row.user_active ? "Ban" : "Activate"}
+              View
             </button>
             <button
               type="button"
               className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-300 transform transition-all duration-200 ease-in-out"
-            //   onClick={() => deleteUserHandler(row._id)}
+              onClick={() => deleteRatingHandler(row._id)}
             >
               Delete
             </button>

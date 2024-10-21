@@ -24,6 +24,7 @@ import Thanks from "../pages/User/Thanks";
 import AdminList from "../pages/Admin/AdminList";
 import { AdminRoute, UserRoute } from "../util/ProtectedRoute";
 import Success from "../pages/User/Success";
+import { LoadingProvider } from "../context/LoadingContext";
 
 const router = createBrowserRouter([
   {
@@ -62,7 +63,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/user",
-    element: <UserRoot />,
+    element: (
+      <LoadingProvider>
+        <UserRoot />
+      </LoadingProvider>
+    ),
     children: [
       {
         index: true,
@@ -175,7 +180,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "view-rating",
+        path: "rating/:id",
         element: (
           <AdminRoute>
             <ViewRating />
