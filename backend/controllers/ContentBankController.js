@@ -30,28 +30,31 @@ const ContentBankController = {
   },
 
   // Create new content
-  async createContent(req, res) {
+  async createContent(req) {
     try {
-      const { name, user_id, file_type } = req.body;
+      const { name, user_id, file_type, file_s3_key } = req; // Use the fields from req
+  
+      const status = req.status || 'uploaded'; // Ensure there's a status or default to 'uploaded'
   
       // Validate required fields
-      if (!name || !user_id || !file_type || !req.file) {
-        return res.status(400).json({ error: 'Missing required fields or file' });
+      if (!name || !user_id || !file_type || !file_s3_key) {
+        throw new Error('Missing required fields or file');
       }
   
       const newContent = new ContentBank({
         name,
         user_id,
         file_type,
-        file_s3_key: `${req.file.s3Key}`, // S3 key for the uploaded file
+        file_s3_key,
+        status,  // Include the status
         created_at: new Date(),
         is_sample: false
       });
   
       await newContent.save();
-      res.status(201).json(newContent);
+      return newContent;
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      throw new Error(error.message);
     }
   },
 

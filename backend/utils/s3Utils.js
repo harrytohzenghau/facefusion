@@ -25,23 +25,40 @@ const uploadFileToS3 = async (filePath, bucketName, key) => {
     const command = new PutObjectCommand(uploadParams);
     const data = await s3Client.send(command);
     console.log('Upload Success', data);
-    return { Location: `https://${bucketName}.s3.amazonaws.com/${key}` };
+    return { Location: `https://${bucketName}.s3.amazonaws.com/${key}` }; // Correctly returns the file URL
   } catch (error) {
     console.error('Error uploading file:', error);
     throw error;
   }
 };
 
-// Download a file from S3 using a signed URL
-const downloadFileFromS3 = async (bucketName, key) => {
-  const downloadParams = {
-    Bucket: bucketName,
-    Key: key,
-  };
+const parseS3Url = (s3Url) => {
+  const url = new URL(s3Url);
+  const bucketName = url.hostname.split('.')[0]; // Extract the bucket name (e.g., 'prod-facefusion')
+  const objectKey = decodeURIComponent(url.pathname.slice(1)); // Extract the object key without leading slash (e.g., 'users/...')
 
+  return { bucketName, objectKey };
+};
+
+// Download a file from S3 using a signed URL
+const downloadFileFromS3 = async (s3Url) => {
   try {
+    // Parse the S3 URL
+    const { bucketName, objectKey } = parseS3Url(s3Url);
+
+    // Define the download parameters
+    const downloadParams = {
+      Bucket: bucketName, // Now correctly passes the bucket name
+      Key: objectKey,     // Now correctly passes the object key
+    };
+
+    // Create a command for getting the object
     const command = new GetObjectCommand(downloadParams);
-    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // 1-hour expiry
+
+    // Generate the signed URL with 1-hour expiry
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+
+    // Return the signed URL
     return signedUrl;
   } catch (error) {
     console.error('Error generating signed URL:', error);
@@ -81,4 +98,5 @@ module.exports = {
   downloadFileFromS3,
   deleteFileFromS3,
   getSignedUrlForS3,
+  parseS3Url,
 };

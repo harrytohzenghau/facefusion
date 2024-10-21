@@ -4,6 +4,7 @@ import Download from "../../components/Dashboard/CreateVideo/Download";
 import { useSelector } from "react-redux";
 import { generateExpression } from "../../services/AnimationService";
 import { LoadingContext } from "../../context/LoadingContext";
+import toast from 'react-hot-toast'; 
 
 const CreateVideo = () => {
   const user = useSelector((state) => state.auth.user);
@@ -11,28 +12,31 @@ const CreateVideo = () => {
   const { setIsLoading } = useContext(LoadingContext);
 
   const generateVideoHandler = async (image, expression, inputText, audio) => {
-    if (user.role === "Free") {
+    // Check for user role
+    if (user.role === "Free" || user.role === "Premium") {
       try {
-        setIsLoading(true);
+        setIsLoading(true);  // Start the loading state
+  
+        // Call the backend service to generate the video
         const response = await generateExpression(image, expression);
-        setVideo(response.data.videoUrl);
-        setIsLoading(false);
+  
+        // Check if the video URL exists in the response
+        if (response.success && response.data.videoS3Url) {
+          setVideo(response.data.videoS3Url);  // Set the video URL in state
+        } else {
+          console.error("Failed to generate video. Response:", response);
+          toast.error("Video generation failed.");
+        }
+  
       } catch (error) {
-        console.log(error);
-        setIsLoading(false);
+        console.error("Error generating video:", error);
+        toast.error("An error occurred while generating the video.");
+      } finally {
+        setIsLoading(false);  // Stop the loading state
       }
-    }
-
-    if (user.role === "Premium") {
-      try {
-        setIsLoading(true);
-        const response = await generateExpression(image, expression);
-        setVideo(response.data.videoUrl);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
+    } else {
+      console.error("Invalid user role:", user.role);
+      toast.error("Unauthorized user role.");
     }
   };
 

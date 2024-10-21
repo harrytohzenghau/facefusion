@@ -8,6 +8,7 @@ const contentBankSchema = new Schema({
     is_sample: { type: Boolean, default: false },
     file_s3_key: { type: String, required: true },
     created_at: { type: Date, default: Date.now },
+    status: { type: String, enum: ['pending', 'uploaded', 'processing', 'completed'], default: 'pending' }, // Add this field to track the status
   });
   
   module.exports = mongoose.model('ContentBank', contentBankSchema);

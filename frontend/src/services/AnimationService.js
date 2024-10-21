@@ -4,6 +4,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 export const generateExpression = async (image, expression) => {
   const token = store.getState().auth.token;
+  const userId = store.getState().auth.user.id; // Get user ID from Redux store
   const formData = new FormData();
 
   try {
@@ -11,12 +12,14 @@ export const generateExpression = async (image, expression) => {
       console.error("Image or expression is missing.");
       return { success: false, message: "Invalid input." };
     }
-
-    formData.append("face", image); // Ensure image is a valid File object
+    // Append the image file, expression, and user ID to form data
+    formData.append("image", image); // Ensure image is a valid File object
     formData.append("expression", expression); // Append the expression string
+    formData.append("user_id", userId); // Append the user ID
 
+    // Call the new API that uploads the image and generates animation
     const response = await axios.post(
-      `${apiUrl}/api/animation/expression`,
+      `${apiUrl}/api/animation/upload-image-expression`,
       formData,
       {
         headers: {
@@ -25,7 +28,7 @@ export const generateExpression = async (image, expression) => {
       }
     );
 
-    console.log(response.data)
+    console.log(response.data);
 
     return { success: true, data: response.data };
   } catch (error) {

@@ -8,6 +8,10 @@ const StripeController = require("./controllers/StripeController");
 
 const app = express();
 
+// Middleware to parse JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(
   cors({
     origin: process.env.FRONTEND_URL, // Allow requests only from this origin
@@ -26,8 +30,6 @@ app.post(
 // Connect to MongoDB
 connectDB();
 
-// Middleware to parse JSON
-app.use(express.json());
 
 // Seeds(This one to add all the roles on startup)
 const seedRoles = async () => {
@@ -67,5 +69,5 @@ app.use("/api/contentBank", require("./routes/contentBank"));
 app.use("/api/stripe", require("./routes/stripeRoutes")); // For stripe
 
 // Start the server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
