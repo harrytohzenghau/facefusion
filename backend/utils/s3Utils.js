@@ -93,10 +93,23 @@ const getSignedUrlForS3 = async (bucketName, key) => {
   return signedUrl;
 };
 
+const getSignedUrlForFullS3Url = async (s3Url) => {
+  const { bucketName, objectKey } = parseS3Url(s3Url); // Parsing the full S3 URL
+
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: objectKey,
+  });
+
+  const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // 1-hour expiration
+  return signedUrl;
+};
+
 module.exports = {
   uploadFileToS3,
   downloadFileFromS3,
   deleteFileFromS3,
   getSignedUrlForS3,
   parseS3Url,
+  getSignedUrlForFullS3Url,
 };

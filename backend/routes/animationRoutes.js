@@ -12,6 +12,8 @@ const FormData = require('form-data');
 const fs = require('fs');
 const axios = require('axios');
 
+
+
 // Setup multer for file uploads
 // router.use(authenticateUser);
 
@@ -26,10 +28,22 @@ router.get('/allVideos', AnimationController.getAllVideos);
 router.post('/expression', upload.single('face'), AnimationController.generateExpression);
 
 // Route to generate lip sync animation
-router.post('/lipSync', upload.fields([{ name: 'face' }, { name: 'audio' }]), AnimationController.generateLipSync);
+router.post(
+  '/lipSync',
+  authenticateToken, // Ensure the user is authenticated
+  upload.fields([
+    { name: 'face', maxCount: 1 },    // Expecting one face video file
+    { name: 'audio', maxCount: 1 }    // Expecting one audio file
+  ]),
+  AnimationController.generateLipSync
+);
 
 // Route for text-to-speech
-router.post('/textToSpeech', AnimationController.textToSpeech);
+router.post(
+  '/textToSpeech',
+  authenticateToken,  // This middleware should decode the token and set req.user
+  AnimationController.textToSpeech
+);
 
 // An's
 router.post('/upscaleVideo', upload.single('file'), AnimationController.upscaleVideo);

@@ -50,6 +50,52 @@ export const generateExpression = async (image, expression) => {
   }
 };
 
+export const generateTextToSpeech = async (message, gender) => {
+  const token = store.getState().auth.token;
+  const userId = store.getState().auth.user.id; // Get user ID from Redux store
+
+  try {
+    if (!message || !gender) {
+      console.error("Message or gender is missing.");
+      return { success: false, message: "Invalid input." };
+    }
+
+    // Call the backend API to generate the text-to-speech audio
+    const response = await axios.post(
+      `${apiUrl}/api/animation/textToSpeech`,
+      { message, gender },  // Send the message and gender to the backend
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Add token to headers
+        },
+      }
+    );
+
+    // Check for success in the response
+    if (response.data.s3Url) {
+      return { success: true, audioUrl: response.data.s3Url };
+    } else {
+      throw new Error('Text-to-speech generation failed.');
+    }
+  } catch (error) {
+    if (error.response) {
+      console.log(error);
+      return {
+        success: false,
+        message: error.response.data.error || "An error occurred on the server.",
+      };
+    } else if (error.request) {
+      return {
+        success: false,
+        message: "No response from the server. Please try again later.",
+      };
+    } else {
+      return { success: false, message: "An unexpected error occurred." };
+    }
+  }
+};
+
+
 export const generateLipSync = async (face, audio) => {
   const token = store.getState().auth.token;
   const formData = new FormData();

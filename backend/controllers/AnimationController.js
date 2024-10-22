@@ -2,7 +2,7 @@ const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 const FormData = require("form-data");
-const { uploadFileToS3, downloadFileFromS3  } = require('../utils/s3Utils');
+const { parseS3Url, getSignedUrlForFullS3Url, uploadFileToS3, downloadFileFromS3  } = require('../utils/s3Utils');
 const AnimationJob = require("../models/AnimationJob");
 
 async function downloadS3File(s3Url, localFilePath) {
@@ -14,7 +14,18 @@ async function downloadS3File(s3Url, localFilePath) {
     writer.on("finish", resolve);
     writer.on("error", reject);
   });
-}
+};
+
+const downloadToFile = async (signedUrl, localFilePath) => {
+  const writer = fs.createWriteStream(localFilePath);
+  const response = await axios.get(signedUrl, { responseType: 'stream' });
+  response.data.pipe(writer);
+
+  return new Promise((resolve, reject) => {
+    writer.on('finish', resolve);
+    writer.on('error', reject);
+  });
+};
 
 const AnimationController = {
   // Generate animation from portrait and text (Existing Functionality)
@@ -200,51 +211,67 @@ const AnimationController = {
   // New: Generate Lip Sync Animation and save to S3
   async generateLipSync(req, res) {
     try {
-      if (!req.files || !req.files.face || !req.files.audio) {
-        return res.status(400).json({ message: "Face video and audio file are required" });
+      const { face, audio } = req.body; // S3 URLs for face video and audio
+  
+      if (!face || !audio) {
+        return res.status(400).json({ message: "Face video and audio file URLs are required" });
       }
-
+  
+      // Download the face and audio files from S3 to temporary local storage
+      const faceSignedUrl = await downloadFileFromS3(face);
+      const audioSignedUrl = await downloadFileFromS3(audio);
+  
+      // Download the actual files
+      const faceFilePath = path.join(__dirname, '../uploads/', `face-${Date.now()}.mp4`);
+      const audioFilePath = path.join(__dirname, '../uploads/', `audio-${Date.now()}.mp3`);
+  
+      await downloadToFile(faceSignedUrl, faceFilePath);
+      await downloadToFile(audioSignedUrl, audioFilePath);
+  
+      // Prepare formData for the external API
       const formData = new FormData();
-      formData.append("face", fs.createReadStream(req.files.face[0].path));
-      formData.append("audio", fs.createReadStream(req.files.audio[0].path));
-
+      formData.append("face", fs.createReadStream(faceFilePath));  // Attach the downloaded file
+      formData.append("audio", fs.createReadStream(audioFilePath));  // Attach the downloaded file
+  
+      // Step 3: Call the lip-sync API
       const response = await axios.post(
         "http://20.205.137.58:8000/generate/",
         formData,
-        {
-          headers: formData.getHeaders(),
-          responseType: "stream",
-        }
+        { headers: formData.getHeaders(), responseType: "stream" }
       );
-
-      const localFilePath = path.join(__dirname, '../uploads/', `video-${Date.now()}.mp4`);
-      const writer = fs.createWriteStream(localFilePath);
-
+  
+      const lipSyncVideoPath = path.join(__dirname, '../uploads/', `lip-sync-${Date.now()}.mp4`);
+      const writer = fs.createWriteStream(lipSyncVideoPath);
+  
+      // Pipe the response stream to the local file
       response.data.pipe(writer);
-
+  
       writer.on("finish", async () => {
-        // Upload to S3
-        const s3Key = `users/${req.user._id}/videos/${path.basename(localFilePath)}`;
-        await uploadFileToS3(localFilePath, process.env.AWS_S3_BUCKET_NAME, s3Key);
-
-        // Delete the local file after uploading to S3
-        fs.unlinkSync(localFilePath);
-
+        // Upload lip-sync video to S3
+        const s3Key = `users/${req.user._id}/videos/${path.basename(lipSyncVideoPath)}`;
+        await uploadFileToS3(lipSyncVideoPath, process.env.AWS_S3_BUCKET_NAME, s3Key);
+  
+        // Delete the local files
+        fs.unlinkSync(lipSyncVideoPath);
+        fs.unlinkSync(faceFilePath);  // Clean up the face file
+        fs.unlinkSync(audioFilePath);  // Clean up the audio file
+  
         res.status(200).json({
-          message: "Video with lip sync generated and uploaded to S3 successfully",
-          s3Url: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`,
+          message: "Lip-sync video generated and uploaded to S3 successfully",
+          lipSyncVideoUrl: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`,
         });
       });
-
+  
       writer.on("error", (error) => {
-        console.error("Error saving video file:", error);
-        res.status(500).json({ error: "Failed to save video file" });
+        console.error("Error saving lip-sync video file:", error);
+        res.status(500).json({ error: "Failed to save lip-sync video file" });
       });
     } catch (error) {
-      console.error("Error generating lip sync animation:", error);
-      res.status(500).json({ error: "Failed to generate lip sync animation" });
+      console.error("Error generating lip-sync animation:", error);
+      res.status(500).json({ error: "Failed to generate lip-sync animation" });
     }
   },
+  
 
   // New: Text to Speech and save to S3
   async textToSpeech(req, res) {
@@ -263,20 +290,23 @@ const AnimationController = {
         formData,
         {
           headers: formData.getHeaders(),
+          responseType: 'arraybuffer'
         }
       );
 
       const audioFileName = `audio-${Date.now()}.mp3`;
       const localFilePath = path.join(__dirname, '../uploads/', audioFileName);
-      fs.writeFileSync(localFilePath, response.data);
+      fs.writeFileSync(localFilePath, Buffer.from(response.data));
 
-      // Upload to S3
+      // Upload the generated audio to S3
+      console.log(req)
       const s3Key = `users/${req.user._id}/audio/${audioFileName}`;
       await uploadFileToS3(localFilePath, process.env.AWS_S3_BUCKET_NAME, s3Key);
-
-      // Delete local file after upload
+  
+      // Delete the local file after upload
       fs.unlinkSync(localFilePath);
-
+  
+      // Send response back to the client with the S3 URL
       res.status(200).json({
         message: "Text to speech generated and uploaded to S3 successfully",
         s3Url: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`,

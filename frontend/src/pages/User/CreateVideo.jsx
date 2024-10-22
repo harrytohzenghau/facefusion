@@ -2,9 +2,10 @@ import { useContext, useState } from "react";
 import Upload from "../../components/Dashboard/CreateVideo/Upload";
 import Download from "../../components/Dashboard/CreateVideo/Download";
 import { useSelector } from "react-redux";
-import { generateExpression } from "../../services/AnimationService";
+import { generateTextToSpeech, generateExpression, generateLipSync  } from "../../services/AnimationService";
 import { LoadingContext } from "../../context/LoadingContext";
 import toast from 'react-hot-toast'; 
+import axios from "axios";
 
 const CreateVideo = () => {
   const user = useSelector((state) => state.auth.user);
@@ -16,17 +17,40 @@ const CreateVideo = () => {
     if (user.role === "Free" || user.role === "Premium") {
       try {
         setIsLoading(true);  // Start the loading state
+
+        // generate audio first
+        let generatedAudioUrl = audio;  // If no input audio is provided, we'll use the generated one
+      if (!audio && inputText) {
+        const ttsResponse = await generateTextToSpeech(inputText, 'female');  // Call the new service
+
+        if (ttsResponse.success) {
+          generatedAudioUrl = ttsResponse.audioUrl;  // Get the audio file URL from the service response
+        } else {
+          throw new Error('Text-to-speech generation failed.');
+        }
+      }
   
         // Call the backend service to generate the video
-        const response = await generateExpression(image, expression);
+        const expressionResponse  = await generateExpression(image, expression);
   
         // Check if the video URL exists in the response
-        if (response.success && response.data.videoS3Url) {
-          setVideo(response.data.videoS3Url);  // Set the video URL in state
-        } else {
-          console.error("Failed to generate video. Response:", response);
-          toast.error("Video generation failed.");
+        if (!expressionResponse.success || !expressionResponse.data.videoS3Url) {
+          throw new Error('Failed to generate the expression video.');
         }
+        const expressionVideoUrl = expressionResponse.data.videoS3Url;
+
+        const lipSyncResponse = await generateLipSync(expressionVideoUrl, generatedAudioUrl);  // Use the service instead
+
+        // Check if the lip-sync video URL exists in the response
+        if (lipSyncResponse.success && lipSyncResponse.data.lipSyncVideoUrl) {
+          setVideo(lipSyncResponse.data.lipSyncVideoUrl);  // Set the lip-sync video URL in state
+          toast.success("Video generated successfully!");
+        } else {
+          throw new Error('Failed to generate the lip-sync video.');
+        }
+
+        toast.success("Video generated successfully!");
+
   
       } catch (error) {
         console.error("Error generating video:", error);
