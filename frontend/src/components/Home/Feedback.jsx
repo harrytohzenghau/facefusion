@@ -3,7 +3,7 @@ import review_1 from "../../assets/review-1.jpg";
 import review_2 from "../../assets/review-2.jpg";
 import review_3 from "../../assets/review-3.jpg";
 
-const Feedback = () => {
+const Feedback = ({ publishedRatings }) => {
   return (
     <div className="overflow-hidden relative w-full bg-gradient-to-r from-blue-9 to-white">
       <Card additionalClassName="flex flex-col gap-y-6">
@@ -11,7 +11,31 @@ const Feedback = () => {
           Client's Feedback
         </h5>
         <div className="flex gap-x-6 justify-between">
-          <Card additionalClassName="flex flex-col justify-between bg-white rounded-md p-6 drop-shadow-lg">
+          {publishedRatings && publishedRatings.map((rating) => (
+            <Card
+              key={rating.id}
+              additionalClassName="flex flex-col justify-between bg-white rounded-md p-6 drop-shadow-lg"
+            >
+              <div className="flex flex-col justify-between h-full gap-y-6">
+                <p>"{rating.feedback}"</p>
+                <div className="flex flex-col gap-y-6">
+                  <hr />
+                  <div className="flex gap-x-4 items-center">
+                    <img
+                      src={review_1}
+                      alt="Review 1"
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <p className="font-bold">
+                      {rating.name} <br /> {rating.occupation} <br />{" "}
+                      {rating.company_name}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
+          {/* <Card additionalClassName="flex flex-col justify-between bg-white rounded-md p-6 drop-shadow-lg">
             <div className="flex flex-col justify-between h-full gap-y-6">
               <p>
                 "FaceFusion has completely transformed the way I create content.
@@ -82,7 +106,7 @@ const Feedback = () => {
                 </div>
               </div>
             </div>
-          </Card>
+          </Card> */}
         </div>
       </Card>
     </div>

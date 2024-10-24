@@ -21,7 +21,7 @@ export const getOwnProfile = async (userId) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -55,7 +55,7 @@ export const editOwnProfile = async (userId, userData) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -85,7 +85,7 @@ export const postRating = async (ratingData) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -129,7 +129,7 @@ export const subscribePlan = async (stripe_customer_id) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -159,7 +159,7 @@ export const getPlanUsageDetails = async (userId) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -176,8 +176,8 @@ export const cancelSubscription = async (subscriptionId) => {
   const token = store.getState().auth.token;
 
   const body = {
-    subscriptionId
-  }
+    subscriptionId,
+  };
 
   try {
     const response = await axios.post(
@@ -196,7 +196,37 @@ export const cancelSubscription = async (subscriptionId) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
+      };
+    } else if (error.request) {
+      return {
+        success: false,
+        message: "No response from the server. Please try again later.",
+      };
+    } else {
+      return { success: false, message: "An unexpected error occurred." };
+    }
+  }
+};
+
+export const getPublishedRating = async () => {
+  const token = store.getState().auth.token;
+
+  try {
+    const response = await axios.get(`${apiUrl}/api/ratings/published`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    if (error.response) {
+      return {
+        success: false,
+        message:
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {

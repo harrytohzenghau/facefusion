@@ -1,6 +1,10 @@
-/* eslint-disable react/prop-types */
 import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Modal from "react-modal"; // Import react-modal
+
+// Set the app element for accessibility (typically the root div)
+Modal.setAppElement("#root");
 
 const AccountTable = ({
   allUsers,
@@ -10,6 +14,9 @@ const AccountTable = ({
   isAdmin = false,
 }) => {
   const navigate = useNavigate();
+
+  const [modalOpen, setModalOpen] = useState(false); // State for modal visibility
+  const [userToDelete, setUserToDelete] = useState(null); // Store user to delete
 
   const customStyles = {
     table: {
@@ -64,27 +71,10 @@ const AccountTable = ({
     {
       name: "Status",
       selector: (row) => {
-        if (!row.is_locked) {
-          return "Active";
-        } else {
-          return "Inactive";
-        }
+        return row.is_locked ? "Inactive" : "Active";
       },
       sortable: true,
     },
-    // {
-    //   name: "Created At",
-    //   selector: (row) => {
-    //     const date = new Date(row.user_created);
-
-    //     const day = date.getDate();
-    //     const month = date.getMonth() + 1;
-    //     const year = date.getFullYear();
-
-    //     return `${day}/${month}/${year}`;
-    //   },
-    //   sortable: true,
-    // },
     {
       name: "Action",
       selector: (row) => {
@@ -107,7 +97,10 @@ const AccountTable = ({
             <button
               type="button"
               className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-300 transform transition-all duration-200 ease-in-out"
-              onClick={() => deleteUserHandler(row._id)}
+              onClick={() => {
+                setUserToDelete(row._id); // Set user to delete
+                setModalOpen(true); // Open modal
+              }}
             >
               Delete
             </button>
@@ -127,11 +120,26 @@ const AccountTable = ({
             return "Free";
           case 3:
             return "Premium";
+          default:
+            return "Unknown";
         }
       },
       sortable: true,
     });
   }
+
+  const handleDeleteUser = () => {
+    if (userToDelete) {
+      deleteUserHandler(userToDelete); // Call delete function
+      setUserToDelete(null); // Reset user to delete
+      setModalOpen(false); // Close modal
+    }
+  };
+
+  const closeModal = () => {
+    setModalOpen(false); // Close modal without action
+    setUserToDelete(null); // Reset user to delete
+  };
 
   return (
     <>
@@ -151,7 +159,46 @@ const AccountTable = ({
         data={allUsers}
         customStyles={customStyles}
         pagination
-      ></DataTable>
+      />
+
+      <Modal
+        isOpen={modalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Delete User Confirmation"
+        style={{
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '400px',
+            padding: '20px',
+            borderRadius: '10px',
+          },
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          },
+        }}
+      >
+        <h2 className="font-bold text-xl">Delete User</h2>
+        <p className="mt-4">Are you sure you want to delete this user?</p>
+        <div className="flex justify-end gap-4 mt-4">
+          <button
+            onClick={closeModal}
+            className="bg-gray-300 px-4 py-2 rounded-md"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleDeleteUser}
+            className="bg-red-500 text-white px-4 py-2 rounded-md"
+          >
+            Delete
+          </button>
+        </div>
+      </Modal>
     </>
   );
 };

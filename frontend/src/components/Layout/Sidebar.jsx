@@ -23,18 +23,6 @@ const Sidebar = () => {
         </li>
         <li>
           <NavLink
-            to="/user/create"
-            className={({ isActive }) => {
-              return isActive
-                ? "text-blue-5"
-                : "hover:text-blue-5 transform transition-all duration-200 ease-in-out";
-            }}
-          >
-            Create Video
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
             to="/user/library"
             className={({ isActive }) => {
               return isActive
@@ -43,6 +31,18 @@ const Sidebar = () => {
             }}
           >
             Library
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/user/create"
+            className={({ isActive }) => {
+              return isActive
+                ? "text-blue-5"
+                : "hover:text-blue-5 transform transition-all duration-200 ease-in-out";
+            }}
+          >
+            Create Video
           </NavLink>
         </li>
       </ul>

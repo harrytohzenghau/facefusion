@@ -19,7 +19,7 @@ export const getAllUsers = async () => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -49,7 +49,7 @@ export const getOneUser = async (userId) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -79,7 +79,7 @@ export const createUser = async (userData) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -113,7 +113,7 @@ export const editUser = async (userId, userData) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -143,7 +143,7 @@ export const deleteUser = async (userId) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -173,7 +173,7 @@ export const getAllRatings = async () => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -203,7 +203,38 @@ export const getOneRating = async (ratingId) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
+      };
+    } else if (error.request) {
+      return {
+        success: false,
+        message: "No response from the server. Please try again later.",
+      };
+    } else {
+      return { success: false, message: "An unexpected error occurred." };
+    }
+  }
+};
+
+export const updateRatingStatus = async (ratingId) => {
+  const token = store.getState().auth.token;
+
+  try {
+    const response = await axios.put(`${apiUrl}/api/ratings/update/${ratingId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log(error)
+    if (error.response) {
+      return {
+        success: false,
+        message:
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -233,7 +264,7 @@ export const deleteRating = async (ratingId) => {
       return {
         success: false,
         message:
-          error.response.data.error || "An error occurred on the server.",
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {

@@ -5,6 +5,12 @@ const RatingsController = require('../controllers/RatingsController');
 // Get all ratings
 router.get('/', RatingsController.getAllRatings);
 
+router.get("/published", RatingsController.getPublishedRating);
+
+router.get("/:ratingId", RatingsController.getRatingByRatingId);
+
+router.put("/update/:ratingId", RatingsController.updateRatingStatus);
+
 // Get ratings by user ID
 router.get('/user/:userId', RatingsController.getRatingsByUserId);
 

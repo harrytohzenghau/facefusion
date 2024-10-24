@@ -1,11 +1,10 @@
 import { useContext, useState } from "react";
-import Upload from "../../components/Dashboard/CreateVideo/Upload";
+import Generate from "../../components/Dashboard/CreateVideo/Generate";
 import Download from "../../components/Dashboard/CreateVideo/Download";
 import { useSelector } from "react-redux";
 import { generateTextToSpeech, generateExpression, generateLipSync  } from "../../services/AnimationService";
 import { LoadingContext } from "../../context/LoadingContext";
 import toast from 'react-hot-toast'; 
-import axios from "axios";
 
 const CreateVideo = () => {
   const user = useSelector((state) => state.auth.user);
@@ -67,7 +66,7 @@ const CreateVideo = () => {
   return (
     <div className="mt-3 flex flex-col gap-y-10">
       <h1 className="font-bold text-xl">Create Video</h1>
-      <Upload generateVideoHandler={(user.role, generateVideoHandler)} />
+      <Generate generateVideoHandler={(user.role, generateVideoHandler)} />
       {video && <Download video={video} />}
     </div>
   );

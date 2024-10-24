@@ -17,10 +17,8 @@ const RatingList = () => {
         const response = await getAllRatings();
 
         if (!response.success) {
-          return toast.error("Something went wrong when fetching user data.");
+          return toast.error("Something went wrong when fetching ratings data.");
         }
-
-        console.log(response.data);
 
         let ratingList = [];
         let publishedRatingList = [];
@@ -72,6 +70,8 @@ const RatingList = () => {
         <RatingTable
           title="Published Rating"
           allRatings={allPublishedRatings}
+          viewRatingHandler={viewRatingHandler}
+          deleteRatingHandler={deleteRatingHandler}
         />
       </Card>
       <Card additionalClassName="my-10 flex flex-col gap-y-4 justify-between bg-white rounded-md p-6 drop-shadow-lg">

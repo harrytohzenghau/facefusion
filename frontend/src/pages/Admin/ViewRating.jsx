@@ -10,7 +10,7 @@ const ViewRating = () => {
   const [rating, setRating] = useState();
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchRating = async () => {
       try {
         const response = await getOneRating(id);
 
@@ -23,7 +23,7 @@ const ViewRating = () => {
         console.log("Error fetching data:", error);
       }
     };
-    fetchUser();
+    fetchRating();
   }, [id]);
   return (
     <Card additionalClassName="flex flex-col my-10 gap-y-6 px-6 py-6">

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const Upload = ({ role, generateVideoHandler }) => {
+const Generate = ({ role, generateVideoHandler }) => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [audio, setAudio] = useState(null);
@@ -151,4 +151,4 @@ const Upload = ({ role, generateVideoHandler }) => {
   );
 };
 
-export default Upload;
+export default Generate;
