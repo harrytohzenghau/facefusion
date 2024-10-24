@@ -32,28 +32,36 @@ const ContentBankController = {
   // Create new content
   async createContent(req) {
     try {
-      const { name, user_id, file_type, file_s3_key } = req; // Use the fields from req
+      const { name, user_id, file_type, file_path } = req; // Use file_path for local file
+      const status = req.status || 'uploaded'; // Default to 'uploaded' if not provided
   
-      const status = req.status || 'uploaded'; // Ensure there's a status or default to 'uploaded'
-  
-      // Validate required fields
-      if (!name || !user_id || !file_type || !file_s3_key) {
+      // validate required fields
+      if (!name || !user_id || !file_type || !file_path) {
         throw new Error('Missing required fields or file');
       }
   
+      const s3Key = `users/${user_id}/${Date.now()}-${path.basename(file_path)}`;
+  
+      // upload file to S3
+      const s3Response = await uploadFileToS3(file_path, process.env.AWS_S3_BUCKET_NAME, s3Key);
+      
+      // create  content metadata
       const newContent = new ContentBank({
         name,
         user_id,
         file_type,
-        file_s3_key,
-        status,  // Include the status
+        file_s3_key: s3Key, // store the S3 key in the db
+        status,
         created_at: new Date(),
         is_sample: false
       });
   
+      // save content to the db
       await newContent.save();
+  
       return newContent;
     } catch (error) {
+      console.error('Error creating content:', error);
       throw new Error(error.message);
     }
   },
