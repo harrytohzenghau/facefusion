@@ -28,6 +28,34 @@ const ContentBankController = {
     }
   
   },
+  // Get content by user
+  async getContentByUserId(req, res) {
+    try {
+      const { user_id } = req.params;
+      
+      // get everything with this user_id
+      const contentItems = await ContentBank.find({ user_id });
+  
+      if (contentItems.length === 0) {
+        return res.status(404).json({ message: 'No content found for this user' });
+      }
+  
+      const contentWithSignedUrls = await Promise.all(
+        contentItems.map(async (item) => {
+          const signedUrl = await getSignedUrlForS3(process.env.AWS_S3_BUCKET_NAME, item.file_s3_key);
+          return {
+            content: item,
+            fileUrl: signedUrl,
+          };
+        })
+      );
+  
+      res.json(contentWithSignedUrls);
+    } catch (error) {
+      console.error("Error fetching content by user_id:", error);
+      res.status(500).json({ error: error.message });
+    }
+  },
 
   // Create new content
   async createContent(req, res) {
