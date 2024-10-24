@@ -32,7 +32,7 @@ const uploadToS3Middleware = async (req, res, next) => {
   if (!req.file) return next(); // If no file is found, skip
 
   try {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const s3Key = `users/${userId}/${req.file.filename}`;
 
     // Simulate file upload to S3

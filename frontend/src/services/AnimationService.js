@@ -63,10 +63,10 @@ export const generateTextToSpeech = async (message, gender) => {
     // Call the backend API to generate the text-to-speech audio
     const response = await axios.post(
       `${apiUrl}/api/animation/textToSpeech`,
-      { message, gender },  // Send the message and gender to the backend
+      { message, gender }, // Send the message and gender to the backend
       {
         headers: {
-          Authorization: `Bearer ${token}`,  // Add token to headers
+          Authorization: `Bearer ${token}`, // Add token to headers
         },
       }
     );
@@ -75,14 +75,15 @@ export const generateTextToSpeech = async (message, gender) => {
     if (response.data.s3Url) {
       return { success: true, audioUrl: response.data.s3Url };
     } else {
-      throw new Error('Text-to-speech generation failed.');
+      throw new Error("Text-to-speech generation failed.");
     }
   } catch (error) {
     if (error.response) {
       console.log(error);
       return {
         success: false,
-        message: error.response.data.message || "An error occurred on the server.",
+        message:
+          error.response.data.message || "An error occurred on the server.",
       };
     } else if (error.request) {
       return {
@@ -94,7 +95,6 @@ export const generateTextToSpeech = async (message, gender) => {
     }
   }
 };
-
 
 export const generateLipSync = async (face, audio) => {
   const token = store.getState().auth.token;
@@ -139,16 +139,53 @@ export const generateLipSync = async (face, audio) => {
   }
 };
 
-
-export const uploadImage = async (name, user_id, file_type, file_s3_key) => {
+export const uploadImage = async (name, file_type, file) => {
   const token = store.getState().auth.token;
+  const user_id = store.getState().auth.user.id;
 
-  const body = {
-    name, user_id, file_type, file_s3_key 
-  }
+  const formData = new FormData();
+
+  formData.append("name", name);
+  formData.append("user_id", user_id);
+  formData.append("file_type", file_type);
+  formData.append("file", file);
 
   try {
-    const response = await axios.post(`${apiUrl}/api/contentBank/createContent`, ratingData, {
+    const response = await axios.post(
+      `${apiUrl}/api/contentBank/createContent`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    if (error.response) {
+      return {
+        success: false,
+        message:
+          error.response.data.message || "An error occurred on the server.",
+      };
+    } else if (error.request) {
+      return {
+        success: false,
+        message: "No response from the server. Please try again later.",
+      };
+    } else {
+      return { success: false, message: "An unexpected error occurred." };
+    }
+  }
+};
+
+export const getImages = async () => {
+  const token = store.getState().auth.token;
+  const user_id = store.getState().auth.user.id;
+
+  try {
+    const response = await axios.get(`${apiUrl}/api/contentBank/${user_id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

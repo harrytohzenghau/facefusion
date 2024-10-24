@@ -1,14 +1,35 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { uploadImage } from "../../../services/AnimationService";
 
 const Upload = () => {
   const [images, setImages] = useState([]); // Array to hold multiple images
   const [imagePreviews, setImagePreviews] = useState([]); // Array for previews
 
-  const uploadImageHandler = (e) => {
+  const uploadImageHandler = async (e) => {
     e.preventDefault();
 
+    for (let i = 0; i < images.length; i++) {
+      try {
+        const response = await uploadImage(
+          images[i].name,
+          "Portraits",
+          images[i]
+        );
+
+        if (!response.success) {
+          return toast.error(response.message);
+        }
+
+      } catch (error) {
+        toast.error("Something went wrong when uploading an image!");
+      }
+    }
+
+    setImages([]);
+    setImagePreviews([]);
     toast.success("Image uploaded successfully!");
+
   };
 
   // Handle Multiple Image Upload

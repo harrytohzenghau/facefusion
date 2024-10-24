@@ -1,8 +1,12 @@
 const express = require('express');
 const { upload, uploadToS3Middleware } = require('../middleware/uploadMiddleware');
 const ContentBankController = require('../controllers/ContentBankController');
+const { authenticateUser, authenticateToken } = require('../middleware/authMiddleware');
 
 const router = express.Router();
+
+router.use(authenticateToken);  // Token validation for all routes in this file
+router.use(authenticateUser);     // Only admins can access these routes
 
 // Route to get all content
 router.get('/', ContentBankController.getAllContent);
