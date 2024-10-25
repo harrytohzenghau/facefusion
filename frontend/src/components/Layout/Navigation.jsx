@@ -46,7 +46,7 @@ const Navigation = () => {
               Pricing
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink
               to="/contact"
               className={({ isActive }) => {
@@ -57,7 +57,7 @@ const Navigation = () => {
             >
               Contact Us
             </NavLink>
-          </li>
+          </li> */}
         </ul>
         <ul className="flex flex-end gap-x-8">
           <li>

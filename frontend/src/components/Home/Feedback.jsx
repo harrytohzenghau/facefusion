@@ -1,7 +1,5 @@
 import Card from "../UI/Card";
-import review_1 from "../../assets/review-1.jpg";
-import review_2 from "../../assets/review-2.jpg";
-import review_3 from "../../assets/review-3.jpg";
+import { FaPerson } from "react-icons/fa6";
 
 const Feedback = ({ publishedRatings }) => {
   return (
@@ -11,30 +9,35 @@ const Feedback = ({ publishedRatings }) => {
           Client's Feedback
         </h5>
         <div className="flex gap-x-6 justify-between">
-          {publishedRatings && publishedRatings.map((rating) => (
-            <Card
-              key={rating.id}
-              additionalClassName="flex flex-col justify-between bg-white rounded-md p-6 drop-shadow-lg"
-            >
-              <div className="flex flex-col justify-between h-full gap-y-6">
-                <p>"{rating.feedback}"</p>
-                <div className="flex flex-col gap-y-6">
-                  <hr />
-                  <div className="flex gap-x-4 items-center">
-                    <img
+          {publishedRatings &&
+            publishedRatings.map((rating) => (
+              <Card
+                key={rating.id}
+                additionalClassName="flex flex-col justify-between bg-white rounded-md p-6 drop-shadow-lg"
+              >
+                <div className="flex flex-col justify-between h-full gap-y-6">
+                  <p>"{rating.feedback}"</p>
+                  <div className="flex flex-col gap-y-6">
+                    <hr />
+                    <div className="flex gap-x-4 items-center justify-between">
+                      {/* <img
                       src={review_1}
                       alt="Review 1"
                       className="w-12 h-12 rounded-full object-cover"
-                    />
-                    <p className="font-bold">
-                      {rating.name} <br /> {rating.occupation} <br />{" "}
-                      {rating.company_name}
-                    </p>
+                    /> */}
+                      <div className="bg-blue-2 rounded-full p-2 inline-flex items-center justify-center text-white">
+                        <FaPerson size={36} />
+                      </div>
+
+                      <p className="font-bold text-right">
+                        {rating.name} <br /> {rating.occupation} <br />{" "}
+                        {rating.company_name}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            ))}
           {/* <Card additionalClassName="flex flex-col justify-between bg-white rounded-md p-6 drop-shadow-lg">
             <div className="flex flex-col justify-between h-full gap-y-6">
               <p>
