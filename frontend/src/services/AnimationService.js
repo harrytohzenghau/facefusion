@@ -97,7 +97,7 @@ export const generateTextToSpeech = async (message, gender) => {
   }
 };
 
-export const generateLipSync = async (face, audio) => {
+export const generateLipSync = async (face, audio, type) => {
   const token = store.getState().auth.token;
   const formData = new FormData();
 
@@ -106,9 +106,17 @@ export const generateLipSync = async (face, audio) => {
       console.error("Face video or audio is missing.");
       return { success: false, message: "Invalid input." };
     }
-
+    
     formData.append("face", face); // ensure face is a valid File object
-    formData.append("audio", audio); // append the audio file
+    if (type === "file") {
+      const response = await fetch(audio);
+      const audioBlob = await response.blob();
+      const audioFile = new File([audioBlob], "audio.mp3", { type: "audio/mpeg" });
+      formData.append("audio", audioFile); // Append the actual audio file
+    } else {
+      formData.append("audio", audio); // If `type` is "url", add the URL directly
+    }
+    formData.append("type", type); 
 
     const response = await axios.post(
       `${apiUrl}/api/animation/lipSync`,

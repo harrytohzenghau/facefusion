@@ -29,11 +29,13 @@ const CreateVideo = () => {
 
         // generate audio first
         let generatedAudioUrl = audio; // If no input audio is provided, we'll use the generated one
+        let audioType = "file"; // Use this to update type of audio in LipSync
         if (!audio && inputText) {
           const ttsResponse = await generateTextToSpeech(inputText, voiceType); // Call the new service
 
           if (ttsResponse.success) {
             generatedAudioUrl = ttsResponse.audioUrl; // Get the audio file URL from the service response
+            audioType = "url";
           } else {
             throw new Error("Text-to-speech generation failed.");
           }
@@ -57,7 +59,8 @@ const CreateVideo = () => {
 
         const lipSyncResponse = await generateLipSync(
           expressionVideoUrl,
-          generatedAudioUrl
+          generatedAudioUrl,
+          audioType
         ); // Use the service instead
 
         // Check if the lip-sync video URL exists in the response

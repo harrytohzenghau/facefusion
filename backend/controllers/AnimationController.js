@@ -200,27 +200,40 @@ const AnimationController = {
   // New: Generate Lip Sync Animation and save to S3
   async generateLipSync(req, res) {
     try {
-      const { face, audio } = req.body; // S3 URLs for face video and audio
-  
-      if (!face || !audio) {
-        return res.status(400).json({ message: "Face video and audio file URLs are required" });
-      }
-  
-      // Download the face and audio files from S3 to temporary local storage
-      const faceSignedUrl = await downloadFileFromS3(face);
-      const audioSignedUrl = await downloadFileFromS3(audio);
-  
-      // Download the actual files
-      const faceFilePath = path.join(__dirname, '../uploads/', `face-${Date.now()}.mp4`);
-      const audioFilePath = path.join(__dirname, '../uploads/', `audio-${Date.now()}.mp3`);
-  
-      await downloadToFile(faceSignedUrl, faceFilePath);
+      const { face, type } = req.body;
+
+    // Validate inputs
+    if (!face || (type === "file" && !req.file) || (type === "url" && !req.body.audio)) {
+      return res.status(400).json({ message: "Invalid input: face URL and audio file or S3 key required." });
+    }
+
+    // Temporary storage path for face video
+    const faceFilePath = path.join(__dirname, '../uploads/', `face-${Date.now()}.mp4`);
+    let audioFilePath;
+
+    // Step 1: Download `face` from S3 (always a URL)
+    const faceSignedUrl = await downloadFileFromS3(face);
+    await downloadToFile(faceSignedUrl, faceFilePath);
+    console.log("faceFilePath:", faceFilePath);
+
+    // Step 2: Handle `audio` based on `type`
+    if (type === "file" && req.file) {
+      audioFilePath = req.file.path;
+      console.log("audioFilePath for uploaded file:", audioFilePath);
+    } else if (type === "url") {
+      // Audio is an S3 key, download it
+      audioFilePath = path.join(__dirname, '../uploads/', `audio-${Date.now()}.mp3`);
+      const audioSignedUrl = await downloadFileFromS3(req.body.audio);
       await downloadToFile(audioSignedUrl, audioFilePath);
-  
-      // Prepare formData for the external API
-      const formData = new FormData();
-      formData.append("face", fs.createReadStream(faceFilePath));  // Attach the downloaded file
-      formData.append("audio", fs.createReadStream(audioFilePath));  // Attach the downloaded file
+      console.log("audioFilePath for S3 key:", audioFilePath);
+    } else {
+      return res.status(400).json({ message: "Invalid type or missing audio input." });
+    }
+
+    // Prepare `formData` for the external API
+    const formData = new FormData();
+    formData.append("face", fs.createReadStream(faceFilePath));
+    formData.append("audio", fs.createReadStream(audioFilePath));
   
       // Step 3: Call the lip-sync API
       const response = await axios.post(

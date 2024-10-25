@@ -31,10 +31,7 @@ router.post('/expression', upload.single('face'), AnimationController.generateEx
 router.post(
   '/lipSync',
   authenticateToken, // Ensure the user is authenticated
-  upload.fields([
-    { name: 'face', maxCount: 1 },    // Expecting one face video file
-    { name: 'audio', maxCount: 1 }    // Expecting one audio file
-  ]),
+  upload.single('audio'), 
   AnimationController.generateLipSync
 );
 
