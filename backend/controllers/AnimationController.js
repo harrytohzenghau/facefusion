@@ -2,19 +2,8 @@ const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 const FormData = require("form-data");
-const { parseS3Url, getSignedUrlForFullS3Url, uploadFileToS3, downloadFileFromS3  } = require('../utils/s3Utils');
+const {  uploadFileToS3, downloadFileFromS3  } = require('../utils/s3Utils');
 const AnimationJob = require("../models/AnimationJob");
-
-async function downloadS3File(s3Url, localFilePath) {
-  const writer = fs.createWriteStream(localFilePath);
-  const s3Stream = downloadFileFromS3(s3Url); // Function to download file from S3
-
-  return new Promise((resolve, reject) => {
-    s3Stream.pipe(writer);
-    writer.on("finish", resolve);
-    writer.on("error", reject);
-  });
-};
 
 const downloadToFile = async (signedUrl, localFilePath) => {
   const writer = fs.createWriteStream(localFilePath);
@@ -254,8 +243,8 @@ const AnimationController = {
   
         // Delete the local files
         fs.unlinkSync(lipSyncVideoPath);
-        fs.unlinkSync(faceFilePath);  // Clean up the face file
-        fs.unlinkSync(audioFilePath);  // Clean up the audio file
+        fs.unlinkSync(faceFilePath);  
+        fs.unlinkSync(audioFilePath);  
   
         res.status(200).json({
           message: "Lip-sync video generated and uploaded to S3 successfully",
