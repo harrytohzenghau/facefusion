@@ -1,27 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { deleteImage } from "../../../services/AnimationService";
 
-const ExistingImage = () => {
-  const initialImages = [
-    "https://picsum.photos/200/200?random=1",
-    "https://picsum.photos/200/200?random=2",
-    "https://picsum.photos/200/200?random=3",
-    "https://picsum.photos/200/200?random=4",
-    "https://picsum.photos/200/200?random=5",
-    "https://picsum.photos/200/200?random=6",
-    "https://picsum.photos/200/200?random=7",
-    "https://picsum.photos/200/200?random=8",
-  ];
-
-  const [images, setImages] = useState(initialImages);
+const ExistingImage = ({ existingImage, updateExistingImageHandler }) => {
+  const [images, setImages] = useState([]);
   const [viewedImage, setViewedImage] = useState(null); // Store image to view
   const [imageToDelete, setImageToDelete] = useState(null); // Store the image to delete for confirmation
 
+  useEffect(() => {
+    setImages(existingImage);
+  }, [existingImage]);
+
   // Function to remove an image
-  const handleDelete = (index) => {
-    setImages(images.filter((_, i) => i !== index));
-    setImageToDelete(null); // Close confirmation modal after deletion
-    toast.success("Image removed successfully!");
+  const handleDelete = async (imageDetail) => {
+    try {
+      const response = await deleteImage(imageDetail.contentId);
+
+      if (!response.success) {
+        return toast.error(response.message);
+      }
+
+      setImages(images.filter((_, i) => i !== imageDetail.index));
+      updateExistingImageHandler(
+        images.filter((_, i) => i !== imageDetail.index)
+      );
+      setImageToDelete(null); // Close confirmation modal after deletion
+      toast.success("Image removed successfully!");
+    } catch (error) {
+      toast.error("Something went wrong when uploading an image!");
+    }
   };
 
   // Function to view an image
@@ -35,37 +42,38 @@ const ExistingImage = () => {
   };
 
   // Function to prompt for delete confirmation
-  const confirmDelete = (index) => {
-    setImageToDelete(index); // Set the image to delete when confirmed
+  const confirmDelete = (index, contentId) => {
+    setImageToDelete({ index, contentId }); // Set the image to delete when confirmed
   };
 
   return (
-    <div>
+    <div className="w-3/4">
       {/* Image Grid */}
       <div className="grid grid-cols-4 gap-4">
-        {images.map((image, index) => (
-          <div key={index} className="w-full">
-            <img
-              src={image}
-              alt={`Placeholder ${index + 1}`}
-              className="w-full h-auto object-cover"
-            />
-            <div className="flex justify-between mt-2 gap-x-4">
-              <button
-                onClick={() => handleView(image)}
-                className="bg-blue-1 w-2/4 text-white py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"
-              >
-                View
-              </button>
-              <button
-                onClick={() => confirmDelete(index)}
-                className="bg-red-500 w-2/4 text-white px-4 py-2 rounded-lg hover:bg-red-300 transform transition-all duration-200 ease-in-out"
-              >
-                Delete
-              </button>
+        {images.length > 0 &&
+          images.map((image, index) => (
+            <div key={index} className="w-full">
+              <img
+                src={image.fileUrl}
+                alt={`Placeholder ${index + 1}`}
+                className="w-full max-w-1/5 h-auto object-cover"
+              />
+              <div className="flex justify-between mt-2 gap-x-4">
+                <button
+                  onClick={() => handleView(image)}
+                  className="bg-blue-1 w-2/4 text-white py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"
+                >
+                  View
+                </button>
+                <button
+                  onClick={() => confirmDelete(index, image.content._id)}
+                  className="bg-red-500 w-2/4 text-white px-4 py-2 rounded-lg hover:bg-red-300 transform transition-all duration-200 ease-in-out"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
 
       {/* Image Preview Modal */}
@@ -73,7 +81,7 @@ const ExistingImage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10 modal-fade">
           <div className="bg-white p-4 rounded-lg shadow-lg">
             <img
-              src={viewedImage}
+              src={viewedImage.fileUrl}
               alt="Viewed"
               className="w-[400px] object-cover mb-4"
             />

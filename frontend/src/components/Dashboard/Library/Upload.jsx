@@ -2,7 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { uploadImage } from "../../../services/AnimationService";
 
-const Upload = () => {
+const Upload = ({ updateExistingImageHandler }) => {
   const [images, setImages] = useState([]); // Array to hold multiple images
   const [imagePreviews, setImagePreviews] = useState([]); // Array for previews
 
@@ -20,7 +20,6 @@ const Upload = () => {
         if (!response.success) {
           return toast.error(response.message);
         }
-
       } catch (error) {
         toast.error("Something went wrong when uploading an image!");
       }
@@ -30,6 +29,7 @@ const Upload = () => {
     setImagePreviews([]);
     toast.success("Image uploaded successfully!");
 
+    updateExistingImageHandler()
   };
 
   // Handle Multiple Image Upload

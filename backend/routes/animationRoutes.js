@@ -52,14 +52,17 @@ router.post('/upscaleVideo', upload.single('file'), AnimationController.upscaleV
 router.post(
     '/upload-image-expression',
     authenticateToken,
-    upload.single('image'), // This handles file upload
-    uploadToS3Middleware, // This handles the S3 upload
+    // upload.single('image'), // This handles file upload
+    // uploadToS3Middleware, // This handles the S3 upload
     async (req, res) => {
       try {
         console.log('File in req after S3 upload:', req.file);
   
-        const { expression } = req.body;
-        const s3Key = req.file?.s3Key; // Get the S3 key
+        console.log(req.body)
+        const { expression, s3Key: file_s3_key } = req.body;
+
+        console.log(file_s3_key)
+        // const s3Key = req.file?.s3Key; // Get the S3 key
   
         if (!s3Key) {
           return res.status(400).json({ error: 'S3 key missing. File upload may have failed.' });

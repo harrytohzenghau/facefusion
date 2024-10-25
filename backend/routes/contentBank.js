@@ -17,9 +17,6 @@ router.post('/createContent', upload.single('file'), uploadToS3Middleware, Conte
 // Route to get content by ID
 router.get('/:id', ContentBankController.getContentById);
 
-// Route to get content by User ID
-router.get('/content/user/:user_id', ContentBankController.getContentByUserId);
-
 // Route to update content by ID
 router.put('/:id', ContentBankController.updateContent);
 
