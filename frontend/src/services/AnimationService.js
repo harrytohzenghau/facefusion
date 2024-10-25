@@ -13,7 +13,7 @@ export const generateExpression = async (image, expression) => {
       return { success: false, message: "Invalid input." };
     }
     // Append the image file, expression, and user ID to form data
-    formData.append("image", image); // Ensure image is a valid File object
+    formData.append("s3_url", image); // Ensure image is a valid File object
     formData.append("expression", expression); // Append the expression string
     formData.append("user_id", userId); // Append the user ID
 

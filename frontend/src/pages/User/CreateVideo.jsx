@@ -36,7 +36,7 @@ const CreateVideo = () => {
         }
 
         // Call the backend service to generate the video
-        const expressionResponse = await generateExpression(image, expression);
+        const expressionResponse = await generateExpression(image.file_s3_key, expression);
 
         // Check if the video URL exists in the response
         if (
