@@ -35,6 +35,7 @@ const CreateVideo = () => {
           }
         }
 
+        console.log(image.file_s3_key)
         // Call the backend service to generate the video
         const expressionResponse = await generateExpression(image.file_s3_key, expression);
 

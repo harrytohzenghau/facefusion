@@ -52,24 +52,25 @@ router.post('/upscaleVideo', upload.single('file'), AnimationController.upscaleV
 router.post(
     '/upload-image-expression',
     authenticateToken,
+    upload.none(),
     // upload.single('image'), // This handles file upload
     // uploadToS3Middleware, // This handles the S3 upload
     async (req, res) => {
       try {
-        console.log('File in req after S3 upload:', req.file);
+        console.log('File in req after S3 upload:', req);
   
         console.log(req.body)
-        const { expression, s3Key: file_s3_key } = req.body;
+        const { s3_url, expression, user_id } = req.body;
 
-        console.log(file_s3_key)
+        console.log(s3_url)
         // const s3Key = req.file?.s3Key; // Get the S3 key
   
-        if (!s3Key) {
+        if (!s3_url) {
           return res.status(400).json({ error: 'S3 key missing. File upload may have failed.' });
         }
   
         // Step 1: Download the image from S3
-        const s3Url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`;
+        const s3Url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3_url}`;
         const localFilePath = path.join(__dirname, '../uploads/', `image-${Date.now()}.jpg`); // Uses the 'path' module here
         const writer = fs.createWriteStream(localFilePath);
         const s3DownloadUrl = await downloadFileFromS3(s3Url); // Assuming you have this helper function
