@@ -246,9 +246,10 @@ const AnimationController = {
       // Pipe the response stream to the local file
       response.data.pipe(writer);
   
+      console.log("user:" ,req.user.id)
       writer.on("finish", async () => {
         // Upload lip-sync video to S3
-        const s3Key = `users/${req.user._id}/videos/${path.basename(lipSyncVideoPath)}`;
+        const s3Key = `users/${req.user.id}/videos/${path.basename(lipSyncVideoPath)}`;
         await uploadFileToS3(lipSyncVideoPath, process.env.AWS_S3_BUCKET_NAME, s3Key);
   
         // Delete the local files
