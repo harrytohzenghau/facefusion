@@ -206,7 +206,6 @@ async function handleCancelSubscription(userId, subscriptionId) {
     console.log(`Subscription plan for user ${userId} successfully cancelled.`);
   } catch (error) {
     console.error("Error canceling subscription:", error);
-    res.status(500).json({ error: "Failed to cancel subscription" });
   }
 }
 
