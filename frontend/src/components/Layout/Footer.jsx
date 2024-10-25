@@ -14,9 +14,9 @@ const Footer = () => {
             <li>
               <NavLink className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out">About Us</NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink to="/contact" className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out">Contact Us</NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink to="/privacy" className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out">Privacy Policy</NavLink>
             </li>
