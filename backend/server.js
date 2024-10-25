@@ -8,10 +8,6 @@ const StripeController = require("./controllers/StripeController");
 
 const app = express();
 
-// Middleware to parse JSON
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 app.use(
   cors({
     origin: process.env.FRONTEND_URL, // Allow requests only from this origin
@@ -30,6 +26,9 @@ app.post(
 // Connect to MongoDB
 connectDB();
 
+// Middleware to parse JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Seeds(This one to add all the roles on startup)
 const seedRoles = async () => {

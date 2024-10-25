@@ -3,10 +3,11 @@ import toast from "react-hot-toast";
 import { getImages } from "../../../services/AnimationService";
 import { useSelector } from "react-redux";
 
-const Generate = ({ role, generateVideoHandler }) => {
+const Generate = ({ generateVideoHandler }) => {
   const user = useSelector((state) => state.auth.user);
 
   const [audio, setAudio] = useState(null);
+  const [voiceType, setVoiceType] = useState("male");
   const [expression, setExpression] = useState("happy");
   const [textInput, setTextInput] = useState("");
 
@@ -38,6 +39,7 @@ const Generate = ({ role, generateVideoHandler }) => {
   const handleAudioUpload = (e) =>
     setAudio(URL.createObjectURL(e.target.files[0]));
   const handleExpressionChange = (e) => setExpression(e.target.value);
+  const handleVoiceTypeChange = (e) => setVoiceType(e.target.value);
   const handleTextChange = (e) => setTextInput(e.target.value);
 
   // Set selected image and notify user
@@ -50,12 +52,12 @@ const Generate = ({ role, generateVideoHandler }) => {
   const generateVideoFormHandler = async (e) => {
     e.preventDefault();
     if (!selectedImage) return toast.error("Please select an image!");
-    if (role === "Premium" && textInput && audio) {
+    if (user.role === "Premium" && textInput && audio) {
       return toast.error(
         "Provide either a text input or an audio file in .mp3 format!"
       );
     }
-    await generateVideoHandler(selectedImage, expression, textInput, audio);
+    await generateVideoHandler(selectedImage, expression, voiceType, textInput, audio);
   };
 
   return (
@@ -66,7 +68,7 @@ const Generate = ({ role, generateVideoHandler }) => {
       >
         <div className="flex gap-x-24 justify-around items-start">
           <div className="w-2/5 flex flex-col gap-y-4">
-            {role === "Premium" && (
+            {user.role === "Premium" && (
               <div className="flex flex-col gap-y-4">
                 <label className="font-bold">Upload Audio:</label>
                 <input
@@ -89,6 +91,17 @@ const Generate = ({ role, generateVideoHandler }) => {
               >
                 <option value="happy">Happy</option>
                 <option value="sad">Sad</option>
+              </select>
+            </div>
+            <div className="flex flex-col gap-y-4">
+              <label className="font-bold">Choose Voice Type:</label>
+              <select
+                className="bg-white p-2 rounded-md drop-shadow-lg"
+                value={expression}
+                onChange={handleVoiceTypeChange}
+              >
+                <option value="male">Male</option>
+                <option value="female">Female</option>
               </select>
             </div>
             <div className="flex flex-col gap-y-4">

@@ -15,9 +15,13 @@ const CreateVideo = () => {
   const [video, setVideo] = useState(null);
   const { setIsLoading } = useContext(LoadingContext);
 
-  const generateVideoHandler = async (image, expression, inputText, audio) => {
-
-    console.log(image, expression, inputText)
+  const generateVideoHandler = async (
+    image,
+    expression,
+    voiceType,
+    inputText,
+    audio
+  ) => {
     // Check for user role
     if (user.role === "Free" || user.role === "Premium") {
       try {
@@ -26,7 +30,7 @@ const CreateVideo = () => {
         // generate audio first
         let generatedAudioUrl = audio; // If no input audio is provided, we'll use the generated one
         if (!audio && inputText) {
-          const ttsResponse = await generateTextToSpeech(inputText, "female"); // Call the new service
+          const ttsResponse = await generateTextToSpeech(inputText, voiceType); // Call the new service
 
           if (ttsResponse.success) {
             generatedAudioUrl = ttsResponse.audioUrl; // Get the audio file URL from the service response
@@ -35,9 +39,12 @@ const CreateVideo = () => {
           }
         }
 
-        console.log(image.file_s3_key)
+        console.log(image.file_s3_key);
         // Call the backend service to generate the video
-        const expressionResponse = await generateExpression(image.file_s3_key, expression);
+        const expressionResponse = await generateExpression(
+          image.file_s3_key,
+          expression
+        );
 
         // Check if the video URL exists in the response
         if (
@@ -77,7 +84,7 @@ const CreateVideo = () => {
   return (
     <div className="mt-3 flex flex-col gap-y-10">
       <h1 className="font-bold text-xl">Create Video</h1>
-      <Generate generateVideoHandler={(user.role, generateVideoHandler)} />
+      <Generate generateVideoHandler={generateVideoHandler} />
       {video && <Download video={video} />}
     </div>
   );
