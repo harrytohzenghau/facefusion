@@ -98,7 +98,7 @@ router.post(
   
             videoWriter.on('finish', async () => {
               // Step 4: Upload the generated video to S3
-              const videoS3Key = `users/${req.user._id}/videos/${path.basename(videoFilePath)}`;
+              const videoS3Key = `users/${user_id}/videos/${path.basename(videoFilePath)}`;
               await uploadFileToS3(videoFilePath, process.env.AWS_S3_BUCKET_NAME, videoS3Key);
   
               // Cleanup: Delete the local files
