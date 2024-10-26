@@ -3,6 +3,8 @@ const path = require("path");
 const fs = require("fs");
 const FormData = require("form-data");
 const {  uploadFileToS3, downloadFileFromS3  } = require('../utils/s3Utils');
+const ContentBank = require("../models/ContentBank");
+
 const AnimationJob = require("../models/AnimationJob");
 
 const downloadToFile = async (signedUrl, localFilePath) => {
@@ -218,8 +220,25 @@ const AnimationController = {
 
     // Step 2: Handle `audio` based on `type`
     if (type === "file" && req.file) {
+      const audioFileName = `audio-${Date.now()}-${req.file.originalname}`;
       audioFilePath = req.file.path;
-      console.log("audioFilePath for uploaded file:", audioFilePath);
+
+      audioS3Key = `users/${req.user.id}/audio/${audioFileName}`;
+      await uploadFileToS3(audioFilePath, process.env.AWS_S3_BUCKET_NAME, audioS3Key);
+      console.log("Audio uploaded to S3 with key:", audioS3Key);
+
+      const newAudioContent = new ContentBank({
+        name: "Personal Audio",
+        user_id: req.user.id,
+        file_type: "Audio",
+        file_s3_key: audioS3Key,
+        status: "uploaded",
+        created_at: new Date(),
+        is_sample: false,
+      });
+      await newAudioContent.save();
+
+
     } else if (type === "url") {
       // Audio is an S3 key, download it
       audioFilePath = path.join(__dirname, '../uploads/', `audio-${Date.now()}.mp3`);
@@ -248,15 +267,26 @@ const AnimationController = {
       // Pipe the response stream to the local file
       response.data.pipe(writer);
   
-      console.log("user:" ,req.user.id)
       writer.on("finish", async () => {
         // Upload lip-sync video to S3
         const s3Key = `users/${req.user.id}/videos/${path.basename(lipSyncVideoPath)}`;
         await uploadFileToS3(lipSyncVideoPath, process.env.AWS_S3_BUCKET_NAME, s3Key);
+
+        const newContent = new ContentBank({
+          name: "Lip-Sync Video",
+          user_id: req.user.id,
+          file_type: "Video",
+          file_s3_key: s3Key,
+          audio_s3_key: type === "file" ? audioS3Key : req.body.audio, // Use `audioS3Key` if uploaded, else use provided S3 URL
+          status: "uploaded",
+          created_at: new Date(),
+          is_sample: false,
+        });
+        await newContent.save();
   
         // Delete the local files
         fs.unlinkSync(lipSyncVideoPath);
-        fs.unlinkSync(faceFilePath);  
+        fs.unlinkSync(faceFilePath);
         fs.unlinkSync(audioFilePath);  
   
         res.status(200).json({
@@ -280,6 +310,7 @@ const AnimationController = {
   async textToSpeech(req, res) {
     try {
       const { message, gender } = req.body;
+
       if (!message || !gender) {
         return res.status(400).json({ message: "Message text and gender are required" });
       }
@@ -302,8 +333,7 @@ const AnimationController = {
       fs.writeFileSync(localFilePath, Buffer.from(response.data));
 
       // Upload the generated audio to S3
-      console.log(req)
-      const s3Key = `users/${req.user._id}/audio/${audioFileName}`;
+      const s3Key = `users/${req.user.id}/audio/${audioFileName}`;
       await uploadFileToS3(localFilePath, process.env.AWS_S3_BUCKET_NAME, s3Key);
   
       // Delete the local file after upload
