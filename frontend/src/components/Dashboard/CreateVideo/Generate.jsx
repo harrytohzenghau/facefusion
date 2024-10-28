@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { getImages } from "../../../services/AnimationService";
+import { getImagesAndVideos } from "../../../services/AnimationService";
 import { useSelector } from "react-redux";
 
 const Generate = ({ generateVideoHandler }) => {
@@ -16,7 +16,7 @@ const Generate = ({ generateVideoHandler }) => {
 
   const updateExistingImageHandler = async () => {
     try {
-      const response = await getImages(user.id);
+      const response = await getImagesAndVideos(user.id);
       if (!response.success) {
         return toast.error("Something went wrong when fetching user data.");
       }
