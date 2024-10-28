@@ -20,10 +20,14 @@ const Generate = ({ generateVideoHandler }) => {
       if (!response.success) {
         return toast.error("Something went wrong when fetching user data.");
       }
-      const existingImageList = response.data.content.map((content, index) => ({
-        content,
-        fileUrl: response.data.fileUrl[index],
-      }));
+
+      const existingImageList = response.data.content
+        .filter((content, index) => content.file_type === "Portraits")
+        .map((content, index) => ({
+          content,
+          fileUrl: response.data.fileUrl[index],
+        }));
+
       setExistingImage(existingImageList);
     } catch (error) {
       console.log("Error fetching data:", error);
@@ -66,10 +70,18 @@ const Generate = ({ generateVideoHandler }) => {
     if (!selectedImage) return toast.error("Please select an image!");
 
     if (user.role === "Premium" && textInput && audio) {
-      return toast.error("Provide either a text input or an audio file, not both!");
+      return toast.error(
+        "Provide either a text input or an audio file, not both!"
+      );
     }
 
-    await generateVideoHandler(selectedImage, expression, voiceType, textInput, audio);
+    await generateVideoHandler(
+      selectedImage,
+      expression,
+      voiceType,
+      textInput,
+      audio
+    );
   };
 
   return (
