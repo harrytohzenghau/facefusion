@@ -193,7 +193,7 @@ async function handleSubscriptionSuccess(
   }
 }
 
-async function handleFailedSubscription(userId) {}
+async function handleFailedSubscription(userId) { }
 
 async function handleCancelSubscription(userId, subscriptionId) {
   try {
