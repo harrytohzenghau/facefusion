@@ -12,9 +12,8 @@ const Generate = ({ generateVideoHandler }) => {
   const [textInput, setTextInput] = useState("");
 
   const [existingImage, setExistingImage] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null); // Track selected image fileUrl
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  // Fetch images on component mount
   const updateExistingImageHandler = async () => {
     try {
       const response = await getImages(user.id);
@@ -35,28 +34,41 @@ const Generate = ({ generateVideoHandler }) => {
     updateExistingImageHandler();
   }, []);
 
-  // Handle audio, expression, and text input changes
-  const handleAudioUpload = (e) =>
-    setAudio(URL.createObjectURL(e.target.files[0]));
+  const handleAudioUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAudio(URL.createObjectURL(file));
+      setTextInput(""); // Clear text input when audio is uploaded
+    }
+  };
+
+  const handleRemoveAudio = () => {
+    setAudio(null); // Remove audio file
+  };
+
   const handleExpressionChange = (e) => setExpression(e.target.value);
   const handleVoiceTypeChange = (e) => setVoiceType(e.target.value);
-  const handleTextChange = (e) => setTextInput(e.target.value);
 
-  // Set selected image and notify user
+  const handleTextChange = (e) => {
+    setTextInput(e.target.value);
+    if (e.target.value) {
+      setAudio(null); // Clear audio file when text input is entered
+    }
+  };
+
   const selectedImageHandler = (imageDetail) => {
     setSelectedImage(imageDetail);
     toast.success("This image has been selected!");
   };
 
-  // Generate video form submission
   const generateVideoFormHandler = async (e) => {
     e.preventDefault();
     if (!selectedImage) return toast.error("Please select an image!");
+
     if (user.role === "Premium" && textInput && audio) {
-      return toast.error(
-        "Provide either a text input or an audio file in .mp3 format!"
-      );
+      return toast.error("Provide either a text input or an audio file, not both!");
     }
+
     await generateVideoHandler(selectedImage, expression, voiceType, textInput, audio);
   };
 
@@ -76,9 +88,19 @@ const Generate = ({ generateVideoHandler }) => {
                   type="file"
                   accept="audio/*"
                   onChange={handleAudioUpload}
+                  disabled={!!textInput} // Disable if text input is filled
                 />
                 {audio && (
-                  <audio controls src={audio} style={{ marginTop: "10px" }} />
+                  <div className="flex items-center gap-x-4 mt-2">
+                    <audio controls src={audio} className="mt-2" />
+                    <button
+                      onClick={handleRemoveAudio}
+                      type="button"
+                      className="text-red-500 font-semibold"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 )}
               </div>
             )}
@@ -97,7 +119,7 @@ const Generate = ({ generateVideoHandler }) => {
               <label className="font-bold">Choose Voice Type:</label>
               <select
                 className="bg-white p-2 rounded-md drop-shadow-lg"
-                value={expression}
+                value={voiceType}
                 onChange={handleVoiceTypeChange}
               >
                 <option value="male">Male</option>
@@ -112,6 +134,7 @@ const Generate = ({ generateVideoHandler }) => {
                 onChange={handleTextChange}
                 rows="4"
                 cols="50"
+                disabled={!!audio} // Disable if audio is uploaded
               />
             </div>
           </div>
@@ -136,12 +159,14 @@ const Generate = ({ generateVideoHandler }) => {
                           })
                         }
                         className={`w-full py-2 rounded-lg transform transition-all duration-200 ease-in-out ${
-                         selectedImage && selectedImage.imageUrl === image.fileUrl
+                          selectedImage &&
+                          selectedImage.imageUrl === image.fileUrl
                             ? "bg-green-500 text-white hover:bg-green-600"
                             : "bg-blue-1 text-white hover:bg-blue-2"
                         }`}
                       >
-                        {selectedImage &&  selectedImage.imageUrl === image.fileUrl
+                        {selectedImage &&
+                        selectedImage.imageUrl === image.fileUrl
                           ? "Selected"
                           : "Select"}
                       </button>

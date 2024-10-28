@@ -42,8 +42,8 @@ const PlanCard = () => {
           {showAvailablePlan ? "Back" : "Manage Plan"}
         </button>
       </div>
-      <div className="flex gap-x-4 justify-between">
-        <Card additionalClassName="w-1/2 flex flex-col gap-y-2 px-4 py-4 bg-white rounded-md drop-shadow-lg">
+      <div className="flex gap-x-4">
+        <Card additionalClassName="w-1/2 flex mx-0 flex-col gap-y-2 px-4 py-4 bg-white rounded-md drop-shadow-lg">
           <h3>Monthly Plan</h3>
           <h2 className="text-xl font-bold">
             ${user.role === "Premium" ? "5" : "0"}.00/month
