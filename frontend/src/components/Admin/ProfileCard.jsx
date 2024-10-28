@@ -32,7 +32,7 @@ const ProfileCard = ({ userData }) => {
     e.preventDefault();
 
     const first_name = firstNameRef.current.value;
-    const last_name = firstNameRef.current.value;
+    const last_name = lastNameRef.current.value;
     const email = emailRef.current.value;
     const phone = phoneRef.current.value;
     const is_locked = !isActive;
