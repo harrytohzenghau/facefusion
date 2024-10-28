@@ -232,7 +232,7 @@ export const uploadImage = async (name, file_type, file) => {
   }
 };
 
-export const getImages = async () => {
+export const getImagesAndVideos = async () => {
   const token = store.getState().auth.token;
   const user_id = store.getState().auth.user.id;
 

@@ -76,6 +76,16 @@ const StripeController = {
             invoice.lines.data[0].plan.id,
             invoice.subscription
           );
+
+          console.log(invoice.lines.data[0]);
+          console.log(invoice.lines.data[0].plan.product);
+          console.log(invoice.lines.data[0].plan.id);
+
+          return res
+            .status(200)
+            .send(
+              "Invoice payment succeeded and subscription updated successfully."
+            );
         } catch (err) {
           console.error("Failed to retrieve customer:", err);
           return res
@@ -161,15 +171,20 @@ async function handleSubscriptionSuccess(
         start_date: new Date(),
         end_date: new Date(new Date().setMonth(new Date().getMonth() + 1)),
       });
-
-      await User.findByIdAndUpdate(userId, { user_role_id: 3 }, { new: true });
     } else {
       // update existing subscription
-      subscriptionPlan.subscription_type = "Premium";
+      subscriptionPlan.product_id = productId;
+      subscriptionPlan.subscription_id = subscriptionId;
       subscriptionPlan.price_id = priceId;
+      subscriptionPlan.subscription_type = "Premium";
+      limit = 8;
+      start_date = new Date();
+      end_date = new Date(new Date().setMonth(new Date().getMonth() + 1));
     }
 
     await subscriptionPlan.save();
+    await User.findByIdAndUpdate(userId, { user_role_id: 3 }, { new: true });
+
     console.log(
       `Subscription plan for user ${userId} successfully updated/created.`
     );

@@ -3,7 +3,7 @@ import ExistingImage from "../../components/Dashboard/Library/ExistingImage";
 import Upload from "../../components/Dashboard/Library/Upload";
 import ExistingVideo from "../../components/Dashboard/Library/ExistingVideo";
 import { Link } from "react-router-dom";
-import { getImages } from "../../services/AnimationService";
+import { getImagesAndVideos } from "../../services/AnimationService";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
@@ -15,16 +15,39 @@ const Library = () => {
 
   const updateExistingImageHandler = async () => {
     try {
-      const response = await getImages(user.id);
+      const response = await getImagesAndVideos(user.id);
 
       if (!response.success) {
         return toast.error("Something went wrong when fetching user data.");
       }
 
-      const existingImageList = response.data.content.map((content, index) => ({
-        content,
-        fileUrl: response.data.fileUrl[index],
-      }));
+      const existingImageList = response.data.content
+        .filter((content, index) => content.file_type === "Portraits")
+        .map((content, index) => ({
+          content,
+          fileUrl: response.data.fileUrl[index],
+        }));
+
+      setExistingImage(existingImageList);
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    }
+  };
+
+  const updateExistingVideoHandler = async () => {
+    try {
+      const response = await getImagesAndVideos(user.id);
+
+      if (!response.success) {
+        return toast.error("Something went wrong when fetching user data.");
+      }
+
+      const existingImageList = response.data.content
+        .filter((content, index) => content.file_type === "Video")
+        .map((content, index) => ({
+          content,
+          fileUrl: response.data.fileUrl[index],
+        }));
 
       setExistingImage(existingImageList);
     } catch (error) {
@@ -34,6 +57,7 @@ const Library = () => {
 
   useEffect(() => {
     updateExistingImageHandler(); // Initial fetch
+    updateExistingVideoHandler();
   }, []);
 
   return (
