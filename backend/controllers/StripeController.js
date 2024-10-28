@@ -177,9 +177,9 @@ async function handleSubscriptionSuccess(
       subscriptionPlan.subscription_id = subscriptionId;
       subscriptionPlan.price_id = priceId;
       subscriptionPlan.subscription_type = "Premium";
-      limit = 8;
-      start_date = new Date();
-      end_date = new Date(new Date().setMonth(new Date().getMonth() + 1));
+      subscriptionPlan.limit = 8;
+      subscriptionPlan.start_date = new Date();
+      subscriptionPlan.end_date = new Date(new Date().setMonth(new Date().getMonth() + 1));
     }
 
     await subscriptionPlan.save();
