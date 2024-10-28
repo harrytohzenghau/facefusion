@@ -42,14 +42,14 @@ const Library = () => {
         return toast.error("Something went wrong when fetching user data.");
       }
 
-      const existingImageList = response.data.content
+      const existingVideoList = response.data.content
         .filter((content, index) => content.file_type === "Video")
         .map((content, index) => ({
           content,
           fileUrl: response.data.fileUrl[index],
         }));
 
-      setExistingImage(existingImageList);
+        setExistingVideo(existingVideoList);
     } catch (error) {
       console.log("Error fetching data:", error);
     }
