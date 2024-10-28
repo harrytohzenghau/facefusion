@@ -74,6 +74,7 @@ export const generateTextToSpeech = async (message, gender) => {
 
     // Check for success in the response
     if (response.data.s3Url) {
+    
       return { success: true, audioUrl: response.data.s3Url };
     } else {
       throw new Error("Text-to-speech generation failed.");
@@ -147,6 +148,48 @@ export const generateLipSync = async (face, audio, type) => {
     }
   }
 };
+
+export const updateContentBank = async (name, file_type, file_s3_key) => {
+  const token = store.getState().auth.token;
+
+  
+  const contentData = {
+    name,
+    file_type,
+    file_s3_key,
+    status: "completed", // Set the status or any other fields you need
+  };
+
+  try {
+    const response = await axios.post(
+      `${apiUrl}/api/contentBank/updateContentBank`,
+      contentData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    if (error.response) {
+      return {
+        success: false,
+        message: error.response.data.message || "An error occurred on the server.",
+      };
+    } else if (error.request) {
+      return {
+        success: false,
+        message: "No response from the server. Please try again later.",
+      };
+    } else {
+      return { success: false, message: "An unexpected error occurred." };
+    }
+  }
+};
+
 
 export const uploadImage = async (name, file_type, file) => {
   const token = store.getState().auth.token;

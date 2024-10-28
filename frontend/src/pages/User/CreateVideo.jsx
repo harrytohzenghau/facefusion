@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import Generate from "../../components/Dashboard/CreateVideo/Generate";
 import Download from "../../components/Dashboard/CreateVideo/Download";
+import { updateContentBank } from "../../services/AnimationService";
 import { useSelector } from "react-redux";
 import {
   generateTextToSpeech,
@@ -32,10 +33,25 @@ const CreateVideo = () => {
         let audioType = "file"; // Use this to update type of audio in LipSync
         if (!audio && inputText) {
           const ttsResponse = await generateTextToSpeech(inputText, voiceType); // Call the new service
-
+          
+          
           if (ttsResponse.success) {
             generatedAudioUrl = ttsResponse.audioUrl; // Get the audio file URL from the service response
             audioType = "url";
+
+            const s3BaseUrl = "https://prod-facefusion.s3.ap-southeast-2.amazonaws.com/";
+            const fileName = "Generated Audio";
+            const fileType = "Audio";
+            const fileS3Key = generatedAudioUrl.replace(s3BaseUrl, ""); // URL from S3
+
+            const result = await updateContentBank(fileName, fileType, fileS3Key);
+
+            if (result.success) {
+              console.log("Content updated successfully in MongoDB:", result.data);
+            } else {
+              console.error("Error updating content in MongoDB:", result.message);
+            }
+
           } else {
             throw new Error("Text-to-speech generation failed.");
           }

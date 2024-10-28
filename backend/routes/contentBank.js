@@ -14,6 +14,9 @@ router.get('/', ContentBankController.getAllContent);
 // Route to create new content (upload file to S3 and check upload limit)
 router.post('/createContent', upload.single('file'), uploadToS3Middleware, ContentBankController.createContent);
 
+// Route to update Mongo DB
+router.post('/updateContentBank', ContentBankController.updateContentBank);
+
 // Route to get content by ID
 router.get('/:id', ContentBankController.getContentById);
 
