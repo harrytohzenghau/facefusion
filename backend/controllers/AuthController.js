@@ -109,7 +109,7 @@ const AuthController = {
 
         await subscriptionPlan.save();
         console.log(
-          `Subscription plan for user ${user._id} successfully created.`
+          `Customer account for ${user._id} successfully created.`
         );
       } catch (error) {
         console.error("Error handling subscription success:", error);
