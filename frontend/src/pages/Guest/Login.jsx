@@ -36,8 +36,6 @@ const Login = () => {
         return toast.error("Your account has been deactivated.");
       }
 
-      console.log(response.data.formattedUser)
-
       dispatch(
         loginAction({
           user: response.data.formattedUser,
