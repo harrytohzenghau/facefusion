@@ -263,7 +263,7 @@ export const getImagesAndVideos = async () => {
   }
 };
 
-export const deleteImage = async (contentId) => {
+export const deleteContent = async (contentId) => {
   const token = store.getState().auth.token;
 
   try {

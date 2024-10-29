@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { deleteImage } from "../../../services/AnimationService";
+import { deleteContent } from "../../../services/AnimationService";
 
 const ExistingImage = ({ existingImage, updateExistingImageHandler }) => {
   const [images, setImages] = useState([]);
@@ -14,7 +14,7 @@ const ExistingImage = ({ existingImage, updateExistingImageHandler }) => {
   // Function to remove an image
   const handleDelete = async (imageDetail) => {
     try {
-      const response = await deleteImage(imageDetail.contentId);
+      const response = await deleteContent(imageDetail.contentId);
 
       if (!response.success) {
         return toast.error(response.message);

@@ -6,6 +6,8 @@ const Download = ({ video }) => {
     link.click();
   };
 
+  const handleDelete = () => {}
+
   return (
     <div className="flex gap-x-6 items-start">
       <div className="w-1/5">
@@ -25,7 +27,7 @@ const Download = ({ video }) => {
         <button
           className="bg-red-50 w-2/5 text-white py-2 rounded-lg hover:bg-red-400 transform transition-all duration-200 ease-in-out"
           type="button"
-          onClick={handleDownload}
+          onClick={handleDelete}
         >
           Delete
         </button>

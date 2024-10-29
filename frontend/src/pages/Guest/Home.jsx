@@ -15,8 +15,6 @@ const Home = () => {
       try {
         const response = await getPublishedRating();
 
-        console.log(response)
-
         if (!response.success) {
           return toast.error(
             "Something went wrong when fetching ratings data."

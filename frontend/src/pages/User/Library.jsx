@@ -22,11 +22,16 @@ const Library = () => {
       }
 
       const existingImageList = response.data.content
-        .filter((content, index) => content.file_type === "Portraits")
-        .map((content, index) => ({
-          content,
-          fileUrl: response.data.fileUrl[index],
-        }));
+        .map((content, index) => {
+          if (content.file_type === "Portraits") {
+            return {
+              content,
+              fileUrl: response.data.fileUrl[index],
+            };
+          }
+          return null;
+        })
+        .filter((item) => item !== null);
 
       setExistingImage(existingImageList);
     } catch (error) {
@@ -43,13 +48,18 @@ const Library = () => {
       }
 
       const existingVideoList = response.data.content
-        .filter((content, index) => content.file_type === "Video")
-        .map((content, index) => ({
-          content,
-          fileUrl: response.data.fileUrl[index],
-        }));
+        .map((content, index) => {
+          if (content.file_type === "Video") {
+            return {
+              content,
+              fileUrl: response.data.fileUrl[index],
+            };
+          }
+          return null;
+        })
+        .filter((item) => item !== null);
 
-        setExistingVideo(existingVideoList);
+      setExistingVideo(existingVideoList);
     } catch (error) {
       console.log("Error fetching data:", error);
     }
@@ -88,7 +98,9 @@ const Library = () => {
             You have no video yet! <Link to="/user/create">Create now.</Link>
           </h4>
         )}
-        {existingVideo.length > 0 && <ExistingVideo />}
+        {existingVideo.length > 0 && (
+          <ExistingVideo existingVideo={existingVideo} />
+        )}
       </div>
     </div>
   );

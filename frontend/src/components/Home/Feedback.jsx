@@ -10,9 +10,9 @@ const Feedback = ({ publishedRatings }) => {
         </h5>
         <div className="flex gap-x-6 justify-between">
           {publishedRatings &&
-            publishedRatings.map((rating) => (
+            publishedRatings.map((rating, index) => (
               <Card
-                key={rating.id}
+                key={index}
                 additionalClassName="flex flex-col justify-between bg-white rounded-md p-6 drop-shadow-lg"
               >
                 <div className="flex flex-col justify-between h-full gap-y-6">
