@@ -269,11 +269,60 @@ const AnimationController = {
   
       writer.on("finish", async () => {
         // Upload lip-sync video to S3
-        const s3Key = `users/${req.user.id}/videos/${path.basename(lipSyncVideoPath)}`;
-        await uploadFileToS3(lipSyncVideoPath, process.env.AWS_S3_BUCKET_NAME, s3Key);
+        let finalVideoPath = lipSyncVideoPath;
+
+        let name ="Lip-Sync Video"
+
+        // If the user is premium, upscale the video before final upload
+        if (req.user.role === "Premium") {
+          name = "Lip-Sync HD Video"
+          const upscaleFormData = new FormData();
+          upscaleFormData.append("file", fs.createReadStream(finalVideoPath));
+
+          try {
+            const response = await axios.post(
+              "https://c8db-138-75-118-40.ngrok-free.app/make-hd",
+              upscaleFormData,
+              {
+                headers: {
+                  ...upscaleFormData.getHeaders(),
+                  'ngrok-skip-browser-warning': 'true',
+                },
+                responseType: "stream",
+              }
+            );
+
+
+            // Save the upscaled video to a new file path
+          finalVideoPath = path.join(__dirname, '../uploads/', `upscaled-${Date.now()}.mp4`);
+          const upscaleWriter = fs.createWriteStream(finalVideoPath);
+          response.data.pipe(upscaleWriter);
+
+          await new Promise((resolve, reject) => {
+            upscaleWriter.on("finish", resolve);
+            upscaleWriter.on("error", reject);
+          });
+
+          console.log("Upscaled video saved to:", finalVideoPath);
+
+          } catch (error) {
+            console.error("Error making request to upscale API:", error.message);
+            console.error("Response data:", error.response?.data);
+            console.error("Status code:", error.response?.status);
+            return res.status(500).json({ error: "Failed to upscale video" });
+          }
+
+          
+        }
+
+        // Upload the final (possibly upscaled) video to S3
+        const s3Key = `users/${req.user.id}/videos/${path.basename(finalVideoPath)}`;
+        await uploadFileToS3(finalVideoPath, process.env.AWS_S3_BUCKET_NAME, s3Key);
+
+
 
         const newContent = new ContentBank({
-          name: "Lip-Sync Video",
+          name: name,
           user_id: req.user.id,
           file_type: "Video",
           file_s3_key: s3Key,
@@ -380,7 +429,7 @@ const AnimationController = {
 
       writer.on("finish", async () => {
         // Upload the upscaled video to S3
-        const s3Key = `user/${req.user._id}/videos/${path.basename(localFilePath)}`;
+        const s3Key = `user/${req.user.id}/videos/${path.basename(localFilePath)}`;
         await uploadFileToS3(localFilePath, process.env.AWS_S3_BUCKET_NAME, s3Key);
 
         // Delete the local file after uploading to S3
