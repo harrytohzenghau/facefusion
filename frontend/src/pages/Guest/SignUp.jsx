@@ -5,6 +5,7 @@ import { login as loginAction } from "../../store/authSlice";
 import { useRef } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import { validatePassword } from "../../util/PasswordValidation";
 
 const SignUp = () => {
   const firstNameRef = useRef();
@@ -31,6 +32,11 @@ const SignUp = () => {
 
     if (confirmPassword !== password) {
       return toast.error("Password does not matched.");
+    }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      return toast.error(passwordError); // Show error message if password fails validation
     }
 
     const userData = {

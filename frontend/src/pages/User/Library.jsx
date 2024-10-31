@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import ExistingImage from "../../components/Dashboard/Library/ExistingImage";
 import Upload from "../../components/Dashboard/Library/Upload";
 import ExistingVideo from "../../components/Dashboard/Library/ExistingVideo";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getImagesAndVideos } from "../../services/AnimationService";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 const Library = () => {
   const user = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
   const [toggleAddMoreImages, setToggleAddMoreImages] = useState(false);
   const [existingImage, setExistingImage] = useState([]);
   const [existingVideo, setExistingVideo] = useState([]);
@@ -92,15 +93,17 @@ const Library = () => {
         <Upload updateExistingImageHandler={updateExistingImageHandler} />
       )}
       <h1 className="font-bold text-xl mt-6">Your Video</h1>
-      <div className="mt-6">
-        {existingVideo.length === 0 && (
-          <h4>
-            You have no video yet! <Link to="/user/create">Create now.</Link>
-          </h4>
-        )}
+      <div className="mt-6 flex justify-between mt-6 items-start gap-x-6">
         {existingVideo.length > 0 && (
           <ExistingVideo existingVideo={existingVideo} />
         )}
+        {existingVideo.length === 0 && <h4>You have no image yet! Add now.</h4>}
+        <button
+          onClick={() => navigate("/user/create")}
+          className="bg-blue-1 w-1/4 text-white py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"
+        >
+          Create Video
+        </button>
       </div>
     </div>
   );

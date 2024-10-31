@@ -19,16 +19,13 @@ const RecentVideos = () => {
       }
 
       const existingVideoList = response.data.content
-        .map((content, index) => {
-          if (content.file_type === "Video") {
-            return {
-              content,
-              fileUrl: response.data.fileUrl[index],
-            };
-          }
-          return null;
-        })
-        .filter((item) => item !== null);
+        .map((content, index) => ({
+          ...content,
+          fileUrl: response.data.fileUrl[index], // Add fileUrl to each content item
+        }))
+        .filter((item) => item.file_type === "Video") // Filter for videos only
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Sort by created_at in descending order
+        .slice(0, 3); // Take the top 3 most recent videos
 
       setExistingVideo(existingVideoList);
     } catch (error) {
@@ -43,7 +40,8 @@ const RecentVideos = () => {
   return (
     <Card additionalClassName="flex flex-col gap-y-8">
       <h5 className="text-xl font-bold">Recent Videos</h5>
-      <ExistingVideo existingVideo={existingVideo}/>
+      {existingVideo.length === 0 && <p>You have no video yet. Create now!</p>}
+      <ExistingVideo existingVideo={existingVideo} />
     </Card>
   );
 };

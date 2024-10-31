@@ -67,7 +67,7 @@ const ProfileCard = ({ userData }) => {
 
   return (
     <Card additionalClassName="flex flex-col gap-y-6 px-6 py-6 bg-white rounded-md drop-shadow-lg">
-      <h1 className="font-bold text-xl">Update User</h1>
+      <h1 className="font-bold text-xl">Update Profile</h1>
       <form onSubmit={updateProfileHandler} className="flex flex-col gap-y-6">
         <div className="flex gap-x-6">
           <div className="w-1/2 flex flex-col gap-y-4">

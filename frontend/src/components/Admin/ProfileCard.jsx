@@ -16,6 +16,7 @@ const ProfileCard = ({ userData }) => {
   const usernameRef = useRef();
   const emailRef = useRef();
   const phoneRef = useRef();
+  const planRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
 
@@ -128,7 +129,12 @@ const ProfileCard = ({ userData }) => {
           </div>
           <div className="w-1/2">
             <div className="flex flex-col gap-y-4">
-              <label>Status: <span className="font-bold">{isActive ? "Active" : "Inactive"}</span></label>
+              <label>
+                Status:{" "}
+                <span className="font-bold">
+                  {isActive ? "Active" : "Inactive"}
+                </span>
+              </label>
               <button
                 type="button"
                 onClick={toggleStatusHandler}
@@ -165,6 +171,23 @@ const ProfileCard = ({ userData }) => {
             />
           </div>
         </div>
+        {user && user.user_role_id !== 1 && (
+          <div className="flex gap-x-6 items-start">
+            <div className="w-1/2 flex flex-col gap-y-4">
+              <label>Plan</label>
+              <input
+                type="text"
+                ref={planRef}
+                disabled
+                required
+                defaultValue={
+                  user && user.user_role_id === "2" ? "Free" : "Premium"
+                }
+                className="bg-white px-4 py-2 rounded-md drop-shadow-lg"
+              />
+            </div>
+          </div>
+        )}
         <div>
           <button
             type="button"
