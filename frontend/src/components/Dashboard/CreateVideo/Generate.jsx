@@ -154,7 +154,7 @@ const Generate = ({ generateVideoHandler }) => {
           </div>
           <div className="w-3/5 flex flex-col gap-y-4">
             <label className="font-bold">Select an image:</label>
-            <div className="flex gap-x-4 flex-wrap">
+            <div className="flex gap-x-4 gap-y-4 flex-wrap">
               {existingImage.length === 0 && (
                 <div className="flex justify-between gap-x-6">
                   <p>

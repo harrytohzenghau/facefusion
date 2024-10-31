@@ -19,11 +19,11 @@ const ExistingVideo = ({ existingVideo }) => {
 
   const handleDelete = async (videoDetail) => {
     try {
-      // const response = await deleteContent(videoDetail.contentId);
+      const response = await deleteContent(videoDetail.contentId);
 
-      // if (!response.success) {
-      //   return toast.error(response.message);
-      // }
+      if (!response.success) {
+        return toast.error(response.message);
+      }
 
       setVideos(videos.filter((_, i) => i !== videoDetail.index));
       // updateExistingImageHandler(
@@ -43,7 +43,7 @@ const ExistingVideo = ({ existingVideo }) => {
 
   return (
     <>
-      <div className="flex gap-x-4">
+      <div className="w-3/4 flex gap-x-4">
         {videos.length > 0 &&
           videos.map((video, index) => (
             <div className="w-2/6 flex flex-col gap-y-4" key={index}>
