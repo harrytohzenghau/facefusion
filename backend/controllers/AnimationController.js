@@ -2,7 +2,7 @@ const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 const FormData = require("form-data");
-const {  uploadFileToS3, downloadFileFromS3  } = require('../utils/s3Utils');
+const {  uploadFileToS3, downloadFileFromS3, getSignedUrlForS3  } = require('../utils/s3Utils');
 const ContentBank = require("../models/ContentBank");
 
 const AnimationJob = require("../models/AnimationJob");
@@ -318,9 +318,9 @@ const AnimationController = {
         // Upload the final (possibly upscaled) video to S3
         const s3Key = `users/${req.user.id}/videos/${path.basename(finalVideoPath)}`;
         await uploadFileToS3(finalVideoPath, process.env.AWS_S3_BUCKET_NAME, s3Key);
+        const lipSyncVideoUrl = await getSignedUrlForS3(process.env.AWS_S3_BUCKET_NAME, s3Key);
 
-
-
+        // Save video metadata to the ContentBank
         const newContent = new ContentBank({
           name: name,
           user_id: req.user.id,
@@ -332,15 +332,15 @@ const AnimationController = {
           is_sample: false,
         });
         await newContent.save();
-  
+        
         // Delete the local files
         fs.unlinkSync(lipSyncVideoPath);
         fs.unlinkSync(faceFilePath);
-        fs.unlinkSync(audioFilePath);  
+        fs.unlinkSync(audioFilePath);    
   
         res.status(200).json({
           message: "Lip-sync video generated and uploaded to S3 successfully",
-          lipSyncVideoUrl: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3Key}`,
+          lipSyncVideoUrl,
         });
       });
   
