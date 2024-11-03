@@ -55,7 +55,7 @@ const RatingCard = () => {
   };
 
   return (
-    <Card additionalClassName="flex flex-col gap-y-6 px-6 py-6 bg-white rounded-md drop-shadow-lg">
+    <Card additionalClassName="flex flex-col gap-y-6 px-6 py-6 bg-white rounded-md drop-shadow-lg max-lg:w-full">
       <h1 className="font-bold text-xl">Rate our service</h1>
       <p>Let us know how satisfy you are with our service!</p>
       <hr />

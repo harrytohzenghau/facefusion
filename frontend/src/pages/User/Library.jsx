@@ -74,7 +74,7 @@ const Library = () => {
   return (
     <div className="mt-3">
       <h1 className="font-bold text-xl">Your image</h1>
-      <div className="flex justify-between mt-6 items-start gap-x-6">
+      <div className="flex justify-between mt-6 items-start gap-x-6 max-lg:flex-col max-lg:gap-y-6">
         {existingImage.length > 0 && (
           <ExistingImage
             existingImage={existingImage}

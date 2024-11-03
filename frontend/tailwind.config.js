@@ -5,6 +5,10 @@ module.exports = withMT({
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      screens: {
+        "max-md": { max: "768px" }, 
+        "max-lg": { max: "1024px" },
+      },
       colors: {
         "blue-1": "#03045E",
         "blue-2": "#023E8A",

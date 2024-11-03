@@ -49,7 +49,7 @@ const ExistingImage = ({ existingImage, updateExistingImageHandler }) => {
   return (
     <div className="w-3/4">
       {/* Image Grid */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2">
         {images.length > 0 &&
           images.map((image, index) => (
             <div key={index} className="w-full">

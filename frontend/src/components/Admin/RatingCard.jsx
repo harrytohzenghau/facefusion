@@ -71,11 +71,11 @@ const RatingCard = ({ ratingData }) => {
 
   return (
     <>
-      <Card additionalClassName="flex flex-col gap-y-6 px-6 py-6 bg-white rounded-md drop-shadow-lg">
+      <Card additionalClassName="flex flex-col gap-y-6 px-6 py-6 bg-white rounded-md drop-shadow-lg max-lg:w-full">
         <h1 className="font-bold text-xl">View Rating</h1>
         <div className="flex flex-col gap-y-6">
-          <div className="flex gap-x-6">
-            <div className="w-1/2 flex flex-col gap-y-4">
+          <div className="flex gap-x-6 gap-y-6 max-lg:flex-col">
+            <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
               <label>Username</label>
               <input
                 type="text"
@@ -84,7 +84,7 @@ const RatingCard = ({ ratingData }) => {
                 className="bg-white px-4 py-2 rounded-md drop-shadow-lg"
               />
             </div>
-            <div className="w-1/2 flex flex-col gap-y-4">
+            <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
               <label>Email</label>
               <input
                 type="text"
@@ -94,8 +94,8 @@ const RatingCard = ({ ratingData }) => {
               />
             </div>
           </div>
-          <div className="flex gap-x-6">
-            <div className="w-1/2 flex flex-col gap-y-4">
+          <div className="flex gap-x-6 gap-y-6 max-lg:flex-col">
+            <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
               <label>Name</label>
               <input
                 type="text"
@@ -104,7 +104,7 @@ const RatingCard = ({ ratingData }) => {
                 className="bg-white px-4 py-2 rounded-md drop-shadow-lg"
               />
             </div>
-            <div className="w-1/2">
+            <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
               <div className="flex flex-col gap-y-4">
                 <label>
                   Status:{" "}
@@ -123,8 +123,8 @@ const RatingCard = ({ ratingData }) => {
               </div>
             </div>
           </div>
-          <div className="flex gap-x-6">
-            <div className="w-1/2 flex flex-col gap-y-4">
+          <div className="flex gap-x-6 gap-y-6 max-lg:flex-col">
+            <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
               <label>Company Name</label>
               <input
                 type="text"
@@ -133,7 +133,7 @@ const RatingCard = ({ ratingData }) => {
                 className="bg-white px-4 py-2 rounded-md drop-shadow-lg"
               />
             </div>
-            <div className="w-1/2 flex flex-col gap-y-4">
+            <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
               <label>Occupation</label>
               <input
                 type="text"
@@ -143,8 +143,8 @@ const RatingCard = ({ ratingData }) => {
               />
             </div>
           </div>
-          <div className="flex gap-x-6">
-            <div className="w-1/2 flex flex-col gap-y-4">
+          <div className="flex gap-x-6 gap-y-6 max-lg:flex-col">
+            <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
               <label>Rating</label>
               <input
                 type="text"
@@ -153,7 +153,7 @@ const RatingCard = ({ ratingData }) => {
                 className="bg-white px-4 py-2 rounded-md drop-shadow-lg"
               />
             </div>
-            <div className="w-1/2 flex flex-col gap-y-4">
+            <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
               <label>Created At</label>
               <input
                 type="text"
@@ -207,7 +207,7 @@ const RatingCard = ({ ratingData }) => {
           </div>
         </div>
       </Card>
-      
+
       {/* Modal for delete confirmation */}
       <Modal
         isOpen={modalOpen}

@@ -66,11 +66,11 @@ const ProfileCard = ({ userData }) => {
   };
 
   return (
-    <Card additionalClassName="flex flex-col gap-y-6 px-6 py-6 bg-white rounded-md drop-shadow-lg">
+    <Card additionalClassName="flex flex-col gap-y-6 px-6 py-6 bg-white rounded-md drop-shadow-lg max-lg:w-full">
       <h1 className="font-bold text-xl">Update Profile</h1>
       <form onSubmit={updateProfileHandler} className="flex flex-col gap-y-6">
-        <div className="flex gap-x-6">
-          <div className="w-1/2 flex flex-col gap-y-4">
+        <div className="flex gap-x-6 gap-y-6 max-lg:flex-col">
+          <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
             <label>First Name</label>
             <input
               type="text"
@@ -80,7 +80,7 @@ const ProfileCard = ({ userData }) => {
               className="bg-white px-4 py-2 rounded-md drop-shadow-lg"
             />
           </div>
-          <div className="w-1/2 flex flex-col gap-y-4">
+          <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
             <label>Last Name</label>
             <input
               type="text"
@@ -91,8 +91,8 @@ const ProfileCard = ({ userData }) => {
             />
           </div>
         </div>
-        <div className="flex gap-x-6">
-          <div className="w-1/2 flex flex-col gap-y-4">
+        <div className="flex gap-x-6 gap-y-6 max-lg:flex-col">
+          <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
             <label>Username</label>
             <input
               type="text"
@@ -104,8 +104,8 @@ const ProfileCard = ({ userData }) => {
             />
           </div>
         </div>
-        <div className="flex gap-x-6">
-          <div className="w-1/2 flex flex-col gap-y-4">
+        <div className="flex gap-x-6 gap-y-6 max-lg:flex-col">
+          <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
             <label>Email</label>
             <input
               type="email"
@@ -115,7 +115,7 @@ const ProfileCard = ({ userData }) => {
               className="bg-white px-4 py-2 rounded-md drop-shadow-lg"
             />
           </div>
-          <div className="w-1/2 flex flex-col gap-y-4">
+          <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
             <label>Phone Number</label>
             <input
               type="tel"
@@ -136,8 +136,8 @@ const ProfileCard = ({ userData }) => {
           </button>
         </div>
         {editPassword && (
-          <div className="flex gap-x-6">
-            <div className="w-1/2 flex flex-col gap-y-4">
+          <div className="flex gap-x-6 gap-y-6 max-lg:flex-col">
+            <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
               <label>Password</label>
               <input
                 type="password"
@@ -146,7 +146,7 @@ const ProfileCard = ({ userData }) => {
                 className="bg-white px-4 py-2 rounded-md drop-shadow-lg"
               />
             </div>
-            <div className="w-1/2 flex flex-col gap-y-4">
+            <div className="w-1/2 flex flex-col gap-y-4 max-lg:w-full">
               <label>Confirm Password</label>
               <input
                 type="password"
