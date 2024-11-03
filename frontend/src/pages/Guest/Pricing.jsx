@@ -1,5 +1,6 @@
 import { CheckIcon } from "@heroicons/react/20/solid";
 import Card from "../../components/UI/Card";
+import { Link } from "react-router-dom";
 
 const freeFeatures = [
   "Up to 3 image uploads",
@@ -78,12 +79,12 @@ export default function Pricing() {
                       SGD / mth
                     </span>
                   </p>
-                  <a
-                    href="#"
+                  <Link
+                    to="/sign-up"
                     className="mt-10 block w-full rounded-md bg-blue-2 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transform transition-all duration-200 ease-in-out"
                   >
                     Subscribe
-                  </a>
+                  </Link>
                   <p className="mt-6 text-xs leading-5 text-gray-600">
                     Invoices and receipts available for easy company
                     reimbursement
@@ -140,12 +141,12 @@ export default function Pricing() {
                       SGD / mth
                     </span>
                   </p>
-                  <a
-                    href="#"
+                  <Link
+                    to="/sign-up"
                     className="mt-10 block w-full rounded-md bg-blue-2 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transform transition-all duration-200 ease-in-out"
                   >
                     Subscribe
-                  </a>
+                  </Link>
                   <p className="mt-6 text-xs leading-5 text-gray-600">
                     Invoices and receipts available for easy company
                     reimbursement
