@@ -331,7 +331,7 @@ const AnimationController = {
           created_at: new Date(),
           is_sample: false,
         });
-        await newContent.save();
+        const savedContent = await newContent.save();
         
         // Delete the local files
         fs.unlinkSync(lipSyncVideoPath);
@@ -341,6 +341,7 @@ const AnimationController = {
         res.status(200).json({
           message: "Lip-sync video generated and uploaded to S3 successfully",
           lipSyncVideoUrl,
+          content_id: savedContent._id,
         });
       });
   

@@ -82,7 +82,7 @@ const CreateVideo = () => {
         // Check if the lip-sync video URL exists in the response
         if (lipSyncResponse.success && lipSyncResponse.data.lipSyncVideoUrl) {
           setVideo(lipSyncResponse.data.lipSyncVideoUrl); // Set the lip-sync video URL in state
-          setContentId(lipSyncResponse.data.id);
+          setContentId(lipSyncResponse.data.content_id);
           toast.success("Video generated successfully!");
         } else {
           throw new Error("Failed to generate the lip-sync video.");
@@ -105,7 +105,7 @@ const CreateVideo = () => {
     <div className="mt-3 flex flex-col gap-y-10">
       <h1 className="font-bold text-xl">Create Video</h1>
       <Generate generateVideoHandler={generateVideoHandler} />
-      {video && <Download video={video} />}
+      {video && <Download video={video} contentId={contentId}/>}
     </div>
   );
 };
