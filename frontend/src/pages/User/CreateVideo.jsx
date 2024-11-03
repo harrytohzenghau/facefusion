@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 const CreateVideo = () => {
   const user = useSelector((state) => state.auth.user);
   const [video, setVideo] = useState(null);
+  const [contentId, setContentId] = useState(null);
   const { setIsLoading } = useContext(LoadingContext);
 
   const generateVideoHandler = async (
@@ -81,6 +82,7 @@ const CreateVideo = () => {
         // Check if the lip-sync video URL exists in the response
         if (lipSyncResponse.success && lipSyncResponse.data.lipSyncVideoUrl) {
           setVideo(lipSyncResponse.data.lipSyncVideoUrl); // Set the lip-sync video URL in state
+          setContentId(lipSyncResponse.data.id);
           toast.success("Video generated successfully!");
         } else {
           throw new Error("Failed to generate the lip-sync video.");
