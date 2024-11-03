@@ -1,6 +1,6 @@
 import { incrementDownloadCount } from "../../../services/AnimationService";
 
-const Download = ({ video }) => {
+const Download = ({ video, contentId }) => {
   // const handleDownload = () => {
   //   const link = document.createElement("a");
   //   link.href = video;
@@ -8,7 +8,7 @@ const Download = ({ video }) => {
   //   link.click();
   // };
 
-  const handleDownload = async (contentId) => {
+  const handleDownload = async () => {
     try {
       // do increment download count before starting the download
       const result = await incrementDownloadCount(contentId);
