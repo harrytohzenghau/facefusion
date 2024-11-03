@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { deleteContent, incrementDownloadCount } from "../../../services/AnimationService";
+import {
+  deleteContent,
+  incrementDownloadCount,
+} from "../../../services/AnimationService";
 
 const ExistingVideo = ({ existingVideo }) => {
   const [videos, setVideos] = useState([]);
@@ -56,7 +59,7 @@ const ExistingVideo = ({ existingVideo }) => {
   };
 
   return (
-    <div className="w-3/4 max-lg:w-full">
+    <div className="w-full">
       <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-2">
         {videos.length > 0 &&
           videos.map((video, index) => (

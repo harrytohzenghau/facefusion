@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { uploadImage } from "../../../services/AnimationService";
+import { LoadingContext } from "../../../context/LoadingContext";
 
 const Upload = ({ updateExistingImageHandler }) => {
   const [images, setImages] = useState([]); // Array to hold multiple images
   const [imagePreviews, setImagePreviews] = useState([]); // Array for previews
+  const { setIsLoading } = useContext(LoadingContext);
 
   const uploadImageHandler = async (e) => {
     e.preventDefault();
+
+    setIsLoading(true);
 
     for (let i = 0; i < images.length; i++) {
       try {
@@ -18,9 +22,11 @@ const Upload = ({ updateExistingImageHandler }) => {
         );
 
         if (!response.success) {
+          setIsLoading(true);
           return toast.error(response.message);
         }
       } catch (error) {
+        setIsLoading(false);
         toast.error("Something went wrong when uploading an image!");
       }
     }
@@ -28,6 +34,8 @@ const Upload = ({ updateExistingImageHandler }) => {
     setImages([]);
     setImagePreviews([]);
     toast.success("Image uploaded successfully!");
+
+    setIsLoading(false);
 
     updateExistingImageHandler()
   };

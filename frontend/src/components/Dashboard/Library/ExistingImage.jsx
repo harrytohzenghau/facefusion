@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { deleteContent } from "../../../services/AnimationService";
+import { LoadingContext } from "../../../context/LoadingContext";
 
 const ExistingImage = ({ existingImage, updateExistingImageHandler }) => {
   const [images, setImages] = useState([]);
   const [viewedImage, setViewedImage] = useState(null); // Store image to view
   const [imageToDelete, setImageToDelete] = useState(null); // Store the image to delete for confirmation
+  const { setIsLoading } = useContext(LoadingContext);
 
   useEffect(() => {
     setImages(existingImage);
@@ -13,10 +15,12 @@ const ExistingImage = ({ existingImage, updateExistingImageHandler }) => {
 
   // Function to remove an image
   const handleDelete = async (imageDetail) => {
+    setIsLoading(true);
     try {
       const response = await deleteContent(imageDetail.contentId);
 
       if (!response.success) {
+        setIsLoading(false);
         return toast.error(response.message);
       }
 
@@ -25,8 +29,10 @@ const ExistingImage = ({ existingImage, updateExistingImageHandler }) => {
         images.filter((_, i) => i !== imageDetail.index)
       );
       setImageToDelete(null); // Close confirmation modal after deletion
+      setIsLoading(false);
       toast.success("Image removed successfully!");
     } catch (error) {
+      setIsLoading(false);
       toast.error("Something went wrong when uploading an image!");
     }
   };
@@ -47,9 +53,9 @@ const ExistingImage = ({ existingImage, updateExistingImageHandler }) => {
   };
 
   return (
-    <div className="w-3/4">
+    <div className="w-3/4 max-lg:w-full">
       {/* Image Grid */}
-      <div className="grid grid-cols-4 gap-4 max-lg:grid-cols-3 max-md:grid-cols-2">
+      <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-2">
         {images.length > 0 &&
           images.map((image, index) => (
             <div key={index} className="w-full">
@@ -58,7 +64,7 @@ const ExistingImage = ({ existingImage, updateExistingImageHandler }) => {
                 alt={`Placeholder ${index + 1}`}
                 className="w-full max-w-1/5 h-auto object-cover"
               />
-              <div className="flex justify-between mt-2 gap-x-4">
+              <div className="flex justify-between mt-2 gap-x-2">
                 <button
                   onClick={() => handleView(image)}
                   className="bg-blue-1 w-2/4 text-white py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"

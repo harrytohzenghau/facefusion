@@ -84,7 +84,7 @@ const Library = () => {
         {existingImage.length === 0 && <h4>You have no image yet! Add now.</h4>}
         <button
           onClick={() => setToggleAddMoreImages((prevState) => !prevState)}
-          className="bg-blue-1 w-1/4 text-white py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"
+          className="bg-blue-1 w-1/4 text-white px-2 py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out max-lg:w-full"
         >
           Add more images
         </button>
@@ -93,14 +93,14 @@ const Library = () => {
         <Upload updateExistingImageHandler={updateExistingImageHandler} />
       )}
       <h1 className="font-bold text-xl mt-6">Your Video</h1>
-      <div className="mt-6 flex justify-between mt-6 items-start gap-x-6">
+      <div className="flex justify-between mt-6 items-start gap-x-6 max-lg:flex-col max-lg:gap-y-6">
         {existingVideo.length > 0 && (
           <ExistingVideo existingVideo={existingVideo} />
         )}
         {existingVideo.length === 0 && <h4>You have no image yet! Add now.</h4>}
         <button
           onClick={() => navigate("/user/create")}
-          className="bg-blue-1 w-1/4 text-white py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"
+          className="bg-blue-1 w-1/4 text-white py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out max-lg:w-full"
         >
           Create Video
         </button>

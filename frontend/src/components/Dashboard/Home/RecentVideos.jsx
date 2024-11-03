@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { getImagesAndVideos } from "../../../services/AnimationService";
 import Card from "../../UI/Card";
-import ExistingVideo from "../Library/ExistingVideo";
+import ExistingVideo from "./ExistingVideo";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
