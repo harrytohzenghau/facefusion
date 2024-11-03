@@ -19,16 +19,22 @@ const Generate = ({ generateVideoHandler }) => {
   const updateExistingImageHandler = async () => {
     try {
       const response = await getImagesAndVideos(user.id);
+
       if (!response.success) {
         return toast.error("Something went wrong when fetching user data.");
       }
 
       const existingImageList = response.data.content
-        .filter((content, index) => content.file_type === "Portraits")
-        .map((content, index) => ({
-          content,
-          fileUrl: response.data.fileUrl[index],
-        }));
+        .map((content, index) => {
+          if (content.file_type === "Portraits") {
+            return {
+              content,
+              fileUrl: response.data.fileUrl[index],
+            };
+          }
+          return null;
+        })
+        .filter((item) => item !== null);
 
       setExistingImage(existingImageList);
     } catch (error) {
@@ -93,7 +99,7 @@ const Generate = ({ generateVideoHandler }) => {
         onSubmit={generateVideoFormHandler}
       >
         <div className="flex gap-x-20 justify-around items-start max-lg:flex-col max-lg:gap-y-4">
-          <div className="w-2/5 flex flex-col gap-y-4">
+          <div className="w-2/5 flex flex-col gap-y-4 max-lg:w-full">
             {user.role === "Premium" && (
               <div className="flex flex-col gap-y-4">
                 <label className="font-bold">Upload Audio:</label>
@@ -152,9 +158,9 @@ const Generate = ({ generateVideoHandler }) => {
               />
             </div>
           </div>
-          <div className="w-3/5 flex flex-col gap-y-4">
+          <div className="w-3/5 flex flex-col gap-y-4 max-lg:w-full">
             <label className="font-bold">Select an image:</label>
-            <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-2">
+            <div className="grid grid-cols-3 gap-4">
               {existingImage.length === 0 && (
                 <div className="flex justify-between gap-x-6">
                   <p>
