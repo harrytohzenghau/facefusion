@@ -190,6 +190,39 @@ export const updateContentBank = async (name, file_type, file_s3_key) => {
   }
 };
 
+export const incrementDownloadCount = async (contentId) => {
+  const token = store.getState().auth.token;
+
+  try {
+    const response = await axios.post(
+      `${apiUrl}/api/contentBank/increment-download/${contentId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    if (error.response) {
+      return {
+        success: false,
+        message: error.response.data.message || "An error occurred on the server.",
+      };
+    } else if (error.request) {
+      return {
+        success: false,
+        message: "No response from the server. Please try again later.",
+      };
+    } else {
+      return { success: false, message: "An unexpected error occurred." };
+    }
+  }
+};
+
 
 export const uploadImage = async (name, file_type, file) => {
   const token = store.getState().auth.token;

@@ -1,9 +1,32 @@
+import { incrementDownloadCount } from "../../../services/AnimationService";
+
 const Download = ({ video }) => {
-  const handleDownload = () => {
-    const link = document.createElement("a");
-    link.href = video;
-    link.download = "video.mp4"; // Set a default file name for download
-    link.click();
+  // const handleDownload = () => {
+  //   const link = document.createElement("a");
+  //   link.href = video;
+  //   link.download = "video.mp4"; // Set a default file name for download
+  //   link.click();
+  // };
+
+  const handleDownload = async (contentId) => {
+    try {
+      // do increment download count before starting the download
+      const result = await incrementDownloadCount(contentId);
+      if (result.success) {
+        console.log("Download count incremented successfully.");
+      } else {
+        console.error("Failed to increment download count:", result.message);
+      }
+
+      // start download
+      const link = document.createElement("a");
+      link.href = video;
+      link.download = "video.mp4"; 
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error("Error during download process:", error);
+    }
   };
 
   const handleDelete = () => {}

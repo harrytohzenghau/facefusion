@@ -9,6 +9,7 @@ const contentBankSchema = new Schema({
     file_s3_key: { type: String, required: true },
     created_at: { type: Date, default: Date.now },
     status: { type: String, enum: ['pending', 'uploaded', 'processing', 'completed'], default: 'pending' }, // Add this field to track the status
+    download_count: { type: Number, default: 0 }, 
   });
   
   module.exports = mongoose.model('ContentBank', contentBankSchema);
