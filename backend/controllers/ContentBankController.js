@@ -5,6 +5,8 @@ const {
   getSignedUrlForS3,
 } = require("../utils/s3Utils");
 
+
+
 const ContentBankController = {
   // Get all content items
   async getAllContent(req, res) {
@@ -190,6 +192,30 @@ const ContentBankController = {
       res.status(500).json({ error: error.message });
     }
   },
+
+  // Increment download count by content ID
+async incrementDownloadCount(req, res) {
+  try {
+    const { id } = req.params; // ID of the content to increment
+    const content = await ContentBank.findByIdAndUpdate(
+      id,
+      { $inc: { download_count: 1 } }, // Increment the download count
+      { new: true } // Return the updated document
+    );
+
+    if (!content) {
+      return res.status(404).json({ message: "Content not found" });
+    }
+
+    res.status(200).json({
+      message: "Download count incremented successfully",
+      download_count: content.download_count,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to increment download count" });
+  }
+},
+  
 };
 
 module.exports = ContentBankController;

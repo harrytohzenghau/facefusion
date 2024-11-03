@@ -26,4 +26,7 @@ router.put('/:id', ContentBankController.updateContent);
 // Route to delete content by ID
 router.delete('/:id', ContentBankController.deleteContent);
 
+router.post('/increment-download/:id', ContentBankController.incrementDownloadCount);
+
+
 module.exports = router;
