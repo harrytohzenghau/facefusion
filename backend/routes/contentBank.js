@@ -28,5 +28,6 @@ router.delete('/:id', ContentBankController.deleteContent);
 
 router.post('/increment-download/:id', ContentBankController.incrementDownloadCount);
 
+router.get('/count-lip-sync-videos', ContentBankController.countLipSyncVideos);
 
 module.exports = router;
