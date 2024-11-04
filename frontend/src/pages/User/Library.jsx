@@ -66,6 +66,16 @@ const Library = () => {
     }
   };
 
+  const toggleAddImageHandler = () => {
+    if (user.role === "Free" && existingImage.length >= 3) {
+      return toast.error(
+        "You had hit the image upload limit. Remove some images before proceed!"
+      );
+    }
+
+    setToggleAddMoreImages((prevState) => !prevState);
+  };
+
   useEffect(() => {
     updateExistingImageHandler(); // Initial fetch
     updateExistingVideoHandler();
@@ -83,7 +93,7 @@ const Library = () => {
         )}
         {existingImage.length === 0 && <h4>You have no image yet! Add now.</h4>}
         <button
-          onClick={() => setToggleAddMoreImages((prevState) => !prevState)}
+          onClick={toggleAddImageHandler}
           className="bg-blue-1 w-1/4 text-white px-2 py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out max-lg:w-full"
         >
           Add more images

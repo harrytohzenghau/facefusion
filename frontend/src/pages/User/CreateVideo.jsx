@@ -1,7 +1,10 @@
 import { useContext, useState } from "react";
 import Generate from "../../components/Dashboard/CreateVideo/Generate";
 import Download from "../../components/Dashboard/CreateVideo/Download";
-import { updateContentBank } from "../../services/AnimationService";
+import {
+  getImagesAndVideos,
+  updateContentBank,
+} from "../../services/AnimationService";
 import { useSelector } from "react-redux";
 import {
   generateTextToSpeech,
@@ -25,6 +28,37 @@ const CreateVideo = () => {
     audio
   ) => {
     // Check for user role
+    try {
+      const response = await getImagesAndVideos(user.id);
+
+      if (!response.success) {
+        return toast.error("Something went wrong when fetching user data.");
+      }
+
+      const existingVideoList = response.data.content
+        .map((content, index) => {
+          if (content.file_type === "Video") {
+            return {
+              content,
+              fileUrl: response.data.fileUrl[index],
+            };
+          }
+          return null;
+        })
+        .filter((item) => item !== null);
+
+      if (
+        (user.role === "Free" && existingVideoList.length >= 3) ||
+        (user.role === "Premium" && existingVideoList.length >= 10)
+      ) {
+        return toast.error(
+          "You had hit the video generate limit. Please remove some video before proceed!"
+        );
+      }
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    }
+
     if (user.role === "Free" || user.role === "Premium") {
       try {
         setIsLoading(true); // Start the loading state
@@ -34,25 +68,34 @@ const CreateVideo = () => {
         let audioType = "file"; // Use this to update type of audio in LipSync
         if (!audio && inputText) {
           const ttsResponse = await generateTextToSpeech(inputText, voiceType); // Call the new service
-          
-          
+
           if (ttsResponse.success) {
             generatedAudioUrl = ttsResponse.audioUrl; // Get the audio file URL from the service response
             audioType = "url";
 
-            const s3BaseUrl = "https://prod-facefusion.s3.ap-southeast-2.amazonaws.com/";
+            const s3BaseUrl =
+              "https://prod-facefusion.s3.ap-southeast-2.amazonaws.com/";
             const fileName = "Generated Audio";
             const fileType = "Audio";
             const fileS3Key = generatedAudioUrl.replace(s3BaseUrl, ""); // URL from S3
 
-            const result = await updateContentBank(fileName, fileType, fileS3Key);
+            const result = await updateContentBank(
+              fileName,
+              fileType,
+              fileS3Key
+            );
 
             if (result.success) {
-              console.log("Content updated successfully in MongoDB:", result.data);
+              console.log(
+                "Content updated successfully in MongoDB:",
+                result.data
+              );
             } else {
-              console.error("Error updating content in MongoDB:", result.message);
+              console.error(
+                "Error updating content in MongoDB:",
+                result.message
+              );
             }
-
           } else {
             throw new Error("Text-to-speech generation failed.");
           }
@@ -105,7 +148,7 @@ const CreateVideo = () => {
     <div className="mt-3 flex flex-col gap-y-10">
       <h1 className="font-bold text-xl">Create Video</h1>
       <Generate generateVideoHandler={generateVideoHandler} />
-      {video && <Download video={video} contentId={contentId}/>}
+      {video && <Download video={video} contentId={contentId} />}
     </div>
   );
 };

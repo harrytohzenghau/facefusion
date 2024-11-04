@@ -151,6 +151,7 @@ const Generate = ({ generateVideoHandler }) => {
               <textarea
                 className="bg-white p-2 rounded-md drop-shadow-lg"
                 value={textInput}
+                required={user.role === "Free"}
                 onChange={handleTextChange}
                 rows="4"
                 cols="50"

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Card from "../../UI/Card";
-import { FaVideo } from "react-icons/fa";
-import { FaDownload } from "react-icons/fa";
+import { FaVideo, FaDownload, FaImage } from "react-icons/fa";
 import { getImagesAndVideos } from "../../../services/AnimationService";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -13,7 +12,7 @@ const Usage = () => {
   const [videoDownloadCount, setVideoDownloadCount] = useState();
 
   const maxImagesAllowed = user.role === "Free" && 3;
-  const maxVideosAllowed = user.role === "Premium" ? 3 : 10;
+  const maxVideosAllowed = user.role === "Premium" ? 10 : 3;
 
   useEffect(() => {
     const getUsageDetails = async () => {
@@ -69,22 +68,25 @@ const Usage = () => {
       <h2 className="text-xl font-bold">Usage</h2>
       <div className="flex gap-x-4 justify-between max-lg:flex-col max-lg:gap-y-6">
         <Card additionalClassName="flex flex-col gap-y-2 px-4 py-4 bg-white rounded-md drop-shadow-lg max-lg:w-full">
-          <FaVideo size={32} />
+          <FaImage size={32} />
           <h3>Images Upload</h3>
           <h2 className="text-xl font-bold">
             {user.role === "Free" &&
               `${imageUploadCount} / ${maxImagesAllowed}`}
+            {user.role === "Premium" && imageUploadCount}
           </h2>
-          <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-blue-9">
-            <div
-              className="bg-blue-4 h-2.5 rounded-full"
-              style={{
-                width: `calc(${
-                  Math.min(imageUploadCount / maxImagesAllowed, 1) * 100
-                }%)`,
-              }}
-            ></div>
-          </div>
+          {user.role === "Free" && (
+            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-blue-9">
+              <div
+                className="bg-blue-4 h-2.5 rounded-full"
+                style={{
+                  width: `calc(${
+                    Math.min(imageUploadCount / maxImagesAllowed, 1) * 100
+                  }%)`,
+                }}
+              ></div>
+            </div>
+          )}
         </Card>
         <Card additionalClassName="flex flex-col gap-y-2 px-4 py-4 bg-white rounded-md drop-shadow-lg max-lg:w-full">
           <FaVideo size={32} />
