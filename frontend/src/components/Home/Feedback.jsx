@@ -8,12 +8,12 @@ const Feedback = ({ publishedRatings }) => {
         <h5 className="w-full text-center text-2xl font-bold">
           Client's Feedback
         </h5>
-        <div className="flex gap-x-6 justify-between">
+        <div className="flex gap-x-6 justify-between max-lg:flex-col max-lg:gap-y-6">
           {publishedRatings &&
             publishedRatings.map((rating, index) => (
               <Card
                 key={index}
-                additionalClassName="flex flex-col justify-between bg-white rounded-md p-6 drop-shadow-lg"
+                additionalClassName="flex flex-col justify-between bg-white rounded-md p-6 drop-shadow-lg max-md:w-full"
               >
                 <div className="flex flex-col justify-between h-full gap-y-6">
                   <p>"{rating.feedback}"</p>

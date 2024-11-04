@@ -160,21 +160,21 @@ const Generate = ({ generateVideoHandler }) => {
           </div>
           <div className="w-3/5 flex flex-col gap-y-4 max-lg:w-full">
             <label className="font-bold">Select an image:</label>
+            {existingImage.length === 0 && (
+              <div className="flex justify-between gap-x-6 max-lg:flex-col max-lg:gap-y-4">
+                <p>
+                  You have no image yet. You may go to library page and upload
+                  now.
+                </p>
+                <button
+                  onClick={() => navigate("/user/library")}
+                  className="bg-blue-1 w-1/4 text-white py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out max-lg:w-full"
+                >
+                  Upload image
+                </button>
+              </div>
+            )}
             <div className="grid grid-cols-3 gap-4">
-              {existingImage.length === 0 && (
-                <div className="flex justify-between gap-x-6">
-                  <p>
-                    You have no image yet. You may go to library page and upload
-                    now.
-                  </p>
-                  <button
-                    onClick={() => navigate("/user/library")}
-                    className="bg-blue-1 w-1/4 text-white py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"
-                  >
-                    Upload image
-                  </button>
-                </div>
-              )}
               {existingImage &&
                 existingImage.map((image, index) => (
                   <div key={index} className="w-full">

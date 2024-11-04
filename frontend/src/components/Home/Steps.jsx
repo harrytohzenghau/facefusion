@@ -5,12 +5,12 @@ import download_video from "../../assets/download.jpg";
 
 const Steps = () => {
   return (
-    <div className=" w-full bg-gradient-to-r from-white to-blue-9">
+    <div className="w-full bg-gradient-to-r from-white to-blue-9">
       <Card additionalClassName="flex flex-col gap-y-8">
         <h5 className="w-full text-center text-2xl font-bold">
           Three Simple Steps to Generate Animated Video
         </h5>
-        <div className="flex gap-x-6 justify-between">
+        <div className="flex gap-x-6 justify-between max-lg:flex-col max-lg:gap-y-6">
           <Card additionalClassName="flex flex-col gap-y-6 justify-between bg-white rounded-md px-6 drop-shadow-lg hover:drop-shadow-xl hover:scale-105 transform transition-all duration-200 ease-in-out">
             <img
               src={upload_image}

@@ -39,7 +39,7 @@ const FAQs = () => {
         <Accordion
           open={open === 1}
           icon={<Icon id={1} open={open} />}
-          className="mb-2 p-[2px] rounded-lg bg-gradient-to-r from-blue-8 to-blue-2"
+          className="mb-2 p-[2px] text-left rounded-lg bg-gradient-to-r from-blue-8 to-blue-2"
         >
           <AccordionHeader
             onClick={() => handleOpen(1)}
@@ -60,7 +60,7 @@ const FAQs = () => {
         <Accordion
           open={open === 2}
           icon={<Icon id={2} open={open} />}
-          className="mb-2 p-[2px] rounded-lg bg-gradient-to-r from-blue-8 to-blue-2"
+          className="mb-2 p-[2px] text-left rounded-lg bg-gradient-to-r from-blue-8 to-blue-2"
         >
           <AccordionHeader
             onClick={() => handleOpen(2)}
@@ -80,7 +80,7 @@ const FAQs = () => {
         <Accordion
           open={open === 3}
           icon={<Icon id={3} open={open} />}
-          className="mb-2 p-[2px] rounded-lg bg-gradient-to-r from-blue-8 to-blue-2"
+          className="mb-2 p-[2px] text-left rounded-lg bg-gradient-to-r from-blue-8 to-blue-2"
         >
           <AccordionHeader
             onClick={() => handleOpen(3)}
@@ -100,7 +100,7 @@ const FAQs = () => {
         <Accordion
           open={open === 4}
           icon={<Icon id={4} open={open} />}
-          className="mb-2 p-[2px] rounded-lg bg-gradient-to-r from-blue-8 to-blue-2"
+          className="mb-2 p-[2px] text-left rounded-lg bg-gradient-to-r from-blue-8 to-blue-2"
         >
           <AccordionHeader
             onClick={() => handleOpen(4)}
@@ -121,7 +121,7 @@ const FAQs = () => {
         <Accordion
           open={open === 5}
           icon={<Icon id={5} open={open} />}
-          className="mb-2 p-[2px] rounded-lg bg-gradient-to-r from-blue-8 to-blue-2"
+          className="mb-2 p-[2px] text-left rounded-lg bg-gradient-to-r from-blue-8 to-blue-2"
         >
           <AccordionHeader
             onClick={() => handleOpen(5)}
