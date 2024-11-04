@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Card from "../../UI/Card";
 import { editOwnProfile } from "../../../services/UserService";
+import { validatePassword } from "../../../util/PasswordValidation";
 
 const ProfileCard = ({ userData }) => {
   const [user, setUser] = useState();
@@ -47,6 +48,11 @@ const ProfileCard = ({ userData }) => {
 
       if (confirmPassword !== password) {
         return toast.error("Password does not matched.");
+      }
+
+      const passwordError = validatePassword(password);
+      if (passwordError) {
+        return toast.error(passwordError); // Show error message if password fails validation
       }
 
       updatedUserData.password = password;

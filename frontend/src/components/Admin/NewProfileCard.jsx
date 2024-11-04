@@ -3,6 +3,7 @@ import Card from "../../components/UI/Card";
 import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { createUser } from "../../services/AdminService";
+import { validatePassword } from "../../util/PasswordValidation";
 
 const NewProfileCard = () => {
   const navigate = useNavigate();
@@ -30,6 +31,11 @@ const NewProfileCard = () => {
 
     if (confirmPassword !== password) {
       return toast.error("Password does not matched.");
+    }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      return toast.error(passwordError); // Show error message if password fails validation
     }
 
     let user_role_id;

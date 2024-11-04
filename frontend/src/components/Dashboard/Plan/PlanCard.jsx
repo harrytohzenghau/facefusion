@@ -29,7 +29,7 @@ const PlanCard = () => {
   }, []);
 
   return (
-    <Card additionalClassName="flex flex-col gap-y-6 px-6 py-6 bg-white rounded-md drop-shadow-lg">
+    <Card additionalClassName="flex flex-col gap-y-6 px-6 py-6 bg-white rounded-md drop-shadow-lg max-lg:w-full">
       <h1 className="font-bold text-xl">Plan & Billing</h1>
       <p>Manage your plan and payments</p>
       <hr />
@@ -46,7 +46,7 @@ const PlanCard = () => {
         <Card additionalClassName="w-1/2 flex mx-0 flex-col gap-y-2 px-4 py-4 bg-white rounded-md drop-shadow-lg">
           <h3>Monthly Plan</h3>
           <h2 className="text-xl font-bold">
-            ${user.role === "Premium" ? "5" : "0"}.00/month
+            ${user.role === "Premium" ? "5" : "0"}.00 / month
           </h2>
         </Card>
         {planDetails && (

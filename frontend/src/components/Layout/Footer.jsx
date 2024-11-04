@@ -4,7 +4,7 @@ import logo from "../../assets/facefusion_logo.png";
 const Footer = () => {
   return (
     <footer className="bg-gradient-to-r from-blue-2 to-blue-1 w-full flex flex-col justify-between">
-      <div className="flex justify-between w-2/5 mx-auto my-10 min-w-[400px]">
+      <div className="flex justify-between w-1/5 mx-auto my-10 min-w-[400px]">
         <div>
           <img src={logo} alt="FaceFusion" className="w-20" />
         </div>
@@ -33,7 +33,7 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <div>
+        {/* <div>
           <h4 className="text-white font-bold">Get In Touch</h4>
           <ul className="flex flex-row gap-x-4 mt-3">
             <li>
@@ -55,7 +55,7 @@ const Footer = () => {
               </NavLink>
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
       <div>
         <hr className="bg-white" />

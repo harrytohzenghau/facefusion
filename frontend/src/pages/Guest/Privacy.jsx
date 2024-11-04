@@ -4,17 +4,18 @@ const Privacy = () => {
   return (
     <div>
       <Card>
-        <p>Effective Date: 1st September 2024</p>
-
-        <h3>1. Introduction</h3>
+        <h3 className="font-bold">Effective Date: 1st September 2024</h3>
+        <h3 className="font-bold mt-4">1. Introduction</h3>
         <p>
           FaceFusion is committed to protecting your privacy. This Privacy
           Policy explains how we collect, use, disclose, and safeguard your
-          information when you visit our website [insert website URL] and use
-          our services.
+          information when you visit our website{" "}
+          <a href="https://facefusion-frontend.onrender.com/">
+            https://facefusion-frontend.onrender.com/
+          </a>
+          and use our services.
         </p>
-
-        <h3>2. Information We Collect</h3>
+        <h3 className="font-bold mt-4">2. Information We Collect</h3>
         <ul>
           <li>
             Personal Information: We may collect personal information such as
@@ -31,7 +32,7 @@ const Privacy = () => {
             statistics.
           </li>
         </ul>
-        <h3>3. How We Use Your Information</h3>
+        <h3 className="font-bold mt-4">3. How We Use Your Information</h3>
         <ul>
           <li>
             Service Delivery: To process and create AI-generated videos based on
@@ -49,7 +50,7 @@ const Privacy = () => {
             Compliance: To comply with legal obligations and protect our rights.
           </li>
         </ul>
-        <h3>4. Sharing Your Information</h3>
+        <h3 className="font-bold mt-4">4. Sharing Your Information</h3>
         <p>
           We do not sell, trade, or rent your personal information to others. We
           may share your information with:
@@ -65,7 +66,7 @@ const Privacy = () => {
             proceedings.
           </li>
         </ul>
-        <h3>5. Security of Your Information</h3>
+        <h3 className="font-bold mt-4">5. Security of Your Information</h3>
         <p>
           We use industry-standard security measures to protect your personal
           information. However, no method of transmission over the internet or
@@ -73,14 +74,14 @@ const Privacy = () => {
           absolute security.
         </p>
 
-        <h3>6. Data Retention</h3>
+        <h3 className="font-bold mt-4">6. Data Retention</h3>
         <p>
           We retain your personal information only as long as necessary to
           fulfill the purposes for which it was collected or to comply with
           legal obligations.
         </p>
 
-        <h3>7. Your Rights</h3>
+        <h3 className="font-bold mt-4">7. Your Rights</h3>
         <p>You have the right to:</p>
 
         <p>Access, correct, or delete your personal information.</p>
@@ -93,14 +94,14 @@ const Privacy = () => {
           To exercise these rights, please contact us at [insert contact email].
         </p>
 
-        <h3>8. Cookies</h3>
+        <h3 className="font-bold mt-4">8. Cookies</h3>
         <p>
           We use cookies and similar tracking technologies to enhance your
           experience on our website. You can manage your cookie preferences
           through your browser settings.
         </p>
 
-        <h3>9. Changes to This Privacy Policy</h3>
+        <h3 className="font-bold mt-4">9. Changes to This Privacy Policy</h3>
         <p>
           We may update this Privacy Policy from time to time. Any changes will
           be posted on this page with an updated "Effective Date." We encourage
