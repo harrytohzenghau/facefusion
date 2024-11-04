@@ -58,3 +58,23 @@ export const register = async (user) => {
     }
   }
 };
+
+
+export const logout = async () => {
+  try {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error("No token found");
+    }
+
+    await axios.post(`${apiUrl}/api/auth/logout`, null, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    localStorage.removeItem('authToken');
+    window.location.href = '/login';
+  } catch (error) {
+    console.error("Logout failed:", error);
+    alert("Failed to logout. Please try again."); 
+  }
+};
