@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const FormData = require("form-data");
 const {  uploadFileToS3, downloadFileFromS3, getSignedUrlForS3  } = require('../utils/s3Utils');
+const ffmpeg = require('fluent-ffmpeg');
 const ContentBank = require("../models/ContentBank");
 
 const AnimationJob = require("../models/AnimationJob");
@@ -202,158 +203,148 @@ const AnimationController = {
   // New: Generate Lip Sync Animation and save to S3
   async generateLipSync(req, res) {
     try {
-      const { face, type } = req.body;
+        const { face, type } = req.body;
 
-    // Validate inputs
-    if (!face || (type === "file" && !req.file) || (type === "url" && !req.body.audio)) {
-      return res.status(400).json({ message: "Invalid input: face URL and audio file or S3 key required." });
-    }
-
-    // Temporary storage path for face video
-    const faceFilePath = path.join(__dirname, '../uploads/', `face-${Date.now()}.mp4`);
-    let audioFilePath;
-
-    // Step 1: Download `face` from S3 (always a URL)
-    const faceSignedUrl = await downloadFileFromS3(face);
-    await downloadToFile(faceSignedUrl, faceFilePath);
-    console.log("faceFilePath:", faceFilePath);
-
-    // Step 2: Handle `audio` based on `type`
-    if (type === "file" && req.file) {
-      const audioFileName = `audio-${Date.now()}-${req.file.originalname}`;
-      audioFilePath = req.file.path;
-
-      audioS3Key = `users/${req.user.id}/audio/${audioFileName}`;
-      await uploadFileToS3(audioFilePath, process.env.AWS_S3_BUCKET_NAME, audioS3Key);
-      console.log("Audio uploaded to S3 with key:", audioS3Key);
-
-      const newAudioContent = new ContentBank({
-        name: "Personal Audio",
-        user_id: req.user.id,
-        file_type: "Audio",
-        file_s3_key: audioS3Key,
-        status: "uploaded",
-        created_at: new Date(),
-        is_sample: false,
-      });
-      await newAudioContent.save();
-
-
-    } else if (type === "url") {
-      // Audio is an S3 key, download it
-      audioFilePath = path.join(__dirname, '../uploads/', `audio-${Date.now()}.mp3`);
-      const audioSignedUrl = await downloadFileFromS3(req.body.audio);
-      await downloadToFile(audioSignedUrl, audioFilePath);
-      console.log("audioFilePath for S3 key:", audioFilePath);
-    } else {
-      return res.status(400).json({ message: "Invalid type or missing audio input." });
-    }
-
-    // Prepare `formData` for the external API
-    const formData = new FormData();
-    formData.append("face", fs.createReadStream(faceFilePath));
-    formData.append("audio", fs.createReadStream(audioFilePath));
-  
-      // Step 3: Call the lip-sync API
-      const response = await axios.post(
-        "http://20.205.137.58:8000/generate/",
-        formData,
-        { headers: formData.getHeaders(), responseType: "stream" }
-      );
-  
-      const lipSyncVideoPath = path.join(__dirname, '../uploads/', `lip-sync-${Date.now()}.mp4`);
-      const writer = fs.createWriteStream(lipSyncVideoPath);
-  
-      // Pipe the response stream to the local file
-      response.data.pipe(writer);
-  
-      writer.on("finish", async () => {
-        // Upload lip-sync video to S3
-        let finalVideoPath = lipSyncVideoPath;
-
-        let name ="Lip-Sync Video"
-
-        // If the user is premium, upscale the video before final upload
-        if (req.user.role === "Premium") {
-          name = "Lip-Sync HD Video"
-          const upscaleFormData = new FormData();
-          upscaleFormData.append("file", fs.createReadStream(finalVideoPath));
-
-          try {
-            const response = await axios.post(
-              "https://c8db-138-75-118-40.ngrok-free.app/make-hd",
-              upscaleFormData,
-              {
-                headers: {
-                  ...upscaleFormData.getHeaders(),
-                  'ngrok-skip-browser-warning': 'true',
-                },
-                responseType: "stream",
-              }
-            );
-
-
-            // Save the upscaled video to a new file path
-          finalVideoPath = path.join(__dirname, '../uploads/', `upscaled-${Date.now()}.mp4`);
-          const upscaleWriter = fs.createWriteStream(finalVideoPath);
-          response.data.pipe(upscaleWriter);
-
-          await new Promise((resolve, reject) => {
-            upscaleWriter.on("finish", resolve);
-            upscaleWriter.on("error", reject);
-          });
-
-          console.log("Upscaled video saved to:", finalVideoPath);
-
-          } catch (error) {
-            console.error("Error making request to upscale API:", error.message);
-            console.error("Response data:", error.response?.data);
-            console.error("Status code:", error.response?.status);
-            return res.status(500).json({ error: "Failed to upscale video" });
-          }
-
-          
+        // Validate inputs
+        if (!face || (type === "file" && !req.file) || (type === "url" && !req.body.audio)) {
+            return res.status(400).json({ message: "Invalid input: face URL and audio file or S3 key required." });
         }
 
-        // Upload the final (possibly upscaled) video to S3
-        const s3Key = `users/${req.user.id}/videos/${path.basename(finalVideoPath)}`;
-        await uploadFileToS3(finalVideoPath, process.env.AWS_S3_BUCKET_NAME, s3Key);
-        const lipSyncVideoUrl = await getSignedUrlForS3(process.env.AWS_S3_BUCKET_NAME, s3Key);
+        // Temporary storage path for face video
+        const faceFilePath = path.join(__dirname, '../uploads/', `face-${Date.now()}.mp4`);
+        let audioFilePath;
 
-        // Save video metadata to the ContentBank
-        const newContent = new ContentBank({
-          name: name,
-          user_id: req.user.id,
-          file_type: "Video",
-          file_s3_key: s3Key,
-          audio_s3_key: type === "file" ? audioS3Key : req.body.audio, // Use `audioS3Key` if uploaded, else use provided S3 URL
-          status: "uploaded",
-          created_at: new Date(),
-          is_sample: false,
+        // Step 1: Download `face` from S3
+        const faceSignedUrl = await downloadFileFromS3(face);
+        await downloadToFile(faceSignedUrl, faceFilePath);
+        console.log("faceFilePath:", faceFilePath);
+
+        // Step 2: Handle `audio` based on `type`
+        if (type === "file" && req.file) {
+            const audioFileName = `audio-${Date.now()}-${req.file.originalname}`;
+            audioFilePath = req.file.path;
+
+            const audioS3Key = `users/${req.user.id}/audio/${audioFileName}`;
+            await uploadFileToS3(audioFilePath, process.env.AWS_S3_BUCKET_NAME, audioS3Key);
+            console.log("Audio uploaded to S3 with key:", audioS3Key);
+        } else if (type === "url") {
+            audioFilePath = path.join(__dirname, '../uploads/', `audio-${Date.now()}.mp3`);
+            const audioSignedUrl = await downloadFileFromS3(req.body.audio);
+            await downloadToFile(audioSignedUrl, audioFilePath);
+            console.log("audioFilePath for S3 key:", audioFilePath);
+        } else {
+            return res.status(400).json({ message: "Invalid type or missing audio input." });
+        }
+
+        // Prepare `formData` for the external API
+        const formData = new FormData();
+        formData.append("face", fs.createReadStream(faceFilePath));
+        formData.append("audio", fs.createReadStream(audioFilePath));
+
+        // Step 3: Call the lip-sync API
+        const response = await axios.post(
+            "http://20.205.137.58:8000/generate/",
+            formData,
+            { headers: formData.getHeaders(), responseType: "stream" }
+        );
+
+        const lipSyncVideoPath = path.join(__dirname, '../uploads/', `lip-sync-${Date.now()}.mp4`);
+        const writer = fs.createWriteStream(lipSyncVideoPath);
+
+        // Pipe the response stream to the local file
+        response.data.pipe(writer);
+
+        writer.on("finish", async () => {
+            // Check video length
+            const { duration } = await getVideoMetadata(lipSyncVideoPath);
+            if (duration > 900) { // Example: limit to 5 minutes (300 seconds)
+                fs.unlinkSync(lipSyncVideoPath);
+                fs.unlinkSync(faceFilePath);
+                fs.unlinkSync(audioFilePath);
+                return res.status(400).json({ message: "Video length exceeds the allowed limit." });
+            }
+
+            // Proceed with the video processing
+            let finalVideoPath = lipSyncVideoPath;
+            let name = "Lip-Sync Video";
+
+            // If the user is premium, upscale the video before final upload
+            if (req.user.role === "Premium") {
+                name = "Lip-Sync HD Video";
+                const upscaleFormData = new FormData();
+                upscaleFormData.append("file", fs.createReadStream(finalVideoPath));
+
+                try {
+                    const upscaleResponse = await axios.post(
+                        "https://c8db-138-75-118-40.ngrok-free.app/make-hd",
+                        upscaleFormData,
+                        {
+                            headers: {
+                                ...upscaleFormData.getHeaders(),
+                                'ngrok-skip-browser-warning': 'true',
+                            },
+                            responseType: "stream",
+                        }
+                    );
+
+                    finalVideoPath = path.join(__dirname, '../uploads/', `upscaled-${Date.now()}.mp4`);
+                    const upscaleWriter = fs.createWriteStream(finalVideoPath);
+                    upscaleResponse.data.pipe(upscaleWriter);
+
+                    await new Promise((resolve, reject) => {
+                        upscaleWriter.on("finish", resolve);
+                        upscaleWriter.on("error", reject);
+                    });
+
+                    console.log("Upscaled video saved to:", finalVideoPath);
+                } catch (error) {
+                    console.error("Error making request to upscale API:", error.message);
+                    return res.status(500).json({ error: "Failed to upscale video" });
+                }
+            }
+
+            // Upload the final (possibly upscaled) video to S3
+            const s3Key = `users/${req.user.id}/videos/${path.basename(finalVideoPath)}`;
+            await uploadFileToS3(finalVideoPath, process.env.AWS_S3_BUCKET_NAME, s3Key);
+            const lipSyncVideoUrl = await getSignedUrlForS3(process.env.AWS_S3_BUCKET_NAME, s3Key);
+
+            // Save video metadata to the ContentBank
+            const newContent = new ContentBank({
+                name: name,
+                user_id: req.user.id,
+                file_type: "Video",
+                file_s3_key: s3Key,
+                audio_s3_key: type === "file" ? audioS3Key : req.body.audio,
+                status: "uploaded",
+                created_at: new Date(),
+                is_sample: false,
+            });
+            const savedContent = await newContent.save();
+
+            // Delete the local files
+            fs.unlinkSync(lipSyncVideoPath);
+            fs.unlinkSync(faceFilePath);
+            fs.unlinkSync(audioFilePath);
+
+            res.status(200).json({
+                message: "Lip-sync video generated and uploaded to S3 successfully",
+                lipSyncVideoUrl,
+                content_id: savedContent._id,
+            });
         });
-        const savedContent = await newContent.save();
-        
-        // Delete the local files
-        fs.unlinkSync(lipSyncVideoPath);
-        fs.unlinkSync(faceFilePath);
-        fs.unlinkSync(audioFilePath);    
-  
-        res.status(200).json({
-          message: "Lip-sync video generated and uploaded to S3 successfully",
-          lipSyncVideoUrl,
-          content_id: savedContent._id,
+
+        writer.on("error", (error) => {
+            console.error("Error saving lip-sync video file:", error);
+            res.status(500).json({ error: "Failed to save lip-sync video file" });
         });
-      });
-  
-      writer.on("error", (error) => {
-        console.error("Error saving lip-sync video file:", error);
-        res.status(500).json({ error: "Failed to save lip-sync video file" });
-      });
     } catch (error) {
-      console.error("Error generating lip-sync animation:", error);
-      res.status(500).json({ error: "Failed to generate lip-sync animation" });
+        console.error("Error generating lip-sync animation:", error);
+        res.status(500).json({ error: "Failed to generate lip-sync animation" });
     }
   },
+
+
+  
   
 
   // New: Text to Speech and save to S3
@@ -451,6 +442,17 @@ const AnimationController = {
       res.status(500).json({ error: "Failed to upscale video" });
     }
   },
+};
+
+const getVideoDuration = (filePath) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(filePath, (err, metadata) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(metadata.format.duration);
+    });
+  });
 };
 
 module.exports = AnimationController;
