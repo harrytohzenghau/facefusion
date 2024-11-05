@@ -64,6 +64,16 @@ const AdminController = {
         user_role_id,
       });
 
+      const stripeCustomer = await stripe.customers.create({
+        email: newUser.email,
+        name: `${newUser.first_name} ${newUser.last_name}`,
+        phone: newUser.phone,
+        metadata: {
+          userId: newUser._id.toString(), // Store the MongoDB user ID as metadata
+        },
+      });
+      
+      newUser.stripe_customer_id = stripeCustomer.id;
       await newUser.save(); // Create new user
 
       res.status(201).json(newUser);
