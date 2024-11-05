@@ -12,7 +12,6 @@ import { updatePlan } from "../../../store/authSlice";
 const freeFeatures = [
   "Up to 3 image uploads",
   "Generate animated video",
-  "15-second video exports",
   "Up to 3 videos",
   "Downloads in standard SD resolution (1280 x 720)",
 ];
@@ -21,7 +20,6 @@ const proFeatures = [
   "Unlimited image uploads",
   "Audio upload (optional)",
   "Generate animated video",
-  "Customisable video length",
   "Up to 10 videos",
   "Downloads in standard HD resolution (1920 x 1080)",
 ];
