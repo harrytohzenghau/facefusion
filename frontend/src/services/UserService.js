@@ -172,6 +172,36 @@ export const getPlanUsageDetails = async (userId) => {
   }
 };
 
+export const deleteProfile = async (userId) => {
+  const token = store.getState().auth.token;
+
+  try {
+    const response = await axios.delete(`${apiUrl}/api/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    if (error.response) {
+      return {
+        success: false,
+        message:
+          error.response.data.message || "An error occurred on the server.",
+      };
+    } else if (error.request) {
+      return {
+        success: false,
+        message: "No response from the server. Please try again later.",
+      };
+    } else {
+      return { success: false, message: "An unexpected error occurred." };
+    }
+  }
+};
+
 export const cancelSubscription = async (subscriptionId) => {
   const token = store.getState().auth.token;
 

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Card from "../../UI/Card";
-import { editOwnProfile } from "../../../services/UserService";
+import { deleteProfile, editOwnProfile } from "../../../services/UserService";
 import { validatePassword } from "../../../util/PasswordValidation";
 
 const ProfileCard = ({ userData }) => {
@@ -25,6 +25,21 @@ const ProfileCard = ({ userData }) => {
 
   const toggleEditPasswordHandler = () => {
     setEditPassword((prevState) => !prevState);
+  };
+
+  const deleteProfileHandler = async () => {
+    try {
+      const response = await deleteProfile(userData._id);
+
+      if (response.success) {
+        toast.success("Your account has been deleted");
+        navigate("/");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      return toast.error(error);
+    }
   };
 
   const updateProfileHandler = async (e) => {
@@ -169,6 +184,13 @@ const ProfileCard = ({ userData }) => {
             className="bg-blue-1 text-white px-4 py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"
           >
             Update
+          </button>
+          <button
+            type="button"
+            onClick={deleteProfileHandler}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-300 transform transition-all duration-200 ease-in-out"
+          >
+            Delete
           </button>
           <button
             type="button"
