@@ -74,6 +74,7 @@ const AdminController = {
             userId: newUser._id.toString(), // Store the MongoDB user ID as metadata
           },
         });
+
         newUser.stripe_customer_id = stripeCustomer.id;
       }
 
