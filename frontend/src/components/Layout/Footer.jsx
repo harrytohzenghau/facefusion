@@ -4,7 +4,7 @@ import logo from "../../assets/facefusion_logo.png";
 const Footer = () => {
   return (
     <footer className="bg-gradient-to-r from-blue-2 to-blue-1 w-full flex flex-col justify-between">
-      <div className="flex justify-between w-1/5 mx-auto my-10 min-w-[400px]">
+      <div className="flex justify-between w-1/5 mx-auto my-10 min-w-[400px] max-sm:flex-col max-sm:gap-y-6 max-sm:items-center max-sm:text-center max-sm:min-w-full">
         <div>
           <img src={logo} alt="FaceFusion" className="w-20" />
         </div>

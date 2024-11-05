@@ -10,7 +10,7 @@ const UserRoot = () => {
     <div className="flex relative">
       <Sidebar />
       {isLoading && (
-        <div className="fixed bg-white bg-opacity-60 z-10 h-fit min-h-screen w-full flex items-center justify-center">
+        <div className="fixed bg-white bg-opacity-60 z-30 h-fit min-h-screen w-full flex items-center justify-center">
           <div className="flex items-center">
             <span className="text-3xl mr-4">Loading</span>
             <svg

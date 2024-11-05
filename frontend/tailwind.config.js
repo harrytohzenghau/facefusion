@@ -6,6 +6,7 @@ module.exports = withMT({
   theme: {
     extend: {
       screens: {
+        "max-sm": { max: "480px" }, 
         "max-md": { max: "768px" }, 
         "max-lg": { max: "1024px" },
       },
