@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const UserRole = require("../models/UserRole");
 const SubscriptionPlan = require("../models/SubscriptionPlan");
-const redisClient = require("../utils/redisClient");
 
 const AuthController = {
   // Login function
@@ -45,23 +44,10 @@ const AuthController = {
   // Logout function (optional token invalidation logic can be implemented if needed)
   async logout(req, res) {
     try {
-      const token = req.headers.authorization.split(" ")[1]; // Extract the token from the Authorization header
-
-      if (!token) {
-        return res.status(401).json({ message: "Authorization token missing" });
-      }
-
-      // Decode the token to get its expiration time
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      // Add the token to the Redis blacklist with an expiration time
-      const expiry = decoded.exp - Math.floor(Date.now() / 1000); // Remaining time in seconds
-      await redisClient.set(token, 'blacklisted', 'EX', expiry);
-
+      // Here, you can handle token invalidation if using a token blacklist mechanism
       res.status(200).json({ message: "Successfully logged out" });
     } catch (error) {
-      console.error("Logout error:", error.message);
-      res.status(500).json({ error: "Failed to logout" });
+      res.status(500).json({ error: error.message });
     }
   },
 
