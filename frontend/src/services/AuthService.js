@@ -58,3 +58,37 @@ export const register = async (user) => {
     }
   }
 };
+
+export const logout = async (token) => {
+  try {
+    const response = await axios.post(
+      `${apiUrl}/api/auth/logout`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return { success: true, message: response.data.message };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+const handleError = (error) => {
+  if (error.response) {
+    return {
+      success: false,
+      message: error.response.data.error || "An error occurred on the server.",
+    };
+  } else if (error.request) {
+    return {
+      success: false,
+      message: "No response from the server. Please try again later.",
+    };
+  } else {
+    return { success: false, message: "An unexpected error occurred." };
+  }
+};
