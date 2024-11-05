@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs/dist/bcrypt");
 const User = require("../models/User"); // Import User Entity
 const SubscriptionPlan = require("../models/SubscriptionPlan");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const AdminController = {
   async getUsers(req, res) {
