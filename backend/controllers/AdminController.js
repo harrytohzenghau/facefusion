@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs/dist/bcrypt");
 const User = require("../models/User"); // Import User Entity
+const Rating = require("../models/Ratings");
+const ContentBank = require("../models/ContentBank");
 const SubscriptionPlan = require("../models/SubscriptionPlan");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -123,11 +125,33 @@ const AdminController = {
   // Delete a user
   async deleteUser(req, res) {
     const { id } = req.params;
+
     try {
-      await User.findByIdAndDelete(id); // removeUserById()
+      // Check if user exists
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Delete all ratings associated with this user
+      const ratingsResult = await Rating.deleteMany({ user_id: id });
+      console.log(`Deleted ${ratingsResult.deletedCount} ratings for user ${id}`);
+
+      // Delete all content associated with this user
+      const contentResult = await ContentBank.deleteMany({ user_id: id });
+      console.log(`Deleted ${contentResult.deletedCount} content items for user ${id}`);
+
+      // Delete subscription plan if it exists
       await SubscriptionPlan.findOneAndDelete({ user_id: id });
-      res.json({ message: "User deleted" });
+      console.log("Deleted subscription plan for user");
+
+      // Finally, delete the user
+      await User.findByIdAndDelete(id);
+      console.log(`Deleted user with ID ${id}`);
+
+      res.json({ message: "User and all associated data deleted successfully" });
     } catch (error) {
+      console.error("Error deleting user and associated data:", error.message);
       res.status(500).json({ error: error.message });
     }
   },
