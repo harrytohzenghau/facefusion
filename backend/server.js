@@ -11,9 +11,8 @@ const app = express();
 app.use(
   cors({
     origin: process.env.FRONTEND_URL, // Allow requests only from this origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Enable cookies and credentials if needed
-    allowedHeaders: ['Authorization', 'Content-Type'],
   })
 );
 
