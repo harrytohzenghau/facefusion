@@ -4,35 +4,27 @@ const redisClient = require('../utils/redis');
 
 // Middleware to authenticate token
 const authenticateToken = async (req, res, next) => {
-  const token = req.header('Authorization')?.split(' ')[1];
+  const token = req.header('Authorization')?.split(' ')[1]; // Expecting a Bearer token in the Authorization header
 
   if (!token) {
     return res.status(401).json({ message: 'Access denied. No token provided.' });
   }
 
   try {
-    // Check Redis for blacklisted token
+    // Check if the token is blacklisted
     const isBlacklisted = await redisClient.get(token);
     if (isBlacklisted) {
       return res.status(403).json({ message: 'Token is blacklisted.' });
     }
 
-    // Verify JWT and decode it
+    // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded; // Attach the decoded user payload to the request
-    next();
+    next(); // Proceed to the next middleware/route handler
   } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      return res.status(403).json({ message: 'Token expired.' });
-    } else if (error.name === 'JsonWebTokenError') {
-      return res.status(403).json({ message: 'Invalid token format.' });
-    } else {
-      console.error('Error authenticating token:', error);
-      return res.status(403).json({ message: 'Invalid token.' });
-    }
+    res.status(403).json({ message: 'Invalid token.' });
   }
 };
-
 
 
 const authorizeAdmin = (req, res, next) => {
