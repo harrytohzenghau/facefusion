@@ -94,6 +94,10 @@ const Generate = ({ generateVideoHandler }) => {
 
   return (
     <>
+      <p className="font-bold">
+        * expect 10-20 mins of processing time for long audio and text, for fast
+        rendering, do 2-3 sentences, or {`<`} 7 second audio.
+      </p>
       <form
         className="flex flex-col gap-y-10"
         onSubmit={generateVideoFormHandler}
