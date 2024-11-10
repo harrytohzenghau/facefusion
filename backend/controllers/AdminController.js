@@ -78,6 +78,34 @@ const AdminController = {
         });
 
         newUser.stripe_customer_id = stripeCustomer.id;
+
+        try {
+          // Find the user by ID
+          let user = await User.findOne({ username: username });
+
+          const subscriptionPlan = new SubscriptionPlan({
+            user_id: user._id,
+            product_id: "",
+            price_id: "",
+            subscription_id: "",
+            subscription_type: "Free",
+            status: "Success",
+            limit: 3,
+            start_date: new Date(),
+            end_date: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+          });
+
+          await User.findByIdAndUpdate(
+            user._id,
+            { user_role_id: 2 },
+            { new: true }
+          );
+
+          await subscriptionPlan.save();
+          console.log(`Customer account for ${user._id} successfully created.`);
+        } catch (error) {
+          console.error("Error handling subscription success:", error);
+        }
       }
 
       await newUser.save(); // Create new user
@@ -135,11 +163,15 @@ const AdminController = {
 
       // Delete all ratings associated with this user
       const ratingsResult = await Rating.deleteMany({ user_id: id });
-      console.log(`Deleted ${ratingsResult.deletedCount} ratings for user ${id}`);
+      console.log(
+        `Deleted ${ratingsResult.deletedCount} ratings for user ${id}`
+      );
 
       // Delete all content associated with this user
       const contentResult = await ContentBank.deleteMany({ user_id: id });
-      console.log(`Deleted ${contentResult.deletedCount} content items for user ${id}`);
+      console.log(
+        `Deleted ${contentResult.deletedCount} content items for user ${id}`
+      );
 
       // Delete subscription plan if it exists
       await SubscriptionPlan.findOneAndDelete({ user_id: id });
@@ -149,7 +181,9 @@ const AdminController = {
       await User.findByIdAndDelete(id);
       console.log(`Deleted user with ID ${id}`);
 
-      res.json({ message: "User and all associated data deleted successfully" });
+      res.json({
+        message: "User and all associated data deleted successfully",
+      });
     } catch (error) {
       console.error("Error deleting user and associated data:", error.message);
       res.status(500).json({ error: error.message });

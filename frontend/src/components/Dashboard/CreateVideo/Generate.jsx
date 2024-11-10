@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { getImagesAndVideos } from "../../../services/AnimationService";
 import { useSelector } from "react-redux";
@@ -9,6 +9,7 @@ const Generate = ({ generateVideoHandler }) => {
   const navigate = useNavigate();
 
   const [audio, setAudio] = useState(null);
+  const audioInputRef = useRef(null); // Create ref for audio input
   const [voiceType, setVoiceType] = useState("male");
   const [expression, setExpression] = useState("happy");
   const [textInput, setTextInput] = useState("");
@@ -46,6 +47,7 @@ const Generate = ({ generateVideoHandler }) => {
     updateExistingImageHandler();
   }, []);
 
+
   const handleAudioUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -56,6 +58,9 @@ const Generate = ({ generateVideoHandler }) => {
 
   const handleRemoveAudio = () => {
     setAudio(null); // Remove audio file
+    if (audioInputRef.current) {
+      audioInputRef.current.value = ""; // Clear the input value to allow re-upload
+    }
   };
 
   const handleExpressionChange = (e) => setExpression(e.target.value);
@@ -108,11 +113,12 @@ const Generate = ({ generateVideoHandler }) => {
               <div className="flex flex-col gap-y-4">
                 <label className="font-bold">Upload Audio:</label>
                 <input
+                  ref={audioInputRef}
                   className="bg-white p-2 rounded-md drop-shadow-lg"
                   type="file"
                   accept="audio/*"
                   onChange={handleAudioUpload}
-                  disabled={!!textInput} // Disable if text input is filled
+                  disabled={!!textInput || !!audio} // Disable if text input or audio is present
                 />
                 {audio && (
                   <div className="flex items-center gap-x-4 mt-2">
