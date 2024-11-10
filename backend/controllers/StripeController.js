@@ -216,7 +216,7 @@ async function handleCancelSubscription(userId, subscriptionId) {
       { new: true }
     );
 
-    await User.findByIdAndUpdate({ id: userId }, { user_role_id: 2 });
+    await User.findByIdAndUpdate(userId, { user_role_id: 2 }, { new: true });
 
     console.log(`Subscription plan for user ${userId} successfully cancelled.`);
   } catch (error) {
