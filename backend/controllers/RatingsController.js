@@ -106,6 +106,18 @@ class RatingsController {
             .json({ message: "Cannot publish more than 3 ratings." });
         }
       }
+
+      if (rating.is_published) {
+        // Count the number of published ratings
+        const publishedCount = await Ratings.countDocuments({ is_published: true });
+  
+        // If there are already 3 published ratings, do not allow more to be published
+        if (publishedCount === 1) {
+          return res
+            .status(400)
+            .json({ message: "Must have at least 1 ratings." });
+        }
+      }
   
       // Toggle the is_published status
       rating.is_published = !rating.is_published;
