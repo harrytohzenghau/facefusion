@@ -211,7 +211,7 @@ async function handleCancelSubscription(userId, subscriptionId) {
         subscription_id: "",
         subscription_type: "Free",
         limit: 3,
-        end_date: "",
+        end_date: null,
       },
       { new: true }
     );
