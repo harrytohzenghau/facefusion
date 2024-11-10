@@ -62,7 +62,7 @@ const RatingList = () => {
         navigate("/admin/rating");
       } else {
         setIsLoading(false);
-        toast.error("Something went wrong");
+        toast.error(response.message);
       }
     } catch (error) {
       setIsLoading(false);

@@ -111,7 +111,6 @@ class RatingsController {
         // Count the number of published ratings
         const publishedCount = await Ratings.countDocuments({ is_published: true });
   
-        // If there are already 3 published ratings, do not allow more to be published
         if (publishedCount === 1) {
           return res
             .status(400)
@@ -182,6 +181,14 @@ class RatingsController {
   // Method to delete a rating
   async deleteRating(req, res) {
     try {
+      const publishedCount = await Ratings.countDocuments({ is_published: true });
+  
+      if (publishedCount === 1) {
+        return res
+          .status(400)
+          .json({ message: "Must have at least 1 ratings." });
+      }
+
       const { ratingId } = req.params;
       const deletedRating = await Ratings.findByIdAndDelete(ratingId);
 
