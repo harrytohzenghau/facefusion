@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { deleteProfile, editOwnProfile } from "../../services/UserService";
+import { editOwnProfile } from "../../services/UserService";
 import { validatePassword } from "../../util/PasswordValidation";
 import { LoadingContext } from "../../context/LoadingContext";
 import Card from "../UI/Card";
@@ -27,25 +27,6 @@ const AdminProfileCard = ({ userData }) => {
 
   const toggleEditPasswordHandler = () => {
     setEditPassword((prevState) => !prevState);
-  };
-
-  const deleteProfileHandler = async () => {
-    try {
-      setIsLoading(true);
-      const response = await deleteProfile(userData._id);
-
-      if (response.success) {
-        setIsLoading(false);
-        toast.success("Your account has been deleted");
-        navigate("/");
-      } else {
-        setIsLoading(false);
-        toast.error("Something went wrong");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      return toast.error(error);
-    }
   };
 
   const updateProfileHandler = async (e) => {
@@ -196,13 +177,6 @@ const AdminProfileCard = ({ userData }) => {
             className="bg-blue-1 text-white px-4 py-2 rounded-lg hover:bg-blue-2 transform transition-all duration-200 ease-in-out"
           >
             Update
-          </button>
-          <button
-            type="button"
-            onClick={deleteProfileHandler}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-300 transform transition-all duration-200 ease-in-out"
-          >
-            Delete
           </button>
           <button
             type="button"
