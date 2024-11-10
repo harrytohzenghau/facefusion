@@ -198,6 +198,8 @@ const ProfileCard = ({ userData }) => {
               <input
                 type="tel"
                 ref={phoneRef}
+                minLength={8}
+                maxLength={8}
                 required
                 defaultValue={user && user.phone}
                 className="bg-white px-4 py-2 rounded-md drop-shadow-lg"

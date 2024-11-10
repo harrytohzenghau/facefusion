@@ -5,7 +5,6 @@ import Home from "../pages/Guest/Home";
 import Sample from "../pages/Guest/Sample";
 import Login from "../pages/Guest/Login";
 import SignUp from "../pages/Guest/SignUp";
-import Contact from "../pages/Guest/Contact";
 import Privacy from "../pages/Guest/Privacy";
 import Pricing from "../pages/Guest/Pricing";
 import DashboardHome from "../pages/User/DashboardHome";
@@ -26,6 +25,7 @@ import { AdminRoute, UserRoute } from "../util/ProtectedRoute";
 import Success from "../pages/User/Success";
 import { LoadingProvider } from "../context/LoadingContext";
 import AboutUs from "../pages/Guest/AboutUs";
+import AdminProfile from "../pages/Admin/AdminProfile";
 
 const router = createBrowserRouter([
   {
@@ -189,6 +189,14 @@ const router = createBrowserRouter([
         element: (
           <AdminRoute>
             <ViewRating />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "admin-profle",
+        element: (
+          <AdminRoute>
+            <AdminProfile />
           </AdminRoute>
         ),
       },

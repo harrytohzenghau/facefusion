@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import Card from "../../UI/Card";
-import { deleteProfile, editOwnProfile } from "../../../services/UserService";
-import { validatePassword } from "../../../util/PasswordValidation";
-import { LoadingContext } from "../../../context/LoadingContext";
+import { deleteProfile, editOwnProfile } from "../../services/UserService";
+import { validatePassword } from "../../util/PasswordValidation";
+import { LoadingContext } from "../../context/LoadingContext";
+import Card from "../UI/Card";
 
-const ProfileCard = ({ userData }) => {
+const AdminProfileCard = ({ userData }) => {
   const [user, setUser] = useState();
   const [editPassword, setEditPassword] = useState(false);
   const { setIsLoading } = useContext(LoadingContext);
@@ -85,7 +85,7 @@ const ProfileCard = ({ userData }) => {
 
       if (response.success) {
         setIsLoading(false);
-        toast.success("User has been updated");
+        toast.success("Profile has been updated");
       } else {
         setIsLoading(false);
         toast.error("Something went wrong");
@@ -217,4 +217,4 @@ const ProfileCard = ({ userData }) => {
   );
 };
 
-export default ProfileCard;
+export default AdminProfileCard;
