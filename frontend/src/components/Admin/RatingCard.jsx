@@ -184,8 +184,7 @@ const RatingCard = ({ ratingData }) => {
           </div>
           <div className="w-full flex flex-col gap-y-4">
             <label>Feedback</label>
-            <input
-              type="textarea"
+            <textarea
               disabled
               defaultValue={rating && rating.feedback}
               rows="4"
