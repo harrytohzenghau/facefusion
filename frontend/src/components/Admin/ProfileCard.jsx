@@ -187,7 +187,7 @@ const ProfileCard = ({ userData }) => {
                 disabled
                 required
                 defaultValue={
-                  user && user.user_role_id === "2" ? "Free" : "Premium"
+                  user && user.user_role_id === 2 ? "Free" : "Premium"
                 }
                 className="bg-white px-4 py-2 rounded-md drop-shadow-lg"
               />

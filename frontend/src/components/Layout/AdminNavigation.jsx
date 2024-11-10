@@ -171,7 +171,7 @@ const AdminNavigation = () => {
         <div className="w-full mx-auto my-0 block flex-grow lg:flex lg:items-center lg:w-auto">
           <div className="text-md lg:flex-grow flex flex-col mt-4 gap-y-2">
             <NavLink
-              to="/"
+              to="/admin"
               end
               className={({ isActive }) => {
                 return isActive
@@ -182,7 +182,7 @@ const AdminNavigation = () => {
               User
             </NavLink>
             <NavLink
-              to="/sample"
+              to="/admin/admin-list"
               className={({ isActive }) => {
                 return isActive
                   ? "text-blue-3 font-bold hover:text-blue-3 hover:bg-blue-7 p-2 transform transition-all duration-200 ease-in-out border-b border-blue-3 pb-2"
@@ -192,7 +192,7 @@ const AdminNavigation = () => {
               Admin
             </NavLink>
             <NavLink
-              to="/pricing"
+              to="/admin/rating"
               className={({ isActive }) => {
                 return isActive
                   ? "text-blue-3 font-bold hover:text-blue-3 hover:bg-blue-7 p-2 transform transition-all duration-200 ease-in-out border-b border-blue-3 pb-2"
