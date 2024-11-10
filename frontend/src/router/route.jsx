@@ -137,7 +137,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminRoot />,
+    element: (
+      <LoadingProvider>
+        <AdminRoot />
+      </LoadingProvider>
+    ),
     children: [
       {
         index: true,

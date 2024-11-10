@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Card from "../../UI/Card";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { postRating } from "../../../services/UserService";
 import { useSelector } from "react-redux";
+import { LoadingContext } from "../../../context/LoadingContext";
 
 const RatingCard = () => {
   const user = useSelector((state) => state.auth.user);
@@ -15,6 +16,8 @@ const RatingCard = () => {
     company_name: "",
     feedback: "",
   });
+
+  const { setIsLoading } = useContext(LoadingContext);
 
   const navigate = useNavigate();
 
@@ -41,15 +44,19 @@ const RatingCard = () => {
     ratingData.rating = rating;
 
     try {
+      setIsLoading(true);
       const response = await postRating(ratingData);
 
       if (response.success) {
+        setIsLoading(false);
         toast.success("Rating sent successfully!");
         navigate("/user/thanks");
       } else {
+        setIsLoading(false);
         return toast.error("Something went wrong while submit rating!");
       }
     } catch (error) {
+      setIsLoading(false);
       return toast.error(error.message);
     }
   };

@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Card from "../UI/Card";
 import { useNavigate, useParams } from "react-router-dom";
 import { deleteRating, updateRatingStatus } from "../../services/AdminService";
 import toast from "react-hot-toast";
 import Modal from "react-modal"; // Import react-modal
+import { LoadingContext } from "../../context/LoadingContext";
 
 Modal.setAppElement("#root");
 
@@ -12,6 +13,7 @@ const RatingCard = ({ ratingData }) => {
   const [rating, setRating] = useState();
   const [isPublished, setIsPublished] = useState();
   const [modalOpen, setModalOpen] = useState(false); // Manage modal state
+  const { setIsLoading } = useContext(LoadingContext);
 
   const navigate = useNavigate();
 
@@ -22,17 +24,21 @@ const RatingCard = ({ ratingData }) => {
 
   const updateRatingStatusHandler = async () => {
     try {
+      setIsLoading(true);
       const response = await updateRatingStatus(id);
 
       if (response.success) {
+        setIsLoading(false);
         toast.success(
           `Rating has been ${isPublished ? "unpublished" : "published"}.`
         );
         setIsPublished((prevState) => !prevState);
       } else {
+        setIsLoading(false);
         toast.error(response.message);
       }
     } catch (error) {
+      setIsLoading(false);
       return toast.error(error);
     }
   };
@@ -40,15 +46,19 @@ const RatingCard = ({ ratingData }) => {
   // Handle deletion of rating after confirmation
   const deleteRatingHandler = async () => {
     try {
+      setIsLoading(true);
       const response = await deleteRating(id);
 
       if (response.success) {
+        setIsLoading(false);
         toast.success("Rating has been deleted");
         navigate("/admin/rating");
       } else {
+        setIsLoading(false);
         toast.error("Something went wrong");
       }
     } catch (error) {
+      setIsLoading(false);
       return toast.error(error);
     }
   };

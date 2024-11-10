@@ -1,14 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import Card from "../../components/UI/Card";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { deleteUser, editUser } from "../../services/AdminService";
 import { validatePassword } from "../../util/PasswordValidation";
+import { LoadingContext } from "../../context/LoadingContext";
 
 const ProfileCard = ({ userData }) => {
   const [user, setUser] = useState();
   const [editPassword, setEditPassword] = useState(false);
   const [isActive, setIsActive] = useState(true);
+  const { setIsLoading } = useContext(LoadingContext);
 
   const navigate = useNavigate();
 
@@ -64,14 +66,18 @@ const ProfileCard = ({ userData }) => {
     }
 
     try {
+      setIsLoading(true);
       const response = await editUser(userData._id, updatedUserData);
 
       if (response.success) {
+        setIsLoading(false);
         toast.success("User has been updated");
       } else {
+        setIsLoading(false);
         toast.error("Something went wrong");
       }
     } catch (error) {
+      setIsLoading(false);
       return toast.error(error);
     }
   };
@@ -82,12 +88,15 @@ const ProfileCard = ({ userData }) => {
 
   const deleteUserHandler = async () => {
     try {
+      setIsLoading(true);
       const response = await deleteUser(userData._id);
 
       if (response.success) {
         toast.success("User has been deleted");
+        setIsLoading(false);
         navigate("/admin");
       } else {
+        setIsLoading(false);
         toast.error("Something went wrong");
       }
     } catch (error) {

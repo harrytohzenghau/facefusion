@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import Card from "../../components/UI/Card";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import toast from "react-hot-toast";
 import { createUser } from "../../services/AdminService";
 import { validatePassword } from "../../util/PasswordValidation";
+import { LoadingContext } from "../../context/LoadingContext";
 
 const NewProfileCard = () => {
   const navigate = useNavigate();
+  const { setIsLoading } = useContext(LoadingContext);
 
   const [role, setRole] = useState("user");
 
@@ -57,15 +59,19 @@ const NewProfileCard = () => {
     };
 
     try {
+      setIsLoading(true);
       const response = await createUser(userData);
 
       if (response.success) {
         toast.success("User has been created");
+        setIsLoading(false);
         navigate("/admin");
       } else {
+        setIsLoading(false);
         return toast.error("Something went wrong");
       }
     } catch (error) {
+      setIsLoading(false);
       return toast.error(error.message);
     }
   };

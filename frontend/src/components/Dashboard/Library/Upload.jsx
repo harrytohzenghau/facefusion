@@ -22,7 +22,7 @@ const Upload = ({ updateExistingImageHandler }) => {
         );
 
         if (!response.success) {
-          setIsLoading(true);
+          setIsLoading(false);
           return toast.error(response.message);
         }
       } catch (error) {
@@ -33,9 +33,8 @@ const Upload = ({ updateExistingImageHandler }) => {
 
     setImages([]);
     setImagePreviews([]);
-    toast.success("Image uploaded successfully!");
-
     setIsLoading(false);
+    toast.success("Image uploaded successfully!");
 
     updateExistingImageHandler()
   };

@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import RatingTable from "../../components/Admin/RatingTable";
 import Card from "../../components/UI/Card";
 import { deleteRating, getAllRatings } from "../../services/AdminService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { LoadingContext } from "../../context/LoadingContext";
 
 const RatingList = () => {
   const [allRatings, setAllRatings] = useState([]);
   const [allPublishedRatings, setAllPublishedRatings] = useState([]);
+  const { setIsLoading } = useContext(LoadingContext);
 
   const navigate = useNavigate();
 
@@ -45,6 +47,7 @@ const RatingList = () => {
 
   const deleteRatingHandler = async (ratingId) => {
     try {
+      setIsLoading(true);
       const response = await deleteRating(ratingId);
 
       if (response.success) {
@@ -54,12 +57,15 @@ const RatingList = () => {
         setAllRatings(updatedOtherRating);
         setAllPublishedRatings(updatedPublishedRating);
 
+        setIsLoading(false);
         toast.success("Rating has been deleted");
         navigate("/admin/rating");
       } else {
+        setIsLoading(false);
         toast.error("Something went wrong");
       }
     } catch (error) {
+      setIsLoading(false);
       return toast.error(error);
     }
   };

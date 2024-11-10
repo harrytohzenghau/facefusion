@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Card from "../../components/UI/Card";
 import AccountTable from "../../components/Admin/AccountTable";
 import { deleteUser, editUser, getAllUsers } from "../../services/AdminService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { LoadingContext } from "../../context/LoadingContext";
 
 const UserList = () => {
   const [allUsers, setAllUsers] = useState();
 
+  const { setIsLoading } = useContext(LoadingContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,6 +43,7 @@ const UserList = () => {
   const banUserHandler = async (userId, is_locked) => {
     const updatedLock = { is_locked: !is_locked };
     try {
+      setIsLoading(true);
       const response = await editUser(userId, updatedLock);
 
       if (response.success) {
@@ -52,29 +55,36 @@ const UserList = () => {
         });
 
         setAllUsers(updatedUsers);
+        setIsLoading(false);
         toast.success("User has been updated");
       } else {
+        setIsLoading(false);
         toast.error("Something went wrong");
       }
     } catch (error) {
+      setIsLoading(false);
       return toast.error(error);
     }
   };
   
   const deleteUserHandler = async (userId) => {
     try {
+      setIsLoading(true);
       const response = await deleteUser(userId);
 
       if (response.success) {
         const updatedUsers = allUsers.filter((admin) => admin._id !== userId);
 
         setAllUsers(updatedUsers);
+        setIsLoading(false);
         toast.success("User has been deleted");
         navigate("/admin");
       } else {
+        setIsLoading(false);
         toast.error("Something went wrong");
       }
     } catch (error) {
+      setIsLoading(false);
       return toast.error(error);
     }
   };

@@ -1,13 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Card from "../../UI/Card";
 import { deleteProfile, editOwnProfile } from "../../../services/UserService";
 import { validatePassword } from "../../../util/PasswordValidation";
+import { LoadingContext } from "../../../context/LoadingContext";
 
 const ProfileCard = ({ userData }) => {
   const [user, setUser] = useState();
   const [editPassword, setEditPassword] = useState(false);
+  const { setIsLoading } = useContext(LoadingContext);
 
   const navigate = useNavigate();
 
@@ -29,15 +31,19 @@ const ProfileCard = ({ userData }) => {
 
   const deleteProfileHandler = async () => {
     try {
+      setIsLoading(true);
       const response = await deleteProfile(userData._id);
 
       if (response.success) {
+        setIsLoading(false);
         toast.success("Your account has been deleted");
         navigate("/");
       } else {
+        setIsLoading(false);
         toast.error("Something went wrong");
       }
     } catch (error) {
+      setIsLoading(false);
       return toast.error(error);
     }
   };
@@ -74,14 +80,18 @@ const ProfileCard = ({ userData }) => {
     }
 
     try {
+      setIsLoading(true);
       const response = await editOwnProfile(userData._id, updatedUserData);
 
       if (response.success) {
+        setIsLoading(false);
         toast.success("User has been updated");
       } else {
+        setIsLoading(false);
         toast.error("Something went wrong");
       }
     } catch (error) {
+      setIsLoading(false);
       return toast.error(error);
     }
   };

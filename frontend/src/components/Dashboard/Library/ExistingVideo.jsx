@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { deleteContent, incrementDownloadCount } from "../../../services/AnimationService";
+import { LoadingContext } from "../../../context/LoadingContext";
 
 const ExistingVideo = ({ existingVideo }) => {
   const [videos, setVideos] = useState([]);
   const [videoToDelete, setVideoToDelete] = useState(null);
+  const { setIsLoading } = useContext(LoadingContext);
 
   useEffect(() => {
     setVideos(existingVideo);
@@ -33,6 +35,7 @@ const ExistingVideo = ({ existingVideo }) => {
 
   const handleDelete = async (videoDetail) => {
     try {
+      setIsLoading(true);
       const response = await deleteContent(videoDetail.contentId);
 
       if (!response.success) {
@@ -40,12 +43,11 @@ const ExistingVideo = ({ existingVideo }) => {
       }
 
       setVideos(videos.filter((_, i) => i !== videoDetail.index));
-      // updateExistingImageHandler(
-      //   images.filter((_, i) => i !== imageDetail.index)
-      // );
       setVideoToDelete(null); // Close confirmation modal after deletion
+      setIsLoading(false);
       toast.success("Video removed successfully!");
     } catch (error) {
+      setIsLoading(false);
       toast.error("Something went wrong when uploading an image!");
     }
   };
