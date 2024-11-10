@@ -12,13 +12,23 @@ const Footer = () => {
           <h4 className="text-white font-bold">Company</h4>
           <ul className="flex flex-col gap-y-2 mt-3">
             <li>
-              <NavLink className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out">About Us</NavLink>
+              <NavLink
+                to="/about"
+                className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out"
+              >
+                About Us
+              </NavLink>
             </li>
             {/* <li>
               <NavLink to="/contact" className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out">Contact Us</NavLink>
             </li> */}
             <li>
-              <NavLink to="/privacy" className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out">Privacy Policy</NavLink>
+              <NavLink
+                to="/privacy"
+                className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out"
+              >
+                Privacy Policy
+              </NavLink>
             </li>
           </ul>
         </div>
@@ -26,10 +36,20 @@ const Footer = () => {
           <h4 className="text-white font-bold">Support</h4>
           <ul className="flex flex-col gap-y-2 mt-3">
             <li>
-              <NavLink to="/sample" className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out">Sample</NavLink>
+              <NavLink
+                to="/sample"
+                className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out"
+              >
+                Sample
+              </NavLink>
             </li>
             <li>
-              <NavLink to="/pricing" className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out">Pricing</NavLink>
+              <NavLink
+                to="/pricing"
+                className="text-white hover:text-blue-5 transform transition-all duration-200 ease-in-out"
+              >
+                Pricing
+              </NavLink>
             </li>
           </ul>
         </div>

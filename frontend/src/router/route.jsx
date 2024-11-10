@@ -25,6 +25,7 @@ import AdminList from "../pages/Admin/AdminList";
 import { AdminRoute, UserRoute } from "../util/ProtectedRoute";
 import Success from "../pages/User/Success";
 import { LoadingProvider } from "../context/LoadingContext";
+import AboutUs from "../pages/Guest/AboutUs";
 
 const router = createBrowserRouter([
   {
@@ -52,8 +53,8 @@ const router = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        path: "contact",
-        element: <Contact />,
+        path: "about",
+        element: <AboutUs />,
       },
       {
         path: "privacy",
