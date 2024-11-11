@@ -100,7 +100,7 @@ const Library = () => {
         </button>
       </div>
       {toggleAddMoreImages && (
-        <Upload updateExistingImageHandler={updateExistingImageHandler} />
+        <Upload updateExistingImageHandler={updateExistingImageHandler} currentLimit={existingImage.length}/>
       )}
       <h1 className="font-bold text-xl mt-6">Your Video</h1>
       <div className="flex justify-between mt-6 items-start gap-x-6 max-lg:flex-col max-lg:gap-y-6">

@@ -2,8 +2,10 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { uploadImage } from "../../../services/AnimationService";
 import { LoadingContext } from "../../../context/LoadingContext";
+import { useSelector } from "react-redux";
 
-const Upload = ({ updateExistingImageHandler }) => {
+const Upload = ({ updateExistingImageHandler, currentLimit }) => {
+  const user = useSelector((state) => state.auth.user);
   const [images, setImages] = useState([]); // Array to hold multiple images
   const [imagePreviews, setImagePreviews] = useState([]); // Array for previews
   const { setIsLoading } = useContext(LoadingContext);
@@ -12,6 +14,13 @@ const Upload = ({ updateExistingImageHandler }) => {
     e.preventDefault();
 
     setIsLoading(true);
+
+    if (user.role === "Free" && currentLimit + images.length > 3) {
+      setIsLoading(false);
+      return toast.error(
+        "You had hit the image upload limit. Remove some images before proceed!"
+      );
+    }
 
     for (let i = 0; i < images.length; i++) {
       try {
@@ -36,7 +45,7 @@ const Upload = ({ updateExistingImageHandler }) => {
     setIsLoading(false);
     toast.success("Image uploaded successfully!");
 
-    updateExistingImageHandler()
+    updateExistingImageHandler();
   };
 
   // Handle Multiple Image Upload
