@@ -47,7 +47,6 @@ const Generate = ({ generateVideoHandler }) => {
     updateExistingImageHandler();
   }, []);
 
-
   const handleAudioUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -67,6 +66,14 @@ const Generate = ({ generateVideoHandler }) => {
   const handleVoiceTypeChange = (e) => setVoiceType(e.target.value);
 
   const handleTextChange = (e) => {
+    // Define a regular expression that matches allowed characters only
+    const regex = /^[^!@%^$&*()]*$/;
+
+    // Only update the text input if the value matches the allowed pattern
+    if (!regex.test(e.target.value)) {
+      return toast.error("Your input cannot include these character !@%^$$&*(");
+    }
+
     setTextInput(e.target.value);
     if (e.target.value) {
       setAudio(null); // Clear audio file when text input is entered
