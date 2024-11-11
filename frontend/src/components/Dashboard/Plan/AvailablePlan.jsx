@@ -8,6 +8,8 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { updatePlan } from "../../../store/authSlice";
+import { useContext } from "react";
+import { LoadingContext } from "../../../context/LoadingContext";
 
 const freeFeatures = [
   "Up to 3 image uploads",
@@ -26,12 +28,14 @@ const proFeatures = [
 
 const AvailablePlan = ({ planDetails }) => {
   const user = useSelector((state) => state.auth.user);
+  const { setIsLoading } = useContext(LoadingContext);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const unsubscribePlanHandler = async () => {
     try {
+      setIsLoading(true);
       await cancelSubscription(planDetails.subscription_id);
       if (user.role === "Free") {
         dispatch(
@@ -46,9 +50,11 @@ const AvailablePlan = ({ planDetails }) => {
           })
         );
       }
+      setIsLoading(false);
       toast.success("You have cancelled the plan successfully!");
       navigate("/user/plan");
     } catch (error) {
+      setIsLoading(false);
       toast.error("Something went wrong while trying to unsubscribe a plan!");
     }
   };
@@ -56,23 +62,23 @@ const AvailablePlan = ({ planDetails }) => {
   const subscribePlanHandler = async (stripe_customer_id) => {
     try {
       await subscribePlan(stripe_customer_id);
-      if (user.role === "Free") {
-        dispatch(
-          updatePlan({
-            user: { ...user, role: "Premium" },
-          })
-        );
-      } else {
-        dispatch(
-          updatePlan({
-            user: { ...user, role: "Free" },
-          })
-        );
-      }
 
       navigate("/user/plan");
     } catch (error) {
       toast.error("Something went wrong while trying to subscribe to a plan!");
+    }
+    if (user.role === "Free") {
+      dispatch(
+        updatePlan({
+          user: { ...user, role: "Premium" },
+        })
+      );
+    } else {
+      dispatch(
+        updatePlan({
+          user: { ...user, role: "Free" },
+        })
+      );
     }
   };
 
