@@ -26,6 +26,7 @@ import Success from "../pages/User/Success";
 import { LoadingProvider } from "../context/LoadingContext";
 import AboutUs from "../pages/Guest/AboutUs";
 import AdminProfile from "../pages/Admin/AdminProfile";
+import Cancel from "../pages/User/Cancel";
 
 const router = createBrowserRouter([
   {
@@ -115,6 +116,14 @@ const router = createBrowserRouter([
         element: (
           <UserRoute>
             <Success />
+          </UserRoute>
+        ),
+      },
+      {
+        path: "cancel",
+        element: (
+          <UserRoute>
+            <Cancel />
           </UserRoute>
         ),
       },

@@ -8,7 +8,7 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { updatePlan } from "../../../store/authSlice";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { LoadingContext } from "../../../context/LoadingContext";
 
 const freeFeatures = [
@@ -32,6 +32,10 @@ const AvailablePlan = ({ planDetails }) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+
+  }, [])
 
   const unsubscribePlanHandler = async () => {
     try {
@@ -64,21 +68,9 @@ const AvailablePlan = ({ planDetails }) => {
       await subscribePlan(stripe_customer_id);
 
       navigate("/user/plan");
+
     } catch (error) {
       toast.error("Something went wrong while trying to subscribe to a plan!");
-    }
-    if (user.role === "Free") {
-      dispatch(
-        updatePlan({
-          user: { ...user, role: "Premium" },
-        })
-      );
-    } else {
-      dispatch(
-        updatePlan({
-          user: { ...user, role: "Free" },
-        })
-      );
     }
   };
 

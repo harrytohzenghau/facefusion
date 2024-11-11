@@ -19,7 +19,7 @@ const StripeController = {
           },
         ],
         success_url: `${process.env.FRONTEND_URL}/user/success`,
-        cancel_url: `${process.env.FRONTEND_URL}/user/plan`,
+        cancel_url: `${process.env.FRONTEND_URL}/user/cancel`,
       });
 
       res.json({ sessionId: session.id });

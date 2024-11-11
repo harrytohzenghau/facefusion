@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 import Card from "../../UI/Card";
 import logo from "../../../assets/facefusion_logo.png";
 
-const SuccessCard = () => {
+const CancelCard = () => {
   return (
     <Card additionalClassName="max-w-2xl flex flex-col gap-y-6 items-start px-6 py-6 bg-white rounded-md drop-shadow-lg">
       <img src={logo} alt="FaceFusion" className="h-20 w-auto" />
-      <h1 className="font-bold text-xl">Thanks for your sign up</h1>
-      <p>Sign Up successfully!</p>
+      <h1 className="font-bold text-xl">Subscription cancelled</h1>
+      <p>You did not complete the subscription!</p>
       <div className="flex ml-auto justify-end mt-4 gap-x-4">
         <Link
           to="/user"
@@ -20,4 +20,4 @@ const SuccessCard = () => {
   );
 };
 
-export default SuccessCard;
+export default CancelCard;

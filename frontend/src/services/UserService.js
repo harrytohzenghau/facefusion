@@ -99,14 +99,13 @@ export const postRating = async (ratingData) => {
 };
 
 export const subscribePlan = async (stripe_customer_id) => {
-  //   const token = store.getState().auth.token;
-
   const stripePromise = loadStripe(publishableKey);
 
   const body = {
     priceId: "price_1PubTMP7UBtaU2ylyQTbH8IT",
     stripe_customer_id,
   };
+
   try {
     const response = await axios.post(
       `${apiUrl}/api/stripe/create-checkout-session`,
@@ -119,11 +118,21 @@ export const subscribePlan = async (stripe_customer_id) => {
     );
 
     const data = response.data;
-
     const { sessionId } = data;
 
     const stripe = await stripePromise;
-    stripe.redirectToCheckout({ sessionId });
+    const result = await stripe.redirectToCheckout({ sessionId });
+
+    // If redirectToCheckout fails (e.g., invalid session)
+    if (result.error) {
+      return {
+        success: false,
+        message: result.error.message,
+      };
+    }
+
+    // Return success after redirection initiation
+    return { success: true };
   } catch (error) {
     if (error.response) {
       return {
@@ -141,6 +150,7 @@ export const subscribePlan = async (stripe_customer_id) => {
     }
   }
 };
+
 
 export const getPlanUsageDetails = async (userId) => {
   const token = store.getState().auth.token;
