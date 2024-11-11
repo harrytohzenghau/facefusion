@@ -10,8 +10,8 @@ const Privacy = () => {
           FaceFusion is committed to protecting your privacy. This Privacy
           Policy explains how we collect, use, disclose, and safeguard your
           information when you visit our website{" "}
-          <a href="https://facefusion-frontend.onrender.com/">
-            https://facefusion-frontend.onrender.com/
+          <a href="https://facefusion-frontend-zo3s.onrender.com/">
+            https://facefusion-frontend-zo3s.onrender.com/
           </a>
           and use our services.
         </p>
@@ -91,7 +91,7 @@ const Privacy = () => {
         </p>
         <p>Object to data processing based on legitimate interests.</p>
         <p>
-          To exercise these rights, please contact us at [insert contact email].
+          To exercise these rights, please contact us at <a href="mailto:facefusion38@gmail.com">facefusion38@gmail.com</a>.
         </p>
 
         <h3 className="font-bold mt-4">8. Cookies</h3>
