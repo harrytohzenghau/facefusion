@@ -116,7 +116,7 @@ const Generate = ({ generateVideoHandler }) => {
                   ref={audioInputRef}
                   className="bg-white p-2 rounded-md drop-shadow-lg"
                   type="file"
-                  accept="audio/*"
+                  accept="audio/mpeg"
                   onChange={handleAudioUpload}
                   disabled={!!textInput || !!audio} // Disable if text input or audio is present
                 />
