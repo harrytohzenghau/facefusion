@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { uploadImage } from "../../../services/AnimationService";
 import { LoadingContext } from "../../../context/LoadingContext";
@@ -9,6 +9,7 @@ const Upload = ({ updateExistingImageHandler, currentLimit }) => {
   const [images, setImages] = useState([]); // Array to hold multiple images
   const [imagePreviews, setImagePreviews] = useState([]); // Array for previews
   const { setIsLoading } = useContext(LoadingContext);
+  const fileInputRef = useRef(); // Reference to the file input
 
   const uploadImageHandler = async (e) => {
     e.preventDefault();
@@ -40,12 +41,17 @@ const Upload = ({ updateExistingImageHandler, currentLimit }) => {
       }
     }
 
-    setImages([]);
-    setImagePreviews([]);
+    setImages([]); // Clear the images state after successful upload
+    setImagePreviews([]); // Clear the previews
     setIsLoading(false);
     toast.success("Image uploaded successfully!");
 
     updateExistingImageHandler();
+
+    // Reset file input after submitting
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null; // Reset the input value to allow re-uploading the same file
+    }
   };
 
   // Handle Multiple Image Upload
@@ -81,6 +87,9 @@ const Upload = ({ updateExistingImageHandler, currentLimit }) => {
         }
       };
     });
+
+    // Reset input value after image selection
+    e.target.value = null; // Clear the input value
   };
 
   // Remove specific image
@@ -113,6 +122,7 @@ const Upload = ({ updateExistingImageHandler, currentLimit }) => {
               >
                 <span>Upload Images:</span>
                 <input
+                  ref={fileInputRef} // Reference to the input
                   id="file"
                   name="file"
                   type="file"
