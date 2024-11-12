@@ -1,12 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import { logout } from "../store/authSlice";
-import { Navigate } from "react-router-dom";
-import toast from "react-hot-toast";
 
 const useAutoLogout = (token) => {
   const dispatch = useDispatch();
+  const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -15,20 +14,20 @@ const useAutoLogout = (token) => {
 
       if (decodedToken.exp < currentTime) {
         dispatch(logout());
-        toast.error("Your session has expired. Please login again.");
-        <Navigate to="/login" replace />;
+        setRedirect(true);
       } else {
         const timeUntilExpiry = (decodedToken.exp - currentTime) * 1000;
         const timeoutId = setTimeout(() => {
           dispatch(logout());
-          toast.error("Your session has expired. Please login again.");
-          <Navigate to="/login" replace />;
+          setRedirect(true);
         }, timeUntilExpiry);
 
         return () => clearTimeout(timeoutId);
       }
     }
   }, [token, dispatch]);
+
+  return redirect;
 };
 
 export default useAutoLogout;
