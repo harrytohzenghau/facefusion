@@ -6,6 +6,7 @@ const {  uploadFileToS3, downloadFileFromS3, getSignedUrlForS3  } = require('../
 const ContentBank = require("../models/ContentBank");
 
 const AnimationJob = require("../models/AnimationJob");
+const User = require("../models/User");
 
 const downloadToFile = async (signedUrl, localFilePath) => {
   const writer = fs.createWriteStream(localFilePath);
@@ -202,6 +203,8 @@ const AnimationController = {
   // New: Generate Lip Sync Animation and save to S3
   async generateLipSync(req, res) {
     try {
+      const user = await User.findById(req.user.id);
+      const role = user.user_role_id === 2 ? "Free" : "Premium";
       const { face, type } = req.body;
 
     // Validate inputs
@@ -274,7 +277,7 @@ const AnimationController = {
         let name ="Lip-Sync Video"
 
         // If the user is premium, upscale the video before final upload
-        if (req.user.role === "Premium") {
+        if (role === "Premium") {
           name = "Lip-Sync HD Video"
           const upscaleFormData = new FormData();
           upscaleFormData.append("file", fs.createReadStream(finalVideoPath));
