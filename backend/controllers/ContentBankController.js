@@ -83,10 +83,7 @@ const ContentBankController = {
   async updateContentBank(req, res) {
     try {
       const { name, file_type, file_s3_key, status } = req.body;
-      const user_id =req.user.id;
-
-      file_s3_key = file_s3_key
-      
+      const user_id =req.user.id;      
   
       // Check for required fields
       if (!name || !file_type) {
