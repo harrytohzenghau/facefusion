@@ -29,6 +29,7 @@ const CreateVideo = () => {
   ) => {
     // Check for user role
     try {
+      setVideo(null)
       const response = await getImagesAndVideos(user.id);
 
       if (!response.success) {
