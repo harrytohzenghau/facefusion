@@ -15,7 +15,7 @@ const freeFeatures = [
   "Up to 3 image uploads",
   "Generate animated video",
   "Up to 3 videos",
-  "Downloads in standard SD resolution (1280 x 720)",
+  "Downloads in standard SD resolution",
 ];
 
 const proFeatures = [
@@ -23,7 +23,7 @@ const proFeatures = [
   "Audio upload (optional)",
   "Generate animated video",
   "Up to 10 videos",
-  "Downloads in standard HD resolution (1920 x 1080)",
+  "Downloads in standard HD resolution",
 ];
 
 const AvailablePlan = ({ planDetails }) => {
