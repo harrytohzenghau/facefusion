@@ -1,0 +1,3 @@
+CUDA_VISIBLE_DEVICES=0 python demo.py --config config/vox-256.yaml --checkpoint checkpoints/vox.pth.tar --source_image assets/loo.jpg --driving_video assets/driver_happy.mp4
+
+python demo.py --config config/vox-256.yaml --checkpoint checkpoints/vox.pth.tar --source_image assets/loo_squared.jpg --driving_video assets/driver_happy.mp4
